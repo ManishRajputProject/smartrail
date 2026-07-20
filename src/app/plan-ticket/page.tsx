@@ -1,0 +1,50 @@
+import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
+import { CalculatorShell } from "@/components/CalculatorShell";
+import { PlanTicketClient } from "./PlanTicketClient";
+import { buildPlanTicketDays } from "@/lib/plan-ticket";
+import { nowIST, ARP_DAYS } from "@/lib/irctc-rules";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Plan Ticket — Train Booking Calendar with Holidays",
+  description:
+    "A calendar of upcoming journey dates with Indian holidays, weekends and IRCTC booking status marked, so you can plan around the rush.",
+  path: "/plan-ticket",
+  keywords: ["train booking calendar", "Indian holiday calendar train booking", "when does booking open"],
+});
+
+const faqs = [
+  {
+    question: "How many days in advance can I book a train ticket on IRCTC?",
+    answer: `You can book up to ${ARP_DAYS} days in advance (excluding the journey date). Booking opens at 8:00 AM IST on that date.`,
+  },
+  {
+    question: "Are the holiday dates on this calendar exact?",
+    answer:
+      "Fixed national holidays (Republic Day, Independence Day, Gandhi Jayanti, Christmas) are exact. Festival dates follow lunar/regional calendars and can shift by a day depending on the almanac and region — treat them as best-effort and verify locally for anything you're planning around closely.",
+  },
+];
+
+export default function Page() {
+  const days = buildPlanTicketDays(nowIST(), 120);
+
+  return (
+    <CalculatorShell
+      eyebrow="Plan Ticket"
+      title="Plan Your Train Journey Around Holidays"
+      breadcrumbLabel="Plan Ticket"
+      breadcrumbHref="/plan-ticket"
+      description="A day-by-day view of the next 120 journey dates, with holidays, weekends and booking status marked, so you can spot high-demand dates early."
+      badges={[`${ARP_DAYS}-day booking window`, "Indian holidays highlighted", "Long weekends marked"]}
+      faqs={faqs}
+      relatedTools={[
+        { href: "/long-weekend-planner", label: "Long Weekend Planner", description: "Just the upcoming long weekends, distilled." },
+        { href: "/booking-date-calculator", label: "Booking Date Calculator", description: "Check one specific journey date." },
+      ]}
+    >
+      <PlanTicketClient days={days} />
+    </CalculatorShell>
+  );
+}
