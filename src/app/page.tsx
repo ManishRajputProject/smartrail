@@ -6,6 +6,7 @@ import { GUIDES } from "@/lib/guides";
 import { nowIST, latestBookableJourneyDate, formatDateLong, ARP_DAYS } from "@/lib/irctc-rules";
 import { computeLongWeekends } from "@/lib/holidays";
 import { FeedbackVoteWidget } from "@/components/FeedbackVoteWidget";
+import { SearchTrigger } from "@/components/SearchTrigger";
 import { JsonLd, faqJsonLd } from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
@@ -57,7 +58,11 @@ export default function Home() {
             reminders so you never miss the window.
           </p>
 
-          <div className="mt-6 flex flex-col items-center gap-3 rise-in-3">
+          <div className="mt-6 w-full max-w-md mx-auto rise-in-3">
+            <SearchTrigger variant="hero" />
+          </div>
+
+          <div className="mt-4 flex flex-col items-center gap-3 rise-in-3">
             <Link href="/booking-date-calculator" className="card card-hover px-6 py-3 text-center">
               <span className="block text-xs text-muted">Today you can book up to</span>
               <span className="block text-2xl font-extrabold gradient-text mt-0.5 tabular-nums">{formatDateLong(latestBookable)}</span>

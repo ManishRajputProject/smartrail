@@ -79,5 +79,13 @@ export function webSiteJsonLd() {
       "Free IRCTC booking date, Tatkal timing, refund and waitlist calculators for Indian Railways travellers.",
     inLanguage: "en-IN",
     publisher: { "@type": "Organization", name: "RailSetu", url: "https://railsetu.in" },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: "https://railsetu.in/search?q={search_term_string}",
+      },
+      "query-input": "required name=search_term_string",
+    },
   };
 }

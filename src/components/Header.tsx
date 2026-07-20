@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { SearchTrigger } from "@/components/SearchTrigger";
 import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, COMMUNITY_ROUTES } from "@/lib/site-routes";
 import { GUIDES } from "@/lib/guides";
 import { SITE_NAME } from "@/lib/seo";
@@ -92,6 +93,8 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-1.5">
+          <SearchTrigger />
+          <span className="md:hidden"><SearchTrigger variant="icon" /></span>
           <Link href="/reminders" className="hidden md:inline-flex btn-primary !py-1.5 !px-3.5 text-[13px]">
             Set Reminder
           </Link>
