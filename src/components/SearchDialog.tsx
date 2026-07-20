@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { searchSite, type SearchItem } from "@/lib/search-index";
+import { localePath, DEFAULT_LOCALE, type Locale } from "@/i18n/locales";
 
 const GROUP_ICON: Record<SearchItem["group"], string> = {
   Tool: "🧮",
@@ -13,7 +14,7 @@ const GROUP_ICON: Record<SearchItem["group"], string> = {
 
 const RECENT_KEY = "recent-searches";
 
-export function SearchDialog() {
+export function SearchDialog({ lang = DEFAULT_LOCALE }: { lang?: Locale }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -73,10 +74,10 @@ export function SearchDialog() {
       } catch {
         /* ignore */
       }
-      router.push(item.href);
+      router.push(localePath(lang, item.href));
       close();
     },
-    [recent, router, close]
+    [recent, router, close, lang]
   );
 
   function onInputKey(e: React.KeyboardEvent) {

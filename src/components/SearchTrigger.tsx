@@ -6,7 +6,7 @@ function openSearch() {
 
 /** Search affordances. "bar"/"icon" live on the dark header; "hero" sits on
  *  the dark hero. All styled for light text on dark chrome. */
-export function SearchTrigger({ variant = "bar" }: { variant?: "bar" | "icon" | "hero" }) {
+export function SearchTrigger({ variant = "bar", placeholder }: { variant?: "bar" | "icon" | "hero"; placeholder?: string }) {
   if (variant === "hero") {
     return (
       <button
@@ -43,7 +43,7 @@ export function SearchTrigger({ variant = "bar" }: { variant?: "bar" | "icon" | 
       aria-label="Search tools, guides and stations"
     >
       <span aria-hidden="true">🔍</span>
-      <span className="flex-1 text-left">Search…</span>
+      <span className="flex-1 text-left">{placeholder ?? "Search…"}</span>
       <kbd className="text-[10px] border border-white/25 rounded px-1 py-0.5">⌘K</kbd>
     </button>
   );

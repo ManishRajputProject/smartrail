@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "Home",
+    "tools": "Tools",
+    "guides": "Guides",
+    "trains": "Trains",
+    "planTicket": "Plan Ticket",
+    "faq": "FAQ",
+    "reminders": "Reminders",
+    "search": "Search…",
+    "searchFull": "Search tools, guides, trains, stations…",
+    "allGuides": "All Guides",
+    "menu": "Menu"
+  },
+  "hero": {
+    "badge": "FREE · NO LOGIN · ALWAYS CURRENT",
+    "title1": "Know exactly when",
+    "title2": "your train booking opens",
+    "subtitle": "IRCTC booking dates, Tatkal timing, refunds, waitlist odds and 5,000+ trains — answered in seconds, with free reminders so you never miss the window.",
+    "bookUpTo": "Today you can book up to",
+    "windowNote": "60-day window · opens 8:00 AM IST daily",
+    "checkBooking": "Check Booking Date",
+    "setReminder": "Set a Reminder",
+    "nextLongWeekend": "Next long weekend",
+    "planIt": "Plan it",
+    "days": "days"
+  },
+  "ticker": {
+    "tatkalAc": "Tatkal AC opens 10:00 AM",
+    "tatkalNonAc": "Tatkal Non-AC opens 11:00 AM",
+    "advance": "Advance booking: 60 days ahead",
+    "chart": "Chart ~4 hrs before departure"
+  },
+  "sections": {
+    "calculators": "Calculators",
+    "calculatorsTitle": "Quick answers, zero friction",
+    "calculatorsSub": "8 rule-based calculators · updated for current IRCTC rules",
+    "planDecide": "Plan, Decide & Look Up",
+    "planDecideTitle": "Beyond calculators",
+    "guides": "Guides",
+    "guidesTitle": "Understand the rules",
+    "allGuidesLink": "All guides",
+    "whyTrust": "Why trust these numbers",
+    "whatsNext": "What's next",
+    "voteNext": "Vote for what we build next:",
+    "howAccurate": "How we keep data accurate"
+  },
+  "cta": {
+    "title1": "Don't miss your",
+    "title2": "next window",
+    "subtitle": "Tatkal opens one day before your journey — 10 AM AC, 11 AM Non-AC. Lock a free reminder in seconds.",
+    "setReminder": "Set Reminder in 10 Seconds",
+    "browseCalendar": "Browse Booking Calendar",
+    "noSpam": "No spam · No login · Free forever"
+  },
+  "footer": {
+    "tagline": "Free, independent tools for Indian Railways travellers. Rules verified against official announcements.",
+    "about": "About & methodology",
+    "calculators": "Calculators",
+    "planLearn": "Plan & Learn",
+    "legal": "Legal",
+    "notAffiliated": "Not affiliated with IRCTC, Indian Railways, or the Government of India.",
+    "rights": "Information is general guidance only — verify on official channels before booking."
+  },
+  "common": {
+    "minRead": "min read",
+    "readGuide": "Read Guide",
+    "relatedTools": "Related Tools",
+    "faqTitle": "Frequently Asked Questions",
+    "verifyOn": "Always confirm critical details on",
+    "lastVerified": "Rules last verified",
+    "selectLanguage": "Select language"
+  }
+}
