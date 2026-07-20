@@ -125,6 +125,13 @@ export const DECISION_TOOL_ROUTES: ToolRoute[] = [
 
 export const COMMUNITY_ROUTES: ToolRoute[] = [
   {
+    href: "/trains",
+    label: "Train Finder",
+    tag: "5,000+ Trains",
+    description: "Search any Indian Railways train by number or name — route, timings and classes.",
+    icon: "🚆",
+  },
+  {
     href: "/reminders",
     label: "Booking Reminders",
     tag: "Only Here",

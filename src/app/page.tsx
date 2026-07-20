@@ -96,7 +96,7 @@ export default function Home() {
       </div>
 
       {/* Calculators grid */}
-      <section id="tools" className="mx-auto max-w-6xl px-4 py-10">
+      <section id="tools" className="reveal mx-auto max-w-6xl px-4 py-10">
         <p className="eyebrow">Calculators</p>
         <div className="flex flex-wrap items-end justify-between gap-2 mt-1">
           <h2 className="text-2xl md:text-[28px] font-bold tracking-tight">Quick answers, zero friction</h2>
@@ -138,7 +138,7 @@ export default function Home() {
       </section>
 
       {/* Guides */}
-      <section className="mx-auto max-w-6xl px-4 py-10">
+      <section className="reveal mx-auto max-w-6xl px-4 py-10">
         <p className="eyebrow">Guides</p>
         <div className="flex flex-wrap items-end justify-between gap-2 mt-1">
           <h2 className="text-2xl md:text-[28px] font-bold tracking-tight">Understand the rules</h2>

@@ -272,3 +272,36 @@ body {
   background: linear-gradient(90deg, var(--primary) 0%, #7c3aed 60%, var(--primary) 100%);
   color: #fff;
 }
+
+/* ---------- Train-track divider motif ---------- */
+
+.track-divider {
+  height: 14px;
+  width: 100%;
+  background-image:
+    linear-gradient(var(--border), var(--border)),
+    repeating-linear-gradient(90deg, var(--border) 0 8px, transparent 8px 20px);
+  background-size: 100% 2px, 100% 6px;
+  background-position: center, center;
+  background-repeat: no-repeat, repeat-x;
+  opacity: 0.6;
+}
+
+/* ---------- Scroll-reveal (progressive enhancement) ----------
+   The hidden start state is applied ONLY where scroll-driven timelines are
+   supported, so browsers without the feature always render content normally
+   and nothing can get stuck invisible. Also disabled for reduced-motion. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+    }
+  }
+}
+
+@keyframes reveal-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
