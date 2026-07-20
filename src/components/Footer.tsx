@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, CONTENT_ROUTES, LEGAL_ROUTES } from "@/lib/site-routes";
+import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, COMMUNITY_ROUTES, CONTENT_ROUTES, LEGAL_ROUTES } from "@/lib/site-routes";
 import { SITE_NAME } from "@/lib/seo";
 import { localePath, type Locale } from "@/i18n/locales";
 import type { Dictionary } from "@/i18n/dictionary";
@@ -35,6 +35,9 @@ export function Footer({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           <h3 className="font-semibold mb-1.5 text-[13px] uppercase tracking-wide muted-on-dark">{f.planLearn}</h3>
           <ul className="space-y-1 text-[13px]">
             {DECISION_TOOL_ROUTES.map((t) => (
+              <li key={t.href}><Link href={lp(t.href)} className="muted-on-dark hover:text-nav-fg transition-colors">{t.label}</Link></li>
+            ))}
+            {COMMUNITY_ROUTES.map((t) => (
               <li key={t.href}><Link href={lp(t.href)} className="muted-on-dark hover:text-nav-fg transition-colors">{t.label}</Link></li>
             ))}
             {CONTENT_ROUTES.map((r) => (

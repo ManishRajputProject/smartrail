@@ -146,6 +146,13 @@ export const COMMUNITY_ROUTES: ToolRoute[] = [
     icon: "🚆",
   },
   {
+    href: "/stations",
+    label: "Station Directory",
+    tag: "8,900+ Stations",
+    description: "Look up any Indian Railways station code, railway zone and state.",
+    icon: "📍",
+  },
+  {
     href: "/reminders",
     label: "Booking Reminders",
     tag: "Only Here",
@@ -164,7 +171,6 @@ export const COMMUNITY_ROUTES: ToolRoute[] = [
 export const CONTENT_ROUTES = [
   { href: "/guides", label: "All Guides" },
   { href: "/faq", label: "FAQ" },
-  { href: "/stations", label: "Station Directory" },
   { href: "/about", label: "About & Methodology" },
 ];
 
