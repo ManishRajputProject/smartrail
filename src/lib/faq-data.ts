@@ -93,4 +93,35 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
       },
     ],
   },
+  {
+    id: "travel-day",
+    title: "On the Day of Travel",
+    items: [
+      {
+        question: "Do I need a printout of my e-ticket?",
+        answer:
+          "No — showing the e-ticket (or even the SMS with PNR details) on your phone is sufficient, along with the original photo ID of any one passenger on the PNR.",
+      },
+      {
+        question: "Can I board at a later station than the one on my ticket?",
+        answer:
+          "Only if you've changed your boarding point in advance through IRCTC (allowed up to a cutoff before departure). Boarding later without changing it risks your seat being marked vacant and reallocated by the TTE.",
+      },
+      {
+        question: "What happens if I miss my train?",
+        answer:
+          "Your ticket is not valid on the next train. For a confirmed ticket you may be able to claim a partial refund by filing a TDR within the allowed window, but you cannot simply board a later train with the same ticket.",
+      },
+      {
+        question: "Can I upgrade my class after booking?",
+        answer:
+          "If you opted in to the auto-upgrade scheme at booking, the system may upgrade you free of charge at chart preparation when higher-class berths go unsold. There's no self-service paid upgrade after booking — the alternative is booking afresh in the higher class.",
+      },
+      {
+        question: "How do I find my coach position on the platform?",
+        answer:
+          "After the chart is prepared, your coach number is fixed. Most stations display coach positions on electronic boards; coach-position apps and the station enquiry desk can also tell you where your coach will stop.",
+      },
+    ],
+  },
 ];

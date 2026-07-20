@@ -68,3 +68,16 @@ export function organizationJsonLd() {
       "Independent, free IRCTC booking calculators and reminders for Indian Railways travellers. Not affiliated with IRCTC or Indian Railways.",
   };
 }
+
+export function webSiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "RailSetu",
+    url: "https://railsetu.in",
+    description:
+      "Free IRCTC booking date, Tatkal timing, refund and waitlist calculators for Indian Railways travellers.",
+    inLanguage: "en-IN",
+    publisher: { "@type": "Organization", name: "RailSetu", url: "https://railsetu.in" },
+  };
+}

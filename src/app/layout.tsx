@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SITE_NAME, SITE_URL, SITE_DESCRIPTION } from "@/lib/seo";
-import { JsonLd, organizationJsonLd } from "@/components/JsonLd";
+import { JsonLd, organizationJsonLd, webSiteJsonLd } from "@/components/JsonLd";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ThemeScript } from "@/components/ThemeScript";
@@ -68,6 +68,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
         <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={webSiteJsonLd()} />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

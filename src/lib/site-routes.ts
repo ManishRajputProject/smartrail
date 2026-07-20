@@ -144,6 +144,7 @@ export const CONTENT_ROUTES = [
   { href: "/guides", label: "All Guides" },
   { href: "/faq", label: "FAQ" },
   { href: "/stations", label: "Station Directory" },
+  { href: "/about", label: "About & Methodology" },
 ];
 
 export const LEGAL_ROUTES = [

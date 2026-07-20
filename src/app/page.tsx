@@ -42,188 +42,166 @@ export default function Home() {
       <JsonLd data={faqJsonLd(homeFaqs)} />
 
       {/* Hero */}
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-4 py-14 md:py-20 text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs font-medium text-muted mb-6">
+      <section className="hero-glow border-b border-border">
+        <div className="mx-auto max-w-5xl px-4 pt-10 pb-9 md:pt-16 md:pb-14 text-center">
+          <p className="chip border border-border bg-surface/60 text-muted rise-in mx-auto">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-success animate-pulse" aria-hidden="true" />
             FREE · NO LOGIN · ALWAYS CURRENT
           </p>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight">
-            Know Exactly When<br />
-            <span className="text-primary">Your Train Booking Opens</span>
+          <h1 className="mt-4 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05] rise-in-1">
+            Know exactly when<br />
+            <span className="gradient-text">your train booking opens</span>
           </h1>
-          <p className="mt-5 max-w-2xl mx-auto text-muted text-lg leading-relaxed">
-            Free calculators for IRCTC booking dates, Tatkal timing, refunds and more — plus free reminders so
-            you never miss the booking window. No sign-up, no ads on the calculators themselves, always
-            accurate.
+          <p className="mt-4 max-w-xl mx-auto text-muted text-base md:text-lg leading-relaxed rise-in-2">
+            IRCTC booking dates, Tatkal timing, refunds and waitlist odds — answered in seconds, with free
+            reminders so you never miss the window.
           </p>
 
-          <div className="mt-8 flex flex-col items-center gap-3">
-            <Link
-              href="/booking-date-calculator"
-              className="rounded-xl border border-primary/30 bg-primary/5 px-6 py-4 text-center hover:bg-primary/10 transition-colors"
-            >
-              <span className="block text-sm text-muted">Today you can book up to</span>
-              <span className="block text-xl font-bold text-primary mt-0.5">{formatDateLong(latestBookable)}</span>
-              <span className="block text-xs text-muted mt-0.5">· {ARP_DAYS}-day window open</span>
+          <div className="mt-6 flex flex-col items-center gap-3 rise-in-3">
+            <Link href="/booking-date-calculator" className="card card-hover px-6 py-3 text-center">
+              <span className="block text-xs text-muted">Today you can book up to</span>
+              <span className="block text-2xl font-extrabold gradient-text mt-0.5 tabular-nums">{formatDateLong(latestBookable)}</span>
+              <span className="block text-[11px] text-muted mt-0.5">{ARP_DAYS}-day window · opens 8:00 AM IST daily</span>
             </Link>
 
-            <div className="flex flex-wrap justify-center gap-3 mt-2">
-              <Link href="/booking-date-calculator" className="rounded-lg bg-primary text-primary-foreground font-semibold px-5 py-2.5 hover:opacity-90 transition-opacity">
-                Check Booking Date
-              </Link>
-              <Link href="/reminders" className="rounded-lg border border-border font-semibold px-5 py-2.5 hover:bg-surface-2 transition-colors">
-                Set Up a Reminder
-              </Link>
+            <div className="flex flex-wrap justify-center gap-2.5">
+              <Link href="/booking-date-calculator" className="btn-primary">Check Booking Date</Link>
+              <Link href="/reminders" className="btn-secondary">🔔 Set a Reminder</Link>
             </div>
-          </div>
 
-          {upcomingLongWeekend && (
-            <p className="mt-8 text-sm text-muted">
-              Next long weekend: <strong className="text-foreground">{upcomingLongWeekend.holiday.name}</strong>,{" "}
-              {upcomingLongWeekend.start} → {upcomingLongWeekend.end} ·{" "}
-              <Link href="/long-weekend-planner" className="text-primary underline underline-offset-2">See all →</Link>
-            </p>
-          )}
+            {upcomingLongWeekend && (
+              <p className="text-[13px] text-muted">
+                Next long weekend: <strong className="text-foreground">{upcomingLongWeekend.holiday.name}</strong>{" "}
+                ({upcomingLongWeekend.days} days) ·{" "}
+                <Link href="/long-weekend-planner" className="text-primary font-medium underline underline-offset-2">Plan it →</Link>
+              </p>
+            )}
+          </div>
         </div>
       </section>
+
+      {/* Rule ticker */}
+      <div className="ticker text-[12px] font-medium overflow-hidden">
+        <div className="mx-auto max-w-6xl px-4 py-1.5 flex flex-wrap justify-center gap-x-6 gap-y-0.5 text-center">
+          <span>⏱️ Tatkal AC opens 10:00 AM</span>
+          <span>🕚 Tatkal Non-AC opens 11:00 AM</span>
+          <span>📅 Advance booking: {ARP_DAYS} days ahead</span>
+          <span>🗒️ Chart ~4 hrs before departure</span>
+        </div>
+      </div>
 
       {/* Calculators grid */}
-      <section id="tools" className="mx-auto max-w-6xl px-4 py-14">
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-2">Next Stop · Calculators</p>
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Railway Calculators</h2>
-        <p className="mt-2 text-muted max-w-2xl">Quick answers to your most common railway booking questions.</p>
+      <section id="tools" className="mx-auto max-w-6xl px-4 py-10">
+        <p className="eyebrow">Calculators</p>
+        <div className="flex flex-wrap items-end justify-between gap-2 mt-1">
+          <h2 className="text-2xl md:text-[28px] font-bold tracking-tight">Quick answers, zero friction</h2>
+          <p className="text-sm text-muted">8 rule-based calculators · updated for current IRCTC rules</p>
+        </div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {CALCULATOR_ROUTES.map((t) => (
-            <Link key={t.href} href={t.href} className="rounded-xl border border-border p-5 hover:border-primary hover:bg-surface transition-colors">
-              <span className="text-2xl" aria-hidden="true">{t.icon}</span>
-              <p className="text-xs font-semibold text-primary uppercase mt-2">{t.tag}</p>
-              <h3 className="font-semibold mt-1">{t.label}</h3>
-              <p className="text-sm text-muted mt-1">{t.description}</p>
+            <Link key={t.href} href={t.href} className="card card-hover group p-4">
+              <div className="flex items-center justify-between">
+                <span className="grid h-9 w-9 place-items-center rounded-lg text-lg bg-primary-soft" aria-hidden="true">{t.icon}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-primary">{t.tag}</span>
+              </div>
+              <h3 className="font-semibold mt-2.5 text-[15px] group-hover:text-primary transition-colors">{t.label}</h3>
+              <p className="text-[13px] text-muted mt-1 leading-snug">{t.description}</p>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Decision tools grid */}
-      <section className="mx-auto max-w-6xl px-4 py-14 border-t border-border">
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-2">Plan &amp; Decide</p>
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Plan Your Journey</h2>
-        <p className="mt-2 text-muted max-w-2xl">Beyond calculators — tools to help you decide and plan ahead.</p>
+      {/* Decision tools */}
+      <section className="bg-surface-2/50 border-y border-border">
+        <div className="mx-auto max-w-6xl px-4 py-10">
+          <p className="eyebrow">Plan &amp; Decide</p>
+          <h2 className="text-2xl md:text-[28px] font-bold tracking-tight mt-1">Beyond calculators</h2>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES].map((t) => (
-            <Link key={t.href} href={t.href} className="rounded-xl border border-border p-5 hover:border-primary hover:bg-surface transition-colors">
-              <span className="text-2xl" aria-hidden="true">{t.icon}</span>
-              <p className="text-xs font-semibold text-primary uppercase mt-2">{t.tag}</p>
-              <h3 className="font-semibold mt-1">{t.label}</h3>
-              <p className="text-sm text-muted mt-1">{t.description}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Trust bar */}
-      <section className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-6xl px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div>
-            <p className="font-bold text-lg">{ARP_DAYS}-Day Rule</p>
-            <p className="text-xs text-muted mt-1">Kept current with IRCTC rules</p>
-          </div>
-          <div>
-            <p className="font-bold text-lg">10 / 11 AM</p>
-            <p className="text-xs text-muted mt-1">Exact Tatkal timings, AC / Non-AC</p>
-          </div>
-          <div>
-            <p className="font-bold text-lg">No Login</p>
-            <p className="text-xs text-muted mt-1">Every tool works without an account</p>
-          </div>
-          <div>
-            <p className="font-bold text-lg">Free Forever</p>
-            <p className="text-xs text-muted mt-1">Ad-supported, not paywalled</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES].map((t) => (
+              <Link key={t.href} href={t.href} className="card card-hover group p-4 flex items-start gap-3">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-xl bg-primary-soft" aria-hidden="true">{t.icon}</span>
+                <div>
+                  <h3 className="font-semibold text-[15px] group-hover:text-primary transition-colors">{t.label}</h3>
+                  <p className="text-[13px] text-muted mt-0.5 leading-snug">{t.description}</p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Guides preview */}
-      <section className="mx-auto max-w-6xl px-4 py-14">
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-2">Platform · Guides</p>
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Popular Guides</h2>
-        <p className="mt-2 text-muted max-w-2xl">In-depth guides to help you navigate Indian Railways.</p>
+      {/* Guides */}
+      <section className="mx-auto max-w-6xl px-4 py-10">
+        <p className="eyebrow">Guides</p>
+        <div className="flex flex-wrap items-end justify-between gap-2 mt-1">
+          <h2 className="text-2xl md:text-[28px] font-bold tracking-tight">Understand the rules</h2>
+          <Link href="/guides" className="text-sm text-primary font-semibold underline underline-offset-2">All guides →</Link>
+        </div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {GUIDES.slice(0, 6).map((g) => (
-            <Link key={g.slug} href={`/guides/${g.slug}`} className="rounded-xl border border-border p-5 hover:border-primary hover:bg-surface transition-colors">
-              <span className="text-xs font-semibold uppercase tracking-wide text-primary">{g.category}</span>
-              <h3 className="font-semibold mt-1">{g.title}</h3>
-              <p className="text-sm text-muted mt-1">{g.description}</p>
-              <p className="text-xs text-muted mt-3">{g.readMins} min read</p>
+            <Link key={g.slug} href={`/guides/${g.slug}`} className="card card-hover group p-4">
+              <div className="flex items-center gap-2">
+                <span className="chip bg-primary-soft text-primary">{g.category}</span>
+                <span className="text-[11px] text-muted">{g.readMins} min read</span>
+              </div>
+              <h3 className="font-semibold mt-2 text-[15px] leading-snug group-hover:text-primary transition-colors">{g.title}</h3>
+              <p className="text-[13px] text-muted mt-1 leading-snug line-clamp-2">{g.description}</p>
             </Link>
           ))}
         </div>
-        <Link href="/guides" className="inline-block mt-6 text-primary font-medium underline underline-offset-2">
-          Browse all guides →
-        </Link>
       </section>
 
-      {/* Roadmap */}
-      <section className="mx-auto max-w-6xl px-4 py-14 border-t border-border">
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-2">Product · Roadmap</p>
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{SITE_NAME} is Growing</h2>
-        <p className="mt-2 text-muted max-w-2xl">Actively built and updated with the latest IRCTC rules. Here&apos;s what&apos;s coming.</p>
-
-        <div className="mt-8 grid gap-6 sm:grid-cols-3">
+      {/* Trust + roadmap strip */}
+      <section className="bg-surface-2/50 border-y border-border">
+        <div className="mx-auto max-w-6xl px-4 py-8 grid gap-6 md:grid-cols-2">
           <div>
-            <p className="text-xs font-semibold uppercase text-success mb-2">Released</p>
-            <ul className="space-y-1 text-sm text-muted">
-              <li>All 8 calculators</li>
-              <li>Waitlist Outlook</li>
-              <li>Plan Ticket Calendar</li>
-              <li>Email &amp; calendar reminders</li>
-              <li>Journey Reports (community)</li>
+            <p className="eyebrow">Why trust these numbers</p>
+            <ul className="mt-2.5 space-y-1.5 text-sm text-muted">
+              <li>✅ Every rule lives in one dated, unit-tested module — verified against official IRCTC announcements</li>
+              <li>✅ Honest uncertainty: the waitlist tool shows outlook bands, never a made-up percentage</li>
+              <li>✅ Estimates labelled as estimates — fares and refunds always say &quot;verify on IRCTC&quot;</li>
+              <li>✅ Independent &amp; free — not affiliated with IRCTC or Indian Railways</li>
             </ul>
+            <Link href="/about" className="inline-block mt-2.5 text-sm text-primary font-semibold underline underline-offset-2">
+              How we keep data accurate →
+            </Link>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase text-accent mb-2">In Progress</p>
-            <ul className="space-y-1 text-sm text-muted">
-              <li>WhatsApp reminders</li>
-              <li>Regional language guides</li>
-              <li>Enhanced WL outlook using community data</li>
-            </ul>
+            <p className="eyebrow">What&apos;s next</p>
+            <div className="mt-2.5 flex flex-wrap gap-1.5 text-[12px]">
+              <span className="chip bg-success-soft text-success">✓ 8 calculators</span>
+              <span className="chip bg-success-soft text-success">✓ Reminders</span>
+              <span className="chip bg-success-soft text-success">✓ Journey Reports</span>
+              <span className="chip bg-accent-soft text-accent">⚙ WhatsApp reminders</span>
+              <span className="chip bg-accent-soft text-accent">⚙ Hindi guides</span>
+              <span className="chip bg-surface-2 text-muted">◌ Train schedules</span>
+              <span className="chip bg-surface-2 text-muted">◌ Mobile app</span>
+            </div>
+            <p className="mt-3 text-sm font-semibold">Vote for what we build next:</p>
+            <div className="mt-1.5">
+              <FeedbackVoteWidget />
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-semibold uppercase text-muted mb-2">Planned</p>
-            <ul className="space-y-1 text-sm text-muted">
-              <li>Licensed train schedule lookup</li>
-              <li>Mobile apps</li>
-              <li>Fare trend analysis</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-10">
-          <p className="font-semibold mb-3">Help Shape {SITE_NAME} — what should we build next?</p>
-          <FeedbackVoteWidget />
         </div>
       </section>
 
       {/* CTA */}
-      <section className="border-t border-border bg-surface">
-        <div className="mx-auto max-w-3xl px-4 py-14 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Don&apos;t Miss Your Next Window</h2>
-          <p className="mt-3 text-muted">
-            Tatkal opens just one day before your journey — at 10 AM for AC and 11 AM for Non-AC. Lock a
-            reminder in seconds.
+      <section className="hero-glow">
+        <div className="mx-auto max-w-3xl px-4 py-12 text-center">
+          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+            Don&apos;t miss your <span className="gradient-text">next window</span>
+          </h2>
+          <p className="mt-2.5 text-muted text-[15px]">
+            Tatkal opens one day before your journey — 10 AM AC, 11 AM Non-AC. Lock a free reminder in seconds.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href="/reminders" className="rounded-lg bg-primary text-primary-foreground font-semibold px-6 py-3 hover:opacity-90 transition-opacity">
-              Set Reminder
-            </Link>
-            <Link href="/booking-date-calculator" className="rounded-lg border border-border font-semibold px-6 py-3 hover:bg-surface-2 transition-colors">
-              Check Booking Date
-            </Link>
+          <div className="mt-5 flex flex-wrap justify-center gap-2.5">
+            <Link href="/reminders" className="btn-primary">Set Reminder in 10 Seconds</Link>
+            <Link href="/plan-ticket" className="btn-secondary">Browse Booking Calendar</Link>
           </div>
-          <p className="mt-4 text-xs text-muted">No spam · No login required · Free forever</p>
+          <p className="mt-3 text-xs text-muted">No spam · No login · Free forever</p>
         </div>
       </section>
     </>

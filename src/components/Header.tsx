@@ -13,14 +13,17 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-[var(--background)]/90 backdrop-blur">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3" aria-label="Main navigation">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg shrink-0" aria-label={`${SITE_NAME} home`}>
-          <span aria-hidden="true">🚆</span>
+    <header
+      className="sticky top-0 z-50 border-b border-border backdrop-blur-xl"
+      style={{ background: "var(--header-bg)" }}
+    >
+      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 h-14" aria-label="Main navigation">
+        <Link href="/" className="flex items-center gap-2 font-bold text-[17px] shrink-0 tracking-tight" aria-label={`${SITE_NAME} home`}>
+          <span className="grid h-8 w-8 place-items-center rounded-lg text-base text-white shadow-sm" style={{ background: "linear-gradient(135deg, var(--primary), #7c3aed)" }} aria-hidden="true">🚆</span>
           {SITE_NAME}
         </Link>
 
-        <div className="hidden md:flex items-center gap-1 text-sm font-medium">
+        <div className="hidden md:flex items-center gap-0.5 text-sm font-medium">
           <div
             className="relative"
             onMouseEnter={() => setToolsOpen(true)}
@@ -28,21 +31,23 @@ export function Header() {
           >
             <button
               type="button"
-              className="px-3 py-2 rounded-md hover:bg-surface-2"
+              className="px-3 py-1.5 rounded-lg hover:bg-surface-2 transition-colors"
               aria-expanded={toolsOpen}
               onClick={() => setToolsOpen((v) => !v)}
             >
-              Tools
+              Tools ▾
             </button>
             {toolsOpen && (
-              <div className="absolute left-0 top-full w-[560px] max-w-[90vw] rounded-xl border border-border bg-[var(--background)] p-4 shadow-xl grid grid-cols-2 gap-1">
+              <div className="card absolute left-0 top-full w-[540px] max-w-[90vw] p-3 grid grid-cols-2 gap-0.5">
                 {[...CALCULATOR_ROUTES, ...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES].map((t) => (
                   <Link
                     key={t.href}
                     href={t.href}
-                    className="flex flex-col rounded-lg px-3 py-2 hover:bg-surface-2"
+                    className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 hover:bg-primary-soft transition-colors"
+                    onClick={() => setToolsOpen(false)}
                   >
-                    <span className="font-medium">{t.icon} {t.label}</span>
+                    <span aria-hidden="true">{t.icon}</span>
+                    <span className="text-[13px]">{t.label}</span>
                   </Link>
                 ))}
               </div>
@@ -56,22 +61,23 @@ export function Header() {
           >
             <button
               type="button"
-              className="px-3 py-2 rounded-md hover:bg-surface-2"
+              className="px-3 py-1.5 rounded-lg hover:bg-surface-2 transition-colors"
               aria-expanded={guidesOpen}
               onClick={() => setGuidesOpen((v) => !v)}
             >
-              Guides
+              Guides ▾
             </button>
             {guidesOpen && (
-              <div className="absolute left-0 top-full w-72 rounded-xl border border-border bg-[var(--background)] p-2 shadow-xl">
-                <Link href="/guides" className="block rounded-lg px-3 py-2 font-medium hover:bg-surface-2">
-                  All Guides
+              <div className="card absolute left-0 top-full w-72 p-2">
+                <Link href="/guides" className="block rounded-lg px-3 py-1.5 font-semibold hover:bg-primary-soft transition-colors" onClick={() => setGuidesOpen(false)}>
+                  All Guides →
                 </Link>
                 {GUIDES.slice(0, 6).map((g) => (
                   <Link
                     key={g.slug}
                     href={`/guides/${g.slug}`}
-                    className="block rounded-lg px-3 py-2 hover:bg-surface-2 text-sm"
+                    className="block rounded-lg px-3 py-1.5 hover:bg-primary-soft transition-colors text-[13px] text-muted hover:text-foreground"
+                    onClick={() => setGuidesOpen(false)}
                   >
                     {g.title}
                   </Link>
@@ -80,16 +86,19 @@ export function Header() {
             )}
           </div>
 
-          <Link href="/plan-ticket" className="px-3 py-2 rounded-md hover:bg-surface-2">Plan Ticket</Link>
-          <Link href="/reminders" className="px-3 py-2 rounded-md hover:bg-surface-2">Reminders</Link>
-          <Link href="/faq" className="px-3 py-2 rounded-md hover:bg-surface-2">FAQ</Link>
+          <Link href="/plan-ticket" className="px-3 py-1.5 rounded-lg hover:bg-surface-2 transition-colors">Plan Ticket</Link>
+          <Link href="/reminders" className="px-3 py-1.5 rounded-lg hover:bg-surface-2 transition-colors">Reminders</Link>
+          <Link href="/faq" className="px-3 py-1.5 rounded-lg hover:bg-surface-2 transition-colors">FAQ</Link>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          <Link href="/reminders" className="hidden md:inline-flex btn-primary !py-1.5 !px-3.5 text-[13px]">
+            Set Reminder
+          </Link>
           <ThemeToggle />
           <button
             type="button"
-            className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-border"
+            className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border"
             aria-label="Toggle menu"
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
@@ -100,28 +109,27 @@ export function Header() {
       </nav>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-border px-4 py-3 space-y-3 text-sm">
+        <div className="md:hidden border-t border-border px-4 py-3 space-y-3 text-sm max-h-[70vh] overflow-y-auto bg-[var(--background)]">
           <div>
-            <p className="font-semibold text-muted mb-1">Tools</p>
-            <div className="grid grid-cols-1 gap-1">
+            <p className="font-semibold text-muted text-xs uppercase tracking-wide mb-1.5">Tools</p>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
               {[...CALCULATOR_ROUTES, ...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES].map((t) => (
-                <Link key={t.href} href={t.href} className="py-1" onClick={() => setMobileOpen(false)}>
+                <Link key={t.href} href={t.href} className="py-1.5 text-[13px]" onClick={() => setMobileOpen(false)}>
                   {t.icon} {t.label}
                 </Link>
               ))}
             </div>
           </div>
           <div className="flex flex-col gap-1 pt-2 border-t border-border">
-            <Link href="/guides" onClick={() => setMobileOpen(false)}>Guides</Link>
-            <Link href="/plan-ticket" onClick={() => setMobileOpen(false)}>Plan Ticket</Link>
-            <Link href="/reminders" onClick={() => setMobileOpen(false)}>Reminders</Link>
-            <Link href="/faq" onClick={() => setMobileOpen(false)}>FAQ</Link>
+            <Link href="/guides" className="py-1" onClick={() => setMobileOpen(false)}>📚 Guides</Link>
+            <Link href="/plan-ticket" className="py-1" onClick={() => setMobileOpen(false)}>🗓️ Plan Ticket</Link>
+            <Link href="/faq" className="py-1" onClick={() => setMobileOpen(false)}>❓ FAQ</Link>
           </div>
         </div>
       )}
 
       {/* Bottom tab bar for small screens */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-[var(--background)] grid grid-cols-4 text-xs">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-border backdrop-blur-xl grid grid-cols-4 text-[11px] font-medium" style={{ background: "var(--header-bg)" }}>
         <Link href="/" className="flex flex-col items-center gap-0.5 py-2">
           <span aria-hidden="true">🏠</span>Home
         </Link>

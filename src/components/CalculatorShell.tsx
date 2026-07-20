@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { FaqAccordion, type FaqItem } from "@/components/FaqAccordion";
 import { RelatedTools } from "@/components/RelatedTools";
+import { LAST_VERIFIED } from "@/lib/irctc-rules";
 
 export function CalculatorShell({
   eyebrow,
@@ -27,26 +28,27 @@ export function CalculatorShell({
   relatedTools?: { href: string; label: string; description: string }[];
 }) {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 md:py-12 pb-24 md:pb-12">
+    <div className="mx-auto max-w-3xl px-4 py-6 md:py-8 pb-20 md:pb-10">
       <Breadcrumb items={[{ name: breadcrumbLabel, href: breadcrumbHref }]} />
-      {eyebrow && (
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary mb-2">{eyebrow}</p>
-      )}
-      <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{title}</h1>
-      <p className="mt-3 text-muted leading-relaxed max-w-2xl">{description}</p>
+      {eyebrow && <p className="eyebrow mb-1">{eyebrow}</p>}
+      <h1 className="text-[26px] md:text-[32px] font-extrabold tracking-tight leading-tight">{title}</h1>
+      <p className="mt-2 text-muted text-[15px] leading-relaxed max-w-2xl">{description}</p>
       {badges && badges.length > 0 && (
-        <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+        <ul className="mt-3 flex flex-wrap gap-1.5">
           {badges.map((b) => (
-            <li key={b} className="flex items-center gap-1 text-success">
-              <span aria-hidden="true">✓</span> {b}
-            </li>
+            <li key={b} className="chip bg-success-soft text-success">✓ {b}</li>
           ))}
         </ul>
       )}
 
-      <div className="mt-6 rounded-2xl border border-border bg-surface p-5 md:p-6">{children}</div>
+      <div className="card mt-4 p-4 md:p-5">{children}</div>
 
-      {explainer && <div className="mt-10 prose-sm max-w-none leading-relaxed">{explainer}</div>}
+      <p className="mt-2 text-[11px] text-muted">
+        Rules last verified {LAST_VERIFIED} · Always confirm critical details on{" "}
+        <a href="https://www.irctc.co.in" rel="nofollow noopener" target="_blank" className="underline underline-offset-2">irctc.co.in</a>
+      </p>
+
+      {explainer && <div className="mt-8 leading-relaxed">{explainer}</div>}
 
       {faqs && <FaqAccordion items={faqs} />}
       {relatedTools && <RelatedTools items={relatedTools} />}
