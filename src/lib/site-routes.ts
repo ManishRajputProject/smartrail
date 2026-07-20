@@ -80,6 +80,20 @@ export const DECISION_TOOL_ROUTES: ToolRoute[] = [
     icon: "📊",
   },
   {
+    href: "/pnr-status",
+    label: "PNR Status Decoder",
+    tag: "Decode It",
+    description: "Understand any booking status — CNF, RAC, GNWL, PQWL and more — and whether you can board.",
+    icon: "🎫",
+  },
+  {
+    href: "/train-classes",
+    label: "Train Classes Explained",
+    tag: "Compare Classes",
+    description: "1A, 2A, 3A, SL, CC, EC, 2S compared by comfort, layout, amenities and cost.",
+    icon: "🛋️",
+  },
+  {
     href: "/quota-selector",
     label: "Quota Selector",
     tag: "3 Quick Questions",
