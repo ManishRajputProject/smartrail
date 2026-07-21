@@ -8,6 +8,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ThemeScript } from "@/components/ThemeScript";
 import { SearchDialog } from "@/components/SearchDialog";
+import { TrainAnnouncementBar } from "@/components/TrainAnnouncementBar";
 import { LOCALES, DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 
@@ -55,8 +56,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0c2b38" },
-    { media: "(prefers-color-scheme: dark)", color: "#071722" },
+    { media: "(prefers-color-scheme: light)", color: "#fafbff" },
+    { media: "(prefers-color-scheme: dark)", color: "#080c18" },
   ],
 };
 
@@ -83,6 +84,7 @@ export default async function LangLayout({
       <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={webSiteJsonLd()} />
+        <TrainAnnouncementBar dict={dict} />
         <Header lang={lang} dict={dict} />
         <main className="flex-1">{children}</main>
         <Footer lang={lang} dict={dict} />

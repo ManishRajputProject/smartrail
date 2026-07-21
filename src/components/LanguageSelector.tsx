@@ -37,9 +37,9 @@ export function LanguageSelector({ lang }: { lang: Locale }) {
         onClick={() => setOpen((v) => !v)}
         aria-label={LOCALE_META[lang].english + " — change language"}
         aria-expanded={open}
-        className="inline-flex h-9 items-center gap-1 rounded-lg border border-white/25 px-2.5 text-[13px] font-medium text-nav-fg hover:bg-white/10 transition-colors"
+        className="inline-flex h-10 items-center gap-1.5 rounded-lg border border-border px-3 text-[13px] font-medium text-foreground hover:bg-surface-2 transition-colors"
       >
-        <span aria-hidden="true">🌐</span>
+        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18Z"/></svg>
         <span>{LOCALE_META[lang].short}</span>
         <span aria-hidden="true" className="text-[10px]">▾</span>
       </button>

@@ -4,20 +4,35 @@ function openSearch() {
   window.dispatchEvent(new CustomEvent("railsetu:open-search"));
 }
 
-/** Search affordances. "bar"/"icon" live on the dark header; "hero" sits on
- *  the dark hero. All styled for light text on dark chrome. */
+const SearchGlyph = ({ className = "h-4 w-4" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+);
+
+/**
+ * Search affordances. All three sit on light surfaces now (the palette is
+ * light-first), so they use foreground/muted tokens rather than fixed white.
+ */
 export function SearchTrigger({ variant = "bar", placeholder }: { variant?: "bar" | "icon" | "hero"; placeholder?: string }) {
   if (variant === "hero") {
     return (
       <button
         type="button"
         onClick={openSearch}
-        className="flex items-center gap-3 w-full max-w-md mx-auto px-4 py-3 text-left rounded-xl bg-white/10 border border-white/25 hover:bg-white/16 transition-colors"
-        aria-label="Search tools, guides and stations"
+        className="card card-hover flex items-center gap-4 w-full px-6 py-5 text-left"
+        aria-label="Search tools, guides, trains and stations"
       >
-        <span aria-hidden="true" className="text-lg">🔍</span>
-        <span className="flex-1 text-white/70 text-[15px]">Search tools, guides, trains, stations…</span>
-        <kbd className="hidden sm:block text-[11px] text-white/70 border border-white/25 rounded px-1.5 py-0.5">⌘K</kbd>
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">
+          <SearchGlyph className="h-5 w-5" />
+        </span>
+        <span className="flex-1 text-muted text-[16px]">
+          {placeholder ?? "Search tools, guides, trains, stations…"}
+        </span>
+        <kbd className="hidden sm:flex items-center gap-1 text-[11px] font-medium text-muted border border-border rounded-md px-2 py-1">
+          ⌘K
+        </kbd>
       </button>
     );
   }
@@ -28,9 +43,9 @@ export function SearchTrigger({ variant = "bar", placeholder }: { variant?: "bar
         type="button"
         onClick={openSearch}
         aria-label="Search"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/25 text-nav-fg hover:bg-white/10 transition-colors"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border text-foreground hover:bg-surface-2 transition-colors"
       >
-        🔍
+        <SearchGlyph className="h-[18px] w-[18px]" />
       </button>
     );
   }
@@ -39,12 +54,12 @@ export function SearchTrigger({ variant = "bar", placeholder }: { variant?: "bar
     <button
       type="button"
       onClick={openSearch}
-      className="hidden lg:flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-[13px] text-white/70 hover:bg-white/16 transition-colors w-56"
-      aria-label="Search tools, guides and stations"
+      className="hidden lg:flex items-center gap-2.5 rounded-lg border border-border bg-surface-2/60 px-3.5 py-2 text-[13px] text-muted hover:border-primary/40 hover:bg-surface-2 transition-colors w-56"
+      aria-label="Search tools, guides, trains and stations"
     >
-      <span aria-hidden="true">🔍</span>
+      <SearchGlyph />
       <span className="flex-1 text-left">{placeholder ?? "Search…"}</span>
-      <kbd className="text-[10px] border border-white/25 rounded px-1 py-0.5">⌘K</kbd>
+      <kbd className="text-[10px] border border-border rounded px-1.5 py-0.5">⌘K</kbd>
     </button>
   );
 }
