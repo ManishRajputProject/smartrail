@@ -45,7 +45,10 @@
   "common": {
     "faqTitle": "वारंवार विचारले जाणारे प्रश्न",
     "relatedTools": "संबंधित साधने",
-    "selectLanguage": "भाषा निवडा"
+    "selectLanguage": "भाषा निवडा",
+    "quickAnswer": "झटपट उत्तर",
+    "verifiedAgainst": "तथ्ये यांच्याशी पडताळली",
+    "keepReading": "पुढे वाचा"
   },
   "links": {
     "/guides": "सर्व मार्गदर्शक",

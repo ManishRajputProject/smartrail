@@ -45,7 +45,10 @@
   "common": {
     "faqTitle": "ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು",
     "relatedTools": "ಸಂಬಂಧಿತ ಟೂಲ್‌ಗಳು",
-    "selectLanguage": "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ"
+    "selectLanguage": "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+    "quickAnswer": "ತ್ವರಿತ ಉತ್ತರ",
+    "verifiedAgainst": "ಸತ್ಯಗಳು ಇವುಗಳ ವಿರುದ್ಧ ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
+    "keepReading": "ಮುಂದೆ ಓದಿ"
   },
   "links": {
     "/guides": "ಎಲ್ಲಾ ಮಾರ್ಗದರ್ಶಿಗಳು",

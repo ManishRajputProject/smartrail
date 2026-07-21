@@ -46,7 +46,10 @@
   "common": {
     "faqTitle": "প্রায়শই জিজ্ঞাসিত প্রশ্ন",
     "relatedTools": "সম্পর্কিত টুল",
-    "selectLanguage": "ভাষা নির্বাচন করুন"
+    "selectLanguage": "ভাষা নির্বাচন করুন",
+    "quickAnswer": "দ্রুত উত্তর",
+    "verifiedAgainst": "তথ্য যাচাই করা হয়েছে",
+    "keepReading": "আরও পড়ুন"
   },
   "links": {
     "/guides": "সব গাইড",

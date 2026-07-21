@@ -45,7 +45,10 @@
   "common": {
     "faqTitle": "વારંવાર પૂછાતા પ્રશ્નો",
     "relatedTools": "સંબંધિત ટૂલ્સ",
-    "selectLanguage": "ભાષા પસંદ કરો"
+    "selectLanguage": "ભાષા પસંદ કરો",
+    "quickAnswer": "ઝડપી જવાબ",
+    "verifiedAgainst": "તથ્યો આના સામે ચકાસાયા",
+    "keepReading": "વધુ વાંચો"
   },
   "links": {
     "/guides": "બધા ગાઈડ",

@@ -5,6 +5,9 @@ import { buildMetadata, SITE_NAME, absoluteUrl } from "@/lib/seo";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { GUIDES, getGuideBySlug } from "@/lib/guides";
+import { DEFAULT_LOCALE, isLocale, localePath, type Locale } from "@/i18n/locales";
+import { getDictionary } from "@/i18n/dictionary";
+import { localizeGuide, categoryLabel } from "@/i18n/guide-translations";
 
 export function generateStaticParams() {
   return GUIDES.map((g) => ({ slug: g.slug }));
@@ -13,10 +16,12 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; lang: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const guide = getGuideBySlug(slug);
+  const { slug, lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const base = getGuideBySlug(slug);
+  const guide = base ? localizeGuide(locale, base) : undefined;
   if (!guide) return buildMetadata({ title: "Guide Not Found", description: "This guide doesn't exist.", path: `/guides/${slug}`, noIndex: true });
 
   return buildMetadata({
@@ -24,6 +29,7 @@ export async function generateMetadata({
     description: guide.description,
     path: `/guides/${guide.slug}`,
     keywords: [guide.category, "IRCTC", "Indian Railways"],
+    locale,
   });
 }
 
@@ -41,28 +47,33 @@ function articleJsonLd(guide: NonNullable<ReturnType<typeof getGuideBySlug>>) {
   };
 }
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const guide = getGuideBySlug(slug);
-  if (!guide) notFound();
+export default async function Page({ params }: { params: Promise<{ slug: string; lang: string }> }) {
+  const { slug, lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
+  const base = getGuideBySlug(slug);
+  if (!base) notFound();
+  const guide = localizeGuide(lang, base);
 
-  const related = GUIDES.filter((g) => g.slug !== guide.slug && g.category === guide.category).slice(0, 2);
+  const related = GUIDES.filter((g) => g.slug !== guide.slug && g.category === guide.category)
+    .slice(0, 2)
+    .map((g) => localizeGuide(lang, g));
 
   return (
     <article className="mx-auto max-w-2xl px-4 py-6 md:py-8 pb-20 md:pb-10">
       <JsonLd data={articleJsonLd(guide)} />
-      <Breadcrumb items={[{ name: "Guides", href: "/guides" }, { name: guide.title, href: `/guides/${guide.slug}` }]} />
+      <Breadcrumb items={[{ name: dict.nav.guides, href: "/guides" }, { name: guide.title, href: `/guides/${guide.slug}` }]} />
 
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="chip bg-primary-soft text-primary">{guide.category}</span>
-        <span className="text-[12px] text-muted">{guide.readMins} min read</span>
+        <span className="chip bg-primary-soft text-primary">{categoryLabel(lang, guide.category)}</span>
+        <span className="text-[12px] text-muted">{guide.readMins} {dict.common.minRead}</span>
         <span className="text-[12px] text-muted">· Updated <time dateTime={guide.updated}>{guide.updated}</time></span>
       </div>
       <h1 className="text-[26px] md:text-[32px] font-extrabold tracking-tight leading-tight mt-2">{guide.title}</h1>
 
       {/* Quick answer — direct, quotable summary (GEO) */}
       <div className="card mt-4 p-4 border-l-4" style={{ borderLeftColor: "var(--primary)" }}>
-        <p className="text-[11px] font-bold uppercase tracking-wider text-primary mb-1">Quick Answer</p>
+        <p className="text-[11px] font-bold uppercase tracking-wider text-primary mb-1">{dict.common.quickAnswer}</p>
         <p className="text-[15px] leading-relaxed font-medium">{guide.quickAnswer}</p>
       </div>
 
@@ -88,14 +99,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       </div>
 
       {guide.relatedTool && (
-        <Link href={guide.relatedTool.href} className="btn-primary mt-6 inline-flex">
+        <Link href={localePath(lang, guide.relatedTool.href)} className="btn-primary mt-6 inline-flex">
           Open {guide.relatedTool.label} →
         </Link>
       )}
 
       {guide.sources && guide.sources.length > 0 && (
         <div className="mt-8 rounded-xl bg-surface-2/60 border border-border p-4">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-muted mb-1.5">Facts verified against</p>
+          <p className="text-[11px] font-bold uppercase tracking-wider text-muted mb-1.5">{dict.common.verifiedAgainst}</p>
           <ul className="space-y-1 text-[13px]">
             {guide.sources.map((s) => (
               <li key={s.url}>
@@ -106,17 +117,17 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           <p className="mt-2 text-[12px] text-muted">
             Published <time dateTime={guide.published}>{guide.published}</time> · Last reviewed{" "}
             <time dateTime={guide.updated}>{guide.updated}</time> · Independent guide — see{" "}
-            <Link href="/about" className="underline underline-offset-2">our methodology</Link>.
+            <Link href={localePath(lang, "/about")} className="underline underline-offset-2">our methodology</Link>.
           </p>
         </div>
       )}
 
       {related.length > 0 && (
         <div className="mt-8">
-          <h2 className="text-lg font-bold tracking-tight mb-2.5">Keep reading</h2>
+          <h2 className="text-lg font-bold tracking-tight mb-2.5">{dict.common.keepReading}</h2>
           <div className="grid gap-2.5 sm:grid-cols-2">
             {related.map((g) => (
-              <Link key={g.slug} href={`/guides/${g.slug}`} className="card card-hover p-3.5">
+              <Link key={g.slug} href={localePath(lang, `/guides/${g.slug}`)} className="card card-hover p-3.5">
                 <p className="font-semibold text-[14px] leading-snug">{g.title}</p>
                 <p className="text-[12px] text-muted mt-1">{g.readMins} min read</p>
               </Link>

@@ -69,7 +69,10 @@
     "faqTitle": "अक्सर पूछे जाने वाले प्रश्न",
     "verifyOn": "महत्वपूर्ण जानकारी हमेशा यहां सत्यापित करें",
     "lastVerified": "नियम अंतिम बार सत्यापित",
-    "selectLanguage": "भाषा चुनें"
+    "selectLanguage": "भाषा चुनें",
+    "quickAnswer": "त्वरित उत्तर",
+    "verifiedAgainst": "तथ्य इनके अनुसार सत्यापित",
+    "keepReading": "आगे पढ़ें"
   },
   "links": {
     "/guides": "सभी गाइड",

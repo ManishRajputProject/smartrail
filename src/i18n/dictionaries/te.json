@@ -45,7 +45,10 @@
   "common": {
     "faqTitle": "తరచుగా అడిగే ప్రశ్నలు",
     "relatedTools": "సంబంధిత టూల్స్",
-    "selectLanguage": "భాషను ఎంచుకోండి"
+    "selectLanguage": "భాషను ఎంచుకోండి",
+    "quickAnswer": "త్వరిత సమాధానం",
+    "verifiedAgainst": "వాస్తవాలు వీటితో ధృవీకరించబడ్డాయి",
+    "keepReading": "చదవడం కొనసాగించండి"
   },
   "links": {
     "/guides": "అన్ని గైడ్‌లు",

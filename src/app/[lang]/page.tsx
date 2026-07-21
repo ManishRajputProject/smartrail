@@ -11,6 +11,7 @@ import { JsonLd, faqJsonLd } from "@/components/JsonLd";
 import { DEFAULT_LOCALE, isLocale, localePath, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizeTools } from "@/i18n/tool-translations";
+import { localizeGuides, categoryLabel } from "@/i18n/guide-translations";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const { hero, ticker, sections, cta } = dict;
   const calculators = localizeTools(lang, CALCULATOR_ROUTES);
   const planTools = localizeTools(lang, [...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES]);
+  const guides = localizeGuides(lang, GUIDES).slice(0, 6);
 
   const today = nowIST();
   const latestBookable = latestBookableJourneyDate(today);
@@ -152,10 +154,10 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {GUIDES.slice(0, 6).map((g) => (
+          {guides.map((g) => (
             <Link key={g.slug} href={lp(`/guides/${g.slug}`)} className="card card-hover group p-4">
               <div className="flex items-center gap-2">
-                <span className="chip bg-primary-soft text-primary">{g.category}</span>
+                <span className="chip bg-primary-soft text-primary">{categoryLabel(lang, g.category)}</span>
                 <span className="text-[11px] text-muted">{g.readMins} {dict.common.minRead}</span>
               </div>
               <h3 className="font-semibold mt-2 text-[15px] leading-snug group-hover:text-primary transition-colors">{g.title}</h3>
