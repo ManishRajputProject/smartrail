@@ -23,10 +23,10 @@ export function Footer({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const col = "text-[13.5px] text-nav-muted hover:text-nav-fg transition-colors";
 
   return (
-    <footer className="section-dark mt-auto pb-20 md:pb-0">
+    <footer className="section-dark mt-16 pb-20 md:pb-0">
       {/* Newsletter band */}
       <div className="border-b" style={{ borderColor: "var(--nav-border)" }}>
-        <div className="mx-auto max-w-6xl px-6 py-14 grid gap-8 md:grid-cols-2 md:items-center">
+        <div className="mx-auto max-w-6xl px-6 py-10 grid gap-8 md:grid-cols-2 md:items-center">
           <div>
             <h2 className="text-[22px] md:text-[26px] font-bold tracking-tight text-nav-fg">
               Never miss a booking window
@@ -40,7 +40,7 @@ export function Footer({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       </div>
 
       {/* Link columns */}
-      <div className="mx-auto max-w-6xl px-6 py-16 grid gap-12 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mx-auto max-w-6xl px-6 py-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <Link href={lp("/")} className="inline-flex items-center gap-2.5 font-bold text-[17px] text-nav-fg">
             <span

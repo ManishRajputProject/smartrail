@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { SearchTrigger } from "@/components/SearchTrigger";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { ToolIcon } from "@/components/ToolIcon";
 import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, COMMUNITY_ROUTES } from "@/lib/site-routes";
@@ -19,6 +18,15 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const [toolsOpen, setToolsOpen] = useState(false);
   const [guidesOpen, setGuidesOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Hover intent: a small close delay stops the panel vanishing while the
+  // pointer travels from the trigger into the menu.
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelClose = () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
+  const open = (set: (v: boolean) => void) => { cancelClose(); set(true); };
+  const scheduleClose = (set: (v: boolean) => void) => {
+    cancelClose();
+    closeTimer.current = setTimeout(() => set(false), 220);
+  };
   const pathname = usePathname();
   const lp = (href: string) => localePath(lang, href);
   const n = dict.nav;
@@ -63,7 +71,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
 
         <div className="hidden md:flex items-center gap-1">
           {/* Tools mega-menu */}
-          <div className="relative" onMouseEnter={() => setToolsOpen(true)} onMouseLeave={() => setToolsOpen(false)}>
+          <div className="relative" onMouseEnter={() => open(setToolsOpen)} onMouseLeave={() => scheduleClose(setToolsOpen)}>
             <button
               type="button"
               className="px-4 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5"
@@ -74,7 +82,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
               <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${toolsOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
             </button>
             {toolsOpen && (
-              <div className="card absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[600px] max-w-[92vw] p-3 grid grid-cols-2 gap-1">
+              <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-[600px] max-w-[92vw]"><div className="card p-3 grid grid-cols-2 gap-1">
                 {allTools.map((t) => (
                   <Link
                     key={t.href}
@@ -88,12 +96,12 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
                     <span className="text-[13px] font-medium leading-snug">{t.label}</span>
                   </Link>
                 ))}
-              </div>
+              </div></div>
             )}
           </div>
 
           {/* Guides menu */}
-          <div className="relative" onMouseEnter={() => setGuidesOpen(true)} onMouseLeave={() => setGuidesOpen(false)}>
+          <div className="relative" onMouseEnter={() => open(setGuidesOpen)} onMouseLeave={() => scheduleClose(setGuidesOpen)}>
             <button
               type="button"
               className="px-4 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5"
@@ -104,7 +112,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
               <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${guidesOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
             </button>
             {guidesOpen && (
-              <div className="card absolute left-1/2 -translate-x-1/2 top-full mt-2 w-80 p-2.5">
+              <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-80"><div className="card p-2.5">
                 <Link href={lp("/guides")} className="block rounded-lg px-3 py-2 text-sm font-semibold text-primary hover:bg-primary-soft transition-colors" onClick={() => setGuidesOpen(false)}>
                   {n.allGuides} →
                 </Link>
@@ -114,7 +122,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
                     {g.title}
                   </Link>
                 ))}
-              </div>
+              </div></div>
             )}
           </div>
 
@@ -124,8 +132,6 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <SearchTrigger placeholder={n.search} />
-          <span className="md:hidden"><SearchTrigger variant="icon" /></span>
           <Link href={lp("/reminders")} className="hidden md:inline-flex btn-primary !py-2 !px-4 !text-[13px]">
             {n.reminders}
           </Link>

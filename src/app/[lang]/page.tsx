@@ -7,7 +7,7 @@ import { nowIST, latestBookableJourneyDate, formatDateLong } from "@/lib/irctc-r
 import { computeLongWeekends } from "@/lib/holidays";
 import { allTrainsCount, allStationsCount } from "@/lib/rail-data";
 import { FeedbackVoteWidget } from "@/components/FeedbackVoteWidget";
-import { SearchTrigger } from "@/components/SearchTrigger";
+import { TrainAnnouncementBar } from "@/components/TrainAnnouncementBar";
 import { ToolIcon } from "@/components/ToolIcon";
 import { StatCounter } from "@/components/StatCounter";
 import { JsonLd, faqJsonLd } from "@/components/JsonLd";
@@ -63,8 +63,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     { state: "done", title: "Train & station lookup", body: "5,000+ trains and 8,900+ stations from open government data." },
     { state: "done", title: "8 Indian languages", body: "Interface, tools and guide summaries fully localized." },
     { state: "active", title: "Full guide translation", body: "Long-form articles being translated language by language." },
-    { state: "next", title: "WhatsApp reminders", body: "Pending Meta business verification." },
-    { state: "next", title: "Live train status", body: "Needs a licensed data feed — we won't scrape for it." },
+    { state: "next", title: "More regional languages", body: "Beyond the current eight, chosen by where readers actually come from." },
+    { state: "next", title: "Deeper station guides", body: "Layouts, facilities and getting-there notes for major stations." },
   ];
 
   return (
@@ -73,37 +73,46 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
       {/* ================= HERO ================= */}
       <section className="hero-glow border-b border-border">
-        <div className="mx-auto max-w-5xl px-6 pt-20 pb-24 md:pt-28 md:pb-32 text-center">
+        <div className="mx-auto max-w-5xl px-6 pt-12 pb-14 md:pt-16 md:pb-20 text-center">
           <p className="chip mx-auto border border-border bg-surface text-muted shadow-sm rise-in">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
             {hero.badge}
           </p>
 
-          <h1 className="mt-8 text-[40px] leading-[1.08] md:text-[68px] md:leading-[1.04] font-extrabold tracking-[-0.02em] rise-in-1">
+          <h1 className="mt-6 text-[40px] leading-[1.08] md:text-[68px] md:leading-[1.04] font-extrabold tracking-[-0.02em] rise-in-1">
             {hero.title1}
             <br />
             <span className="gradient-text-brand">{hero.title2}</span>
           </h1>
 
-          <p className="mt-6 max-w-xl mx-auto text-muted text-[17px] md:text-[19px] leading-relaxed rise-in-2">
+          <p className="mt-4 max-w-xl mx-auto text-muted text-[17px] md:text-[19px] leading-relaxed rise-in-2">
             {hero.subtitle}
           </p>
 
-          {/* Universal search — the primary entry point */}
-          <div className="mt-10 w-full max-w-xl mx-auto rise-in-3">
-            <SearchTrigger variant="hero" />
-          </div>
+          {/* Universal search — a plain GET form, no popup and no JS */}
+          <form action={lp("/search")} method="get" className="mt-8 w-full max-w-xl mx-auto flex gap-2.5 rise-in-3">
+            <label htmlFor="site-search" className="sr-only">{dict.nav.searchFull}</label>
+            <input
+              id="site-search"
+              type="search"
+              name="q"
+              placeholder={dict.nav.searchFull}
+              className="input"
+              autoComplete="off"
+            />
+            <button type="submit" className="btn-primary shrink-0">{dict.nav.search.replace("…", "")}</button>
+          </form>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-4 rise-in-3">
+          <div className="mt-7 flex flex-wrap justify-center gap-3 rise-in-3">
             <Link href={lp("/booking-date-calculator")} className="btn-primary">{hero.checkBooking}</Link>
             <Link href={lp("/reminders")} className="btn-secondary">{hero.setReminder}</Link>
           </div>
 
           {/* Live booking window */}
-          <div className="mt-14 rise-in-3">
+          <div className="mt-10 rise-in-3">
             <Link
               href={lp("/booking-date-calculator")}
-              className="panel card-hover inline-flex flex-col items-center px-10 py-7 text-center"
+              className="panel card-hover inline-flex flex-col items-center px-8 py-6 text-center"
             >
               <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">{hero.bookUpTo}</span>
               <span className="mt-2 block text-[30px] md:text-[36px] font-extrabold gradient-text-brand tabular-nums leading-tight">
@@ -121,23 +130,28 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                 </Link>
               </p>
             )}
+
+            {/* Rolling announcements */}
+            <div className="mt-10 w-full">
+              <TrainAnnouncementBar dict={dict} />
+            </div>
           </div>
         </div>
       </section>
 
       {/* ================= CALCULATORS ================= */}
-      <section id="tools" className="reveal mx-auto max-w-6xl px-6 py-24 md:py-28">
+      <section id="tools" className="reveal mx-auto max-w-6xl px-6 py-14 md:py-20">
         <div className="max-w-2xl">
           <p className="eyebrow">{sections.calculators}</p>
-          <h2 className="mt-4 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
+          <h2 className="mt-3 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
             {sections.calculatorsTitle}
           </h2>
-          <p className="mt-4 text-muted text-[17px] leading-relaxed">{sections.calculatorsSub}</p>
+          <p className="mt-3 text-muted text-[17px] leading-relaxed">{sections.calculatorsSub}</p>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {calculators.map((t) => (
-            <Link key={t.href} href={lp(t.href)} className="card card-hover group p-7 flex flex-col">
+            <Link key={t.href} href={lp(t.href)} className="card card-hover group p-6 flex flex-col">
               <span className="grid h-12 w-12 place-items-center rounded-xl bg-primary-soft text-primary transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3">
                 <ToolIcon href={t.href} className="h-6 w-6" />
               </span>
@@ -151,17 +165,17 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
       {/* ================= PLAN & DECIDE ================= */}
       <section className="border-y border-border bg-surface-2/40">
-        <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <div className="mx-auto max-w-6xl px-6 py-14 md:py-20">
           <div className="max-w-2xl">
             <p className="eyebrow">{sections.planDecide}</p>
-            <h2 className="mt-4 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
+            <h2 className="mt-3 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
               {sections.planDecideTitle}
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {planTools.map((t) => (
-              <Link key={t.href} href={lp(t.href)} className="card card-hover group p-7 flex items-start gap-5">
+              <Link key={t.href} href={lp(t.href)} className="card card-hover group p-6 flex items-start gap-5">
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary transition-transform duration-300 group-hover:scale-110">
                   <ToolIcon href={t.href} className="h-6 w-6" />
                 </span>
@@ -176,18 +190,18 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* ================= TRUST / STATS ================= */}
-      <section className="reveal mx-auto max-w-6xl px-6 py-24 md:py-28">
+      <section className="reveal mx-auto max-w-6xl px-6 py-14 md:py-20">
         <div className="text-center max-w-2xl mx-auto">
           <p className="eyebrow">{sections.whyTrust}</p>
-          <h2 className="mt-4 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
+          <h2 className="mt-3 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
             Built on rules you can check
           </h2>
-          <p className="mt-4 text-muted text-[17px] leading-relaxed">
+          <p className="mt-3 text-muted text-[17px] leading-relaxed">
             Every figure here is a fact about the product itself — not a traffic claim we can&apos;t prove.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((s) => (
             <Link key={s.label} href={s.href.startsWith("#") ? s.href : lp(s.href)} className="panel card-hover p-8 text-center">
               <p className="text-[38px] md:text-[44px] font-extrabold tracking-tight gradient-text-brand leading-none">
@@ -198,13 +212,13 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           ))}
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
           {[
             { t: "Dated, tested rules", d: "Every IRCTC rule lives in one version-controlled module with a “last verified” date and automated tests." },
             { t: "Honest uncertainty", d: "The waitlist tool shows outlook bands, never a made-up percentage. Estimates are labelled as estimates." },
             { t: "Sourced, open data", d: "Train and station data comes from India’s Open Government Data, clearly marked as reference-only." },
           ].map((c) => (
-            <div key={c.t} className="card p-7">
+            <div key={c.t} className="card p-6">
               <div className="flex items-center gap-3">
                 <span className="grid h-9 w-9 place-items-center rounded-lg bg-success-soft text-success" aria-hidden="true">
                   <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -218,25 +232,25 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           ))}
         </div>
 
-        <div className="mt-10 text-center">
+        <div className="mt-8 text-center">
           <Link href={lp("/about")} className="btn-secondary">{sections.howAccurate} →</Link>
         </div>
       </section>
 
       {/* ================= GUIDES ================= */}
       <section className="border-y border-border bg-surface-2/40">
-        <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <div className="mx-auto max-w-6xl px-6 py-14 md:py-20">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="max-w-2xl">
               <p className="eyebrow">{sections.guides}</p>
-              <h2 className="mt-4 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">{sections.guidesTitle}</h2>
+              <h2 className="mt-3 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">{sections.guidesTitle}</h2>
             </div>
             <Link href={lp("/guides")} className="btn-secondary">{sections.allGuidesLink} →</Link>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {guides.map((g) => (
-              <Link key={g.slug} href={lp(`/guides/${g.slug}`)} className="card card-hover group p-7 flex flex-col">
+              <Link key={g.slug} href={lp(`/guides/${g.slug}`)} className="card card-hover group p-6 flex flex-col">
                 <div className="flex items-center gap-3">
                   <span className="chip bg-primary-soft text-primary">{categoryLabel(lang, g.category)}</span>
                   <span className="text-[12px] text-muted">{g.readMins} {dict.common.minRead}</span>
@@ -250,17 +264,17 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* ================= ROADMAP ================= */}
-      <section className="reveal mx-auto max-w-4xl px-6 py-24 md:py-28">
+      <section className="reveal mx-auto max-w-4xl px-6 py-14 md:py-20">
         <div className="text-center max-w-2xl mx-auto">
           <p className="eyebrow">{sections.whatsNext}</p>
-          <h2 className="mt-4 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">Where this is going</h2>
+          <h2 className="mt-3 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">Where this is going</h2>
         </div>
 
-        <ol className="mt-14 relative">
+        <ol className="mt-10 relative">
           {/* connecting line */}
           <span className="absolute left-[15px] top-2 bottom-2 w-px bg-border md:left-1/2" aria-hidden="true" />
           {roadmap.map((r, i) => (
-            <li key={r.title} className="relative pl-12 pb-10 last:pb-0 md:pl-0 md:grid md:grid-cols-2 md:gap-12">
+            <li key={r.title} className="relative pl-12 pb-7 last:pb-0 md:pl-0 md:grid md:grid-cols-2 md:gap-12">
               <span
                 className={`absolute left-0 top-1 grid h-8 w-8 place-items-center rounded-full border-2 md:left-1/2 md:-translate-x-1/2 ${
                   r.state === "done"
@@ -290,7 +304,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           ))}
         </ol>
 
-        <div className="mt-14 panel p-8 text-center">
+        <div className="mt-10 panel p-7 text-center">
           <p className="font-semibold text-[17px]">{sections.voteNext}</p>
           <div className="mt-5 flex justify-center">
             <FeedbackVoteWidget />
@@ -300,12 +314,12 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
       {/* ================= CTA ================= */}
       <section className="section-dark hero-glow">
-        <div className="mx-auto max-w-3xl px-6 py-24 md:py-28 text-center">
+        <div className="mx-auto max-w-3xl px-6 py-14 md:py-20 text-center">
           <h2 className="text-[32px] md:text-[44px] font-extrabold tracking-[-0.02em] leading-tight">
             {cta.title1} <span className="gradient-text">{cta.title2}</span>
           </h2>
-          <p className="mt-6 text-white/70 text-[17px] leading-relaxed">{cta.subtitle}</p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <p className="mt-4 text-white/70 text-[17px] leading-relaxed">{cta.subtitle}</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link href={lp("/reminders")} className="btn-primary">{cta.setReminder}</Link>
             <Link href={lp("/plan-ticket")} className="btn-on-dark">{cta.browseCalendar}</Link>
           </div>

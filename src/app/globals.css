@@ -288,51 +288,64 @@ body {
 .train-bar {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #0e1628 0%, #17203a 100%);
-  border-bottom: 1px solid var(--nav-border);
+  background: linear-gradient(180deg, #131c33 0%, #1c2743 60%, #131c33 100%);
+  border: 1px solid var(--border);
 }
 /* rails + sleepers */
 .train-bar::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 6px; height: 6px;
+  content: ""; position: absolute; left: 0; right: 0; bottom: 5px; height: 8px;
   background:
-    linear-gradient(rgba(255,255,255,.32), rgba(255,255,255,.32)) 0 0/100% 2px no-repeat,
-    repeating-linear-gradient(90deg, rgba(255,255,255,.16) 0 8px, transparent 8px 22px) 0 3px/100% 3px repeat-x;
+    linear-gradient(rgba(190,205,240,.5), rgba(190,205,240,.5)) 0 0/100% 2px no-repeat,
+    linear-gradient(rgba(190,205,240,.28), rgba(190,205,240,.28)) 0 6px/100% 2px no-repeat,
+    repeating-linear-gradient(90deg, rgba(190,205,240,.14) 0 10px, transparent 10px 26px) 0 2px/100% 4px repeat-x;
 }
 .train-track {
-  display: flex; align-items: flex-end; gap: 12px; width: max-content;
-  padding: 8px 0 14px;
-  animation: train-roll 42s linear infinite;
+  display: flex; align-items: flex-end; width: max-content;
+  padding: 12px 0 9px;
+  animation: train-roll 46s linear infinite;
   will-change: transform;
 }
 .train-bar:hover .train-track,
 .train-bar:focus-within .train-track { animation-play-state: paused; }
 @keyframes train-roll { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
 
-.coach {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 10px 10px 6px 6px;
-  padding: 8px 16px; white-space: nowrap;
+/* ---- coach ---- */
+.coach { position: relative; display: inline-flex; flex-direction: column; align-items: stretch; }
+.coach-roof {
+  height: 7px; margin: 0 5px;
+  border-radius: 7px 7px 0 0;
+  background: linear-gradient(180deg, #8d9dcb, #5a6a9c);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+}
+.coach-body {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 9px 14px; white-space: nowrap;
+  background: linear-gradient(180deg, #46557f 0%, #313d61 55%, #262f4d 100%);
+  border: 1px solid rgba(190,205,240,.22);
+  border-radius: 4px;
   color: #eef1f8; font-size: 13px; font-weight: 500;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.14);
 }
-.coach-link { position: relative; }
-/* bogies */
-.coach::after {
-  content: ""; position: absolute; left: 14px; right: 14px; bottom: -7px; height: 7px;
-  background: radial-gradient(circle at 12% 50%, #cdd6ea 0 3px, transparent 3.5px),
-              radial-gradient(circle at 88% 50%, #cdd6ea 0 3px, transparent 3.5px);
+.coach-text { line-height: 1; }
+.coach-window {
+  width: 12px; height: 13px; border-radius: 2px; flex: none;
+  background: linear-gradient(160deg, #cfdcff 0%, #9fb2e6 60%, #7d92cc 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.25);
 }
-.coupling { width: 12px; height: 2px; background: rgba(255,255,255,.3); margin-bottom: 8px; }
+.coach-bogies { display: flex; justify-content: space-between; padding: 0 12px; margin-top: -2px; }
+.bogie {
+  width: 13px; height: 13px; border-radius: 50%;
+  background: #1b2440; border: 2px solid #93a4d4;
+}
+.coupler { width: 10px; height: 3px; border-radius: 2px; background: rgba(190,205,240,.45); margin-bottom: 16px; }
 
 @keyframes puff {
-  0% { transform: translate(0,0) scale(.6); opacity: .55; }
-  100% { transform: translate(-26px,-16px) scale(1.5); opacity: 0; }
+  0%   { transform: translate(0,0) scale(.55); opacity: .5; }
+  100% { transform: translate(-34px,-22px) scale(1.7); opacity: 0; }
 }
-.smoke { animation: puff 2.2s ease-out infinite; }
-.smoke-2 { animation-delay: .7s; }
-.smoke-3 { animation-delay: 1.4s; }
+.smoke { animation: puff 2.4s ease-out infinite; }
+.smoke-2 { animation-delay: .8s; }
+.smoke-3 { animation-delay: 1.6s; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-glow::before, .train-track, .smoke { animation: none !important; }
