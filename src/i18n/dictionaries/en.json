@@ -62,6 +62,16 @@
     "notAffiliated": "Not affiliated with IRCTC, Indian Railways, or the Government of India.",
     "rights": "Information is general guidance only — verify on official channels before booking."
   },
+  "links": {
+    "/guides": "All Guides",
+    "/faq": "FAQ",
+    "/about": "About & Methodology",
+    "/terms": "Terms",
+    "/privacy-policy": "Privacy Policy",
+    "/disclaimer": "Disclaimer",
+    "/data-deletion": "Data Deletion",
+    "/contact": "Contact"
+  },
   "common": {
     "minRead": "min read",
     "readGuide": "Read Guide",

@@ -46,5 +46,15 @@
     "faqTitle": "વારંવાર પૂછાતા પ્રશ્નો",
     "relatedTools": "સંબંધિત ટૂલ્સ",
     "selectLanguage": "ભાષા પસંદ કરો"
+  },
+  "links": {
+    "/guides": "બધા ગાઈડ",
+    "/faq": "સામાન્ય પ્રશ્નો",
+    "/about": "અમારા વિશે",
+    "/terms": "શરતો",
+    "/privacy-policy": "ગોપનીયતા નીતિ",
+    "/disclaimer": "અસ્વીકરણ",
+    "/data-deletion": "ડેટા કાઢી નાખો",
+    "/contact": "સંપર્ક"
   }
 }

@@ -10,6 +10,7 @@ import { SearchTrigger } from "@/components/SearchTrigger";
 import { JsonLd, faqJsonLd } from "@/components/JsonLd";
 import { DEFAULT_LOCALE, isLocale, localePath, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
+import { localizeTools } from "@/i18n/tool-translations";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const dict = getDictionary(lang);
   const lp = (href: string) => localePath(lang, href);
   const { hero, ticker, sections, cta } = dict;
+  const calculators = localizeTools(lang, CALCULATOR_ROUTES);
+  const planTools = localizeTools(lang, [...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES]);
 
   const today = nowIST();
   const latestBookable = latestBookableJourneyDate(today);
@@ -107,7 +110,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {CALCULATOR_ROUTES.map((t) => (
+          {calculators.map((t) => (
             <Link key={t.href} href={lp(t.href)} className="card card-hover group p-4">
               <div className="flex items-center justify-between">
                 <span className="grid h-9 w-9 place-items-center rounded-lg text-lg bg-primary-soft" aria-hidden="true">{t.icon}</span>
@@ -127,7 +130,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
           <h2 className="text-2xl md:text-[28px] font-bold tracking-tight mt-1">{sections.planDecideTitle}</h2>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {[...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES].map((t) => (
+            {planTools.map((t) => (
               <Link key={t.href} href={lp(t.href)} className="card card-hover group p-4 flex items-start gap-3">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl text-xl bg-primary-soft" aria-hidden="true">{t.icon}</span>
                 <div>

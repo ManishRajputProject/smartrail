@@ -46,5 +46,15 @@
     "faqTitle": "वारंवार विचारले जाणारे प्रश्न",
     "relatedTools": "संबंधित साधने",
     "selectLanguage": "भाषा निवडा"
+  },
+  "links": {
+    "/guides": "सर्व मार्गदर्शक",
+    "/faq": "सामान्य प्रश्न",
+    "/about": "आमच्याबद्दल",
+    "/terms": "अटी",
+    "/privacy-policy": "गोपनीयता धोरण",
+    "/disclaimer": "अस्वीकरण",
+    "/data-deletion": "डेटा हटवा",
+    "/contact": "संपर्क"
   }
 }

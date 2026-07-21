@@ -9,6 +9,7 @@ import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, COMMUNITY_ROUTES } from "@/lib
 import { GUIDES } from "@/lib/guides";
 import { SITE_NAME } from "@/lib/seo";
 import { localePath, type Locale } from "@/i18n/locales";
+import { localizeTools } from "@/i18n/tool-translations";
 import type { Dictionary } from "@/i18n/dictionary";
 
 export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
@@ -17,6 +18,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const lp = (href: string) => localePath(lang, href);
   const n = dict.nav;
+  const allTools = localizeTools(lang, [...CALCULATOR_ROUTES, ...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES]);
 
   return (
     <header
@@ -36,7 +38,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
             </button>
             {toolsOpen && (
               <div className="card absolute left-0 top-full w-[540px] max-w-[90vw] p-3 grid grid-cols-2 gap-0.5 text-foreground">
-                {[...CALCULATOR_ROUTES, ...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES].map((t) => (
+                {allTools.map((t) => (
                   <Link key={t.href} href={lp(t.href)} className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 hover:bg-primary-soft transition-colors" onClick={() => setToolsOpen(false)}>
                     <span aria-hidden="true">{t.icon}</span>
                     <span className="text-[13px]">{t.label}</span>
@@ -94,7 +96,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           <div>
             <p className="font-semibold text-nav-muted text-xs uppercase tracking-wide mb-1.5">{n.tools}</p>
             <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
-              {[...CALCULATOR_ROUTES, ...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES].map((t) => (
+              {allTools.map((t) => (
                 <Link key={t.href} href={lp(t.href)} className="py-1.5 text-[13px]" onClick={() => setMobileOpen(false)}>
                   {t.icon} {t.label}
                 </Link>

@@ -2,11 +2,17 @@ import Link from "next/link";
 import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, COMMUNITY_ROUTES, CONTENT_ROUTES, LEGAL_ROUTES } from "@/lib/site-routes";
 import { SITE_NAME } from "@/lib/seo";
 import { localePath, type Locale } from "@/i18n/locales";
+import { localizeTools } from "@/i18n/tool-translations";
 import type { Dictionary } from "@/i18n/dictionary";
 
 export function Footer({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const lp = (href: string) => localePath(lang, href);
   const f = dict.footer;
+  const calculators = localizeTools(lang, CALCULATOR_ROUTES);
+  const planTools = localizeTools(lang, [...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES]);
+  // Translated label for a static content/legal link, falling back to English.
+  const linkLabel = (href: string, fallback: string) =>
+    (dict.links as Record<string, string>)[href] ?? fallback;
 
   return (
     <footer className="section-dark mt-12 pb-16 md:pb-0">
@@ -25,7 +31,7 @@ export function Footer({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <div>
           <h3 className="font-semibold mb-1.5 text-[13px] uppercase tracking-wide muted-on-dark">{f.calculators}</h3>
           <ul className="space-y-1 text-[13px]">
-            {CALCULATOR_ROUTES.map((t) => (
+            {calculators.map((t) => (
               <li key={t.href}><Link href={lp(t.href)} className="muted-on-dark hover:text-nav-fg transition-colors">{t.label}</Link></li>
             ))}
           </ul>
@@ -34,14 +40,11 @@ export function Footer({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <div>
           <h3 className="font-semibold mb-1.5 text-[13px] uppercase tracking-wide muted-on-dark">{f.planLearn}</h3>
           <ul className="space-y-1 text-[13px]">
-            {DECISION_TOOL_ROUTES.map((t) => (
-              <li key={t.href}><Link href={lp(t.href)} className="muted-on-dark hover:text-nav-fg transition-colors">{t.label}</Link></li>
-            ))}
-            {COMMUNITY_ROUTES.map((t) => (
+            {planTools.map((t) => (
               <li key={t.href}><Link href={lp(t.href)} className="muted-on-dark hover:text-nav-fg transition-colors">{t.label}</Link></li>
             ))}
             {CONTENT_ROUTES.map((r) => (
-              <li key={r.href}><Link href={lp(r.href)} className="muted-on-dark hover:text-nav-fg transition-colors">{r.label}</Link></li>
+              <li key={r.href}><Link href={lp(r.href)} className="muted-on-dark hover:text-nav-fg transition-colors">{linkLabel(r.href, r.label)}</Link></li>
             ))}
           </ul>
         </div>
@@ -50,7 +53,7 @@ export function Footer({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           <h3 className="font-semibold mb-1.5 text-[13px] uppercase tracking-wide muted-on-dark">{f.legal}</h3>
           <ul className="space-y-1 text-[13px]">
             {LEGAL_ROUTES.map((r) => (
-              <li key={r.href}><Link href={lp(r.href)} className="muted-on-dark hover:text-nav-fg transition-colors">{r.label}</Link></li>
+              <li key={r.href}><Link href={lp(r.href)} className="muted-on-dark hover:text-nav-fg transition-colors">{linkLabel(r.href, r.label)}</Link></li>
             ))}
           </ul>
         </div>
