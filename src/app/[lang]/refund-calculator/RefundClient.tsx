@@ -1,11 +1,13 @@
 "use client";
 
+import type { Dictionary } from "@/i18n/dictionary";
+
 import { useState } from "react";
 import { CANCELLATION_SLABS, hoursBetween } from "@/lib/irctc-rules";
 
 const CLASSES = ["2S", "SL", "CC", "3A", "2A", "EC", "1A"];
 
-export function RefundClient() {
+export function RefundClient({ forms }: { forms: Dictionary["forms"] }) {
   const [travelClass, setTravelClass] = useState("3A");
   const [fare, setFare] = useState("");
   const [departure, setDeparture] = useState("");
@@ -37,7 +39,7 @@ export function RefundClient() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="rf-class" className="block text-sm font-medium mb-1">Travel Class</label>
+        <label htmlFor="rf-class" className="block text-sm font-medium mb-1">{forms.travelClass}</label>
         <select
           id="rf-class"
           value={travelClass}
@@ -48,7 +50,7 @@ export function RefundClient() {
         </select>
       </div>
       <div>
-        <label htmlFor="rf-fare" className="block text-sm font-medium mb-1">Ticket Fare (₹)</label>
+        <label htmlFor="rf-fare" className="block text-sm font-medium mb-1">{forms.ticketFare}</label>
         <input
           id="rf-fare"
           type="number"
@@ -61,7 +63,7 @@ export function RefundClient() {
         />
       </div>
       <div>
-        <label htmlFor="rf-departure" className="block text-sm font-medium mb-1">Train Departure Date &amp; Time</label>
+        <label htmlFor="rf-departure" className="block text-sm font-medium mb-1">{forms.departureDateTime}</label>
         <input
           id="rf-departure"
           type="datetime-local"
@@ -71,15 +73,13 @@ export function RefundClient() {
           className="w-full rounded-lg border border-border bg-[var(--background)] px-3 py-2.5 text-base"
         />
       </div>
-      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">
-        Estimate Refund
-      </button>
+      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">{forms.estimateRefund}</button>
 
       {result && (
         <div className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-4 text-center">
           <p className="text-sm text-muted">{result.label}</p>
           <p className="text-2xl font-bold text-primary mt-1">₹{result.refund} refund</p>
-          <p className="text-sm text-muted mt-1">Cancellation charge: ₹{result.deduction}</p>
+          <p className="text-sm text-muted mt-1">{forms.cancellationCharge}: ₹{result.deduction}</p>
         </div>
       )}
     </form>

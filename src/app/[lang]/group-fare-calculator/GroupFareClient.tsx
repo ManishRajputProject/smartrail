@@ -1,11 +1,13 @@
 "use client";
 
+import type { Dictionary } from "@/i18n/dictionary";
+
 import { useState } from "react";
 import { estimateFare, FARE_RATES } from "@/lib/irctc-rules";
 
 const CLASSES = Object.keys(FARE_RATES);
 
-export function GroupFareClient() {
+export function GroupFareClient({ forms }: { forms: Dictionary["forms"] }) {
   const [travelClass, setTravelClass] = useState("3A");
   const [distance, setDistance] = useState("");
   const [passengers, setPassengers] = useState("4");
@@ -23,7 +25,7 @@ export function GroupFareClient() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="gf-class" className="block text-sm font-medium mb-1">Travel Class</label>
+        <label htmlFor="gf-class" className="block text-sm font-medium mb-1">{forms.travelClass}</label>
         <select
           id="gf-class"
           value={travelClass}
@@ -35,7 +37,7 @@ export function GroupFareClient() {
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label htmlFor="gf-distance" className="block text-sm font-medium mb-1">Distance (km)</label>
+          <label htmlFor="gf-distance" className="block text-sm font-medium mb-1">{forms.distanceKm}</label>
           <input
             id="gf-distance"
             type="number"
@@ -47,7 +49,7 @@ export function GroupFareClient() {
           />
         </div>
         <div>
-          <label htmlFor="gf-pax" className="block text-sm font-medium mb-1">Passengers</label>
+          <label htmlFor="gf-pax" className="block text-sm font-medium mb-1">{forms.passengers}</label>
           <input
             id="gf-pax"
             type="number"
@@ -62,12 +64,8 @@ export function GroupFareClient() {
         </div>
       </div>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" checked={superfast} onChange={(e) => setSuperfast(e.target.checked)} />
-        Superfast train
-      </label>
-      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">
-        Estimate Group Fare
-      </button>
+        <input type="checkbox" checked={superfast} onChange={(e) => setSuperfast(e.target.checked)} />{forms.superfast}</label>
+      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">{forms.estimateGroupFare}</button>
 
       {result && (
         <div className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-4 text-center">

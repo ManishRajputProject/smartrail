@@ -1,11 +1,13 @@
 "use client";
 
+import type { Dictionary } from "@/i18n/dictionary";
+
 import { useState } from "react";
 import { TATKAL_CHARGE } from "@/lib/irctc-rules";
 
 const CLASSES = ["2S", "SL", "CC", "3A", "2A", "EC", "1A"];
 
-export function TatkalChargeClient() {
+export function TatkalChargeClient({ forms }: { forms: Dictionary["forms"] }) {
   const [travelClass, setTravelClass] = useState("3A");
   const [baseFare, setBaseFare] = useState("");
   const [result, setResult] = useState<{ charge: number; total: number } | null | "none">(null);
@@ -27,7 +29,7 @@ export function TatkalChargeClient() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="tc-class" className="block text-sm font-medium mb-1">Travel Class</label>
+        <label htmlFor="tc-class" className="block text-sm font-medium mb-1">{forms.travelClass}</label>
         <select
           id="tc-class"
           value={travelClass}
@@ -38,7 +40,7 @@ export function TatkalChargeClient() {
         </select>
       </div>
       <div>
-        <label htmlFor="tc-fare" className="block text-sm font-medium mb-1">Base Fare (₹)</label>
+        <label htmlFor="tc-fare" className="block text-sm font-medium mb-1">{forms.baseFare}</label>
         <input
           id="tc-fare"
           type="number"
@@ -51,9 +53,7 @@ export function TatkalChargeClient() {
         />
         <p className="mt-1 text-xs text-muted">Enter the normal (non-Tatkal) fare shown for this class.</p>
       </div>
-      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">
-        Estimate Tatkal Charge
-      </button>
+      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">{forms.estimateTatkalCharge}</button>
 
       {result === "none" && (
         <div className="mt-2 rounded-xl border border-border bg-surface p-4 text-center text-sm text-muted">
@@ -62,7 +62,7 @@ export function TatkalChargeClient() {
       )}
       {result && result !== "none" && (
         <div className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-4 text-center">
-          <p className="text-sm text-muted">Estimated Tatkal surcharge</p>
+          <p className="text-sm text-muted">{forms.estimatedSurcharge}</p>
           <p className="text-2xl font-bold text-primary mt-1">₹{result.charge}</p>
           <p className="text-sm text-muted mt-1">Estimated total fare: ₹{result.total}</p>
         </div>

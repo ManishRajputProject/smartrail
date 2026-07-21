@@ -1,11 +1,13 @@
 "use client";
 
+import type { Dictionary } from "@/i18n/dictionary";
+
 import { useState } from "react";
 import { tatkalOpenDateTime, formatDateLong, TATKAL_CLASS_GROUP } from "@/lib/irctc-rules";
 
 const CLASSES = ["1A", "2A", "3A", "CC", "EC", "SL", "2S"];
 
-export function TatkalTimeClient() {
+export function TatkalTimeClient({ forms }: { forms: Dictionary["forms"] }) {
   const [journeyDate, setJourneyDate] = useState("");
   const [travelClass, setTravelClass] = useState("3A");
   const [result, setResult] = useState<Date | null>(null);
@@ -21,7 +23,7 @@ export function TatkalTimeClient() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="journey-date" className="block text-sm font-medium mb-1">Journey Date</label>
+        <label htmlFor="journey-date" className="block text-sm font-medium mb-1">{forms.journeyDate}</label>
         <input
           id="journey-date"
           type="date"
@@ -32,7 +34,7 @@ export function TatkalTimeClient() {
         />
       </div>
       <div>
-        <label htmlFor="travel-class" className="block text-sm font-medium mb-1">Travel Class</label>
+        <label htmlFor="travel-class" className="block text-sm font-medium mb-1">{forms.travelClass}</label>
         <select
           id="travel-class"
           value={travelClass}
@@ -49,13 +51,11 @@ export function TatkalTimeClient() {
       <button
         type="submit"
         className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity"
-      >
-        Check Tatkal Time
-      </button>
+      >{forms.checkTatkalTime}</button>
 
       {result && (
         <div className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-4 text-center">
-          <p className="text-sm text-muted">Tatkal booking opens</p>
+          <p className="text-sm text-muted">{forms.tatkalOpensAt}</p>
           <p className="text-2xl font-bold text-primary mt-1">
             {result.getHours()}:00 IST, {formatDateLong(result)}
           </p>

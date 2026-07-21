@@ -2,14 +2,22 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { RefundClient } from "./RefundClient";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { getDictionary } from "@/i18n/dictionary";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
   title: "IRCTC Train Ticket Refund Calculator",
   description:
     "Estimate your refund after cancelling a confirmed IRCTC ticket, based on how far ahead of departure you cancel.",
   path: "/refund-calculator",
   keywords: ["IRCTC refund calculator", "train cancellation charges", "ticket cancellation refund"],
-});
+    locale,
+  });
+}
 
 const faqs = [
   {
@@ -29,15 +37,25 @@ const faqs = [
   },
 ];
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
+  const page = localizePage(lang, "refund-calculator", {
+    eyebrow: "Refund Calculator",
+    title: "IRCTC Train Ticket Refund Calculator",
+    description: "Estimate your refund after cancelling a confirmed ticket, based on standard cancellation-charge slabs. Always verify the exact amount on IRCTC before cancelling.",
+    badges: ["Slab-based estimate", "Class-aware", "Instant result"],
+  });
+
   return (
     <CalculatorShell
-      eyebrow="Refund Calculator"
-      title="IRCTC Train Ticket Refund Calculator"
-      breadcrumbLabel="Refund Calculator"
+      eyebrow={page.eyebrow}
+      title={page.title}
+      breadcrumbLabel={page.eyebrow ?? "Refund Calculator"}
       breadcrumbHref="/refund-calculator"
-      description="Estimate your refund after cancelling a confirmed ticket, based on standard cancellation-charge slabs. Always verify the exact amount on IRCTC before cancelling."
-      badges={["Slab-based estimate", "Class-aware", "Instant result"]}
+      description={page.description}
+      badges={page.badges}
       faqs={faqs}
       relatedTools={[
         { href: "/booking-date-calculator", label: "Booking Date Calculator", description: "Check when to book instead of cancelling and rebooking." },
@@ -56,7 +74,7 @@ export default function Page() {
         </>
       }
     >
-      <RefundClient />
+      <RefundClient forms={dict.forms} />
     </CalculatorShell>
   );
 }

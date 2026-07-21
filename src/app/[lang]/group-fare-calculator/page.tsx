@@ -2,13 +2,21 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { GroupFareClient } from "./GroupFareClient";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { getDictionary } from "@/i18n/dictionary";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
   title: "Group / Multi-Passenger Train Fare Calculator",
   description: "Estimate the total fare for a group booking multiple passengers on one PNR.",
   path: "/group-fare-calculator",
   keywords: ["group fare calculator", "multi passenger train fare", "family train booking cost"],
-});
+    locale,
+  });
+}
 
 const faqs = [
   {
@@ -21,22 +29,32 @@ const faqs = [
   },
 ];
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
+  const page = localizePage(lang, "group-fare-calculator", {
+    eyebrow: "Group Fare Calculator",
+    title: "Group Fare Calculator",
+    description: "Estimate the total fare for your group travelling together on one PNR — useful for splitting costs or budgeting a family trip.",
+    badges: ["Up to 6 passengers", "Instant estimate"],
+  });
+
   return (
     <CalculatorShell
-      eyebrow="Group Fare Calculator"
-      title="Group Fare Calculator"
-      breadcrumbLabel="Group Fare Calculator"
+      eyebrow={page.eyebrow}
+      title={page.title}
+      breadcrumbLabel={page.eyebrow ?? "Group Fare Calculator"}
       breadcrumbHref="/group-fare-calculator"
-      description="Estimate the total fare for your group travelling together on one PNR — useful for splitting costs or budgeting a family trip."
-      badges={["Up to 6 passengers", "Instant estimate"]}
+      description={page.description}
+      badges={page.badges}
       faqs={faqs}
       relatedTools={[
         { href: "/fare-calculator", label: "Single Passenger Fare", description: "Estimate fare for one traveller." },
         { href: "/trip-cost-estimator", label: "Trip Cost Estimator", description: "Add hotel, food and local transport to the trip budget." },
       ]}
     >
-      <GroupFareClient />
+      <GroupFareClient forms={dict.forms} />
     </CalculatorShell>
   );
 }

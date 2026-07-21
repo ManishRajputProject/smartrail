@@ -4,14 +4,22 @@ import { CalculatorShell } from "@/components/CalculatorShell";
 import { BookingDateClient } from "./BookingDateClient";
 import { JsonLd, howToJsonLd } from "@/components/JsonLd";
 import { ARP_DAYS, ARP_OPEN_HOUR_IST } from "@/lib/irctc-rules";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { getDictionary } from "@/i18n/dictionary";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
-  title: "IRCTC 60-Day Advance Booking Date Calculator",
-  description:
-    "Find the exact date IRCTC advance train ticket booking opens for your journey date. Booking opens 60 days before departure at 8 AM IST.",
-  path: "/booking-date-calculator",
-  keywords: ["IRCTC booking date calculator", "60 day advance booking", "ARP calculator", "train booking date"],
-});
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
+    title: "IRCTC 60-Day Advance Booking Date Calculator",
+    description:
+      "Find the exact date IRCTC advance train ticket booking opens for your journey date. Booking opens 60 days before departure at 8 AM IST.",
+    path: "/booking-date-calculator",
+    keywords: ["IRCTC booking date calculator", "60 day advance booking", "ARP calculator", "train booking date"],
+    locale,
+  });
+}
 
 const faqs = [
   {
@@ -35,7 +43,17 @@ const faqs = [
   },
 ];
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
+  const page = localizePage(lang, "booking-date-calculator", {
+    eyebrow: "Booking Date Calculator",
+    title: "IRCTC 60-Day Advance Booking Date Calculator",
+    description: `Find the exact date advance booking opens for your journey. Indian Railways opens booking ${ARP_DAYS} days before the journey date at ${ARP_OPEN_HOUR_IST}:00 AM IST.`,
+    badges: ["Accurate as per IRCTC rules", `Booking opens at ${ARP_OPEN_HOUR_IST} AM IST`, "Instant result", "Free forever"],
+  });
+
   return (
     <>
       <JsonLd
@@ -50,12 +68,12 @@ export default function Page() {
         })}
       />
       <CalculatorShell
-        eyebrow="Booking Date Calculator"
-        title="IRCTC 60-Day Advance Booking Date Calculator"
-        breadcrumbLabel="Booking Date Calculator"
+        eyebrow={page.eyebrow}
+        title={page.title}
+        breadcrumbLabel={page.eyebrow ?? "Booking Date Calculator"}
         breadcrumbHref="/booking-date-calculator"
-        description={`Find the exact date advance booking opens for your journey. Indian Railways opens booking ${ARP_DAYS} days before the journey date at ${ARP_OPEN_HOUR_IST}:00 AM IST.`}
-        badges={["Accurate as per IRCTC rules", `Booking opens at ${ARP_OPEN_HOUR_IST} AM IST`, "Instant result", "Free forever"]}
+        description={page.description}
+        badges={page.badges}
         faqs={faqs}
         relatedTools={[
           { href: "/reminders", label: "Set a Booking Reminder", description: "Free email & calendar alert before your window opens." },
@@ -81,7 +99,7 @@ export default function Page() {
           </>
         }
       >
-        <BookingDateClient />
+        <BookingDateClient forms={dict.forms} lang={lang} />
       </CalculatorShell>
     </>
   );

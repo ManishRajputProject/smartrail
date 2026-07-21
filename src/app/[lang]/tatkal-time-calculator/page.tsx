@@ -2,14 +2,22 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { TatkalTimeClient } from "./TatkalTimeClient";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { getDictionary } from "@/i18n/dictionary";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
   title: "IRCTC Tatkal Booking Time Calculator — AC & Non-AC",
   description:
     "Find the exact Tatkal booking opening time for your journey and class. AC classes open at 10 AM IST, non-AC at 11 AM IST, one day before travel.",
   path: "/tatkal-time-calculator",
   keywords: ["tatkal time", "tatkal booking time AC", "tatkal booking time sleeper", "IRCTC tatkal timing"],
-});
+    locale,
+  });
+}
 
 const faqs = [
   {
@@ -30,15 +38,25 @@ const faqs = [
   },
 ];
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
+  const page = localizePage(lang, "tatkal-time-calculator", {
+    eyebrow: "Tatkal Time Calculator",
+    title: "IRCTC Tatkal Booking Time Calculator",
+    description: "Check exactly when Tatkal booking opens for your journey and class — AC classes open at 10 AM IST, non-AC at 11 AM IST, one day before travel.",
+    badges: ["10 AM for AC classes", "11 AM for Non-AC", "Opens 1 day before travel"],
+  });
+
   return (
     <CalculatorShell
-      eyebrow="Tatkal Time Calculator"
-      title="IRCTC Tatkal Booking Time Calculator"
-      breadcrumbLabel="Tatkal Time Calculator"
+      eyebrow={page.eyebrow}
+      title={page.title}
+      breadcrumbLabel={page.eyebrow ?? "Tatkal Time Calculator"}
       breadcrumbHref="/tatkal-time-calculator"
-      description="Check exactly when Tatkal booking opens for your journey and class — AC classes open at 10 AM IST, non-AC at 11 AM IST, one day before travel."
-      badges={["10 AM for AC classes", "11 AM for Non-AC", "Opens 1 day before travel"]}
+      description={page.description}
+      badges={page.badges}
       faqs={faqs}
       relatedTools={[
         { href: "/reminders", label: "Set a Tatkal Reminder", description: "Get pinged minutes before Tatkal opens." },
@@ -59,7 +77,7 @@ export default function Page() {
         </>
       }
     >
-      <TatkalTimeClient />
+      <TatkalTimeClient forms={dict.forms} />
     </CalculatorShell>
   );
 }

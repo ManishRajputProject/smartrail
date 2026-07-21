@@ -1,11 +1,13 @@
 "use client";
 
+import type { Dictionary } from "@/i18n/dictionary";
+
 import { useState } from "react";
 import { LUGGAGE_FREE_ALLOWANCE_KG } from "@/lib/irctc-rules";
 
 const CLASSES = Object.keys(LUGGAGE_FREE_ALLOWANCE_KG);
 
-export function LuggageClient() {
+export function LuggageClient({ forms }: { forms: Dictionary["forms"] }) {
   const [travelClass, setTravelClass] = useState("3A");
   const [weight, setWeight] = useState("");
   const [result, setResult] = useState<{ free: number; excess: number; overLimit: boolean } | null>(null);
@@ -22,7 +24,7 @@ export function LuggageClient() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="lg-class" className="block text-sm font-medium mb-1">Travel Class</label>
+        <label htmlFor="lg-class" className="block text-sm font-medium mb-1">{forms.travelClass}</label>
         <select
           id="lg-class"
           value={travelClass}
@@ -33,7 +35,7 @@ export function LuggageClient() {
         </select>
       </div>
       <div>
-        <label htmlFor="lg-weight" className="block text-sm font-medium mb-1">Total Luggage Weight (kg)</label>
+        <label htmlFor="lg-weight" className="block text-sm font-medium mb-1">{forms.luggageWeight}</label>
         <input
           id="lg-weight"
           type="number"
@@ -44,9 +46,7 @@ export function LuggageClient() {
           className="w-full rounded-lg border border-border bg-[var(--background)] px-3 py-2.5 text-base"
         />
       </div>
-      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">
-        Check Luggage Allowance
-      </button>
+      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">{forms.checkLuggage}</button>
 
       {result && (
         <div className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-4 text-center">

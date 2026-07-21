@@ -1,5 +1,7 @@
 "use client";
 
+import type { Dictionary } from "@/i18n/dictionary";
+
 import { useState } from "react";
 import {
   CHART_HOURS_BEFORE_DEPARTURE,
@@ -7,7 +9,7 @@ import {
   PREVIOUS_NIGHT_CHART_HOUR_IST,
 } from "@/lib/irctc-rules";
 
-export function ChartPrepClient() {
+export function ChartPrepClient({ forms }: { forms: Dictionary["forms"] }) {
   const [departure, setDeparture] = useState("");
   const [result, setResult] = useState<{ text: string; note: string } | null>(null);
 
@@ -37,7 +39,7 @@ export function ChartPrepClient() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="cp-departure" className="block text-sm font-medium mb-1">Scheduled Departure Date &amp; Time</label>
+        <label htmlFor="cp-departure" className="block text-sm font-medium mb-1">{forms.scheduledDeparture}</label>
         <input
           id="cp-departure"
           type="datetime-local"
@@ -48,13 +50,11 @@ export function ChartPrepClient() {
         />
         <p className="mt-1 text-xs text-muted">Use the train&apos;s scheduled departure from its source station.</p>
       </div>
-      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">
-        Check Chart Time
-      </button>
+      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">{forms.checkChartTime}</button>
 
       {result && (
         <div className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-4 text-center">
-          <p className="text-sm text-muted">Estimated chart preparation time</p>
+          <p className="text-sm text-muted">{forms.chartPrepTime}</p>
           <p className="text-2xl font-bold text-primary mt-1">{result.text}</p>
           <p className="text-sm text-muted mt-1">{result.note}</p>
         </div>

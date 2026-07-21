@@ -2,14 +2,22 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { TatkalChargeClient } from "./TatkalChargeClient";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { getDictionary } from "@/i18n/dictionary";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
   title: "Tatkal Charge Calculator — Estimate the Tatkal Surcharge",
   description:
     "Estimate the Tatkal surcharge on top of the base fare for Sleeper, 3A, 2A, CC and other classes.",
   path: "/tatkal-charge-calculator",
   keywords: ["tatkal charge calculator", "tatkal surcharge", "tatkal fare"],
-});
+    locale,
+  });
+}
 
 const faqs = [
   {
@@ -27,15 +35,25 @@ const faqs = [
   },
 ];
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
+  const page = localizePage(lang, "tatkal-charge-calculator", {
+    eyebrow: "Tatkal Charge Calculator",
+    title: "Tatkal Charge Calculator",
+    description: "Estimate the Tatkal surcharge on top of your base fare, by class. Figures are illustrative — always confirm the exact charge on the IRCTC payment screen.",
+    badges: ["Class-wise rates", "Instant estimate"],
+  });
+
   return (
     <CalculatorShell
-      eyebrow="Tatkal Charge Calculator"
-      title="Tatkal Charge Calculator"
-      breadcrumbLabel="Tatkal Charge Calculator"
+      eyebrow={page.eyebrow}
+      title={page.title}
+      breadcrumbLabel={page.eyebrow ?? "Tatkal Charge Calculator"}
       breadcrumbHref="/tatkal-charge-calculator"
-      description="Estimate the Tatkal surcharge on top of your base fare, by class. Figures are illustrative — always confirm the exact charge on the IRCTC payment screen."
-      badges={["Class-wise rates", "Instant estimate"]}
+      description={page.description}
+      badges={page.badges}
       faqs={faqs}
       relatedTools={[
         { href: "/tatkal-time-calculator", label: "Tatkal Time Calculator", description: "Check exactly when Tatkal opens for your class." },
@@ -43,7 +61,7 @@ export default function Page() {
         { href: "/refund-calculator", label: "Refund Calculator", description: "See what you'd get back if you cancel a regular ticket." },
       ]}
     >
-      <TatkalChargeClient />
+      <TatkalChargeClient forms={dict.forms} />
     </CalculatorShell>
   );
 }

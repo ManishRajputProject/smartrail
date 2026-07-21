@@ -1,11 +1,13 @@
 "use client";
 
+import type { Dictionary } from "@/i18n/dictionary";
+
 import { useState } from "react";
 import { estimateFare, FARE_RATES } from "@/lib/irctc-rules";
 
 const CLASSES = Object.keys(FARE_RATES);
 
-export function FareClient() {
+export function FareClient({ forms }: { forms: Dictionary["forms"] }) {
   const [travelClass, setTravelClass] = useState("3A");
   const [distance, setDistance] = useState("");
   const [superfast, setSuperfast] = useState(true);
@@ -22,7 +24,7 @@ export function FareClient() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="fc-class" className="block text-sm font-medium mb-1">Travel Class</label>
+        <label htmlFor="fc-class" className="block text-sm font-medium mb-1">{forms.travelClass}</label>
         <select
           id="fc-class"
           value={travelClass}
@@ -33,7 +35,7 @@ export function FareClient() {
         </select>
       </div>
       <div>
-        <label htmlFor="fc-distance" className="block text-sm font-medium mb-1">Distance (km)</label>
+        <label htmlFor="fc-distance" className="block text-sm font-medium mb-1">{forms.distanceKm}</label>
         <input
           id="fc-distance"
           type="number"
@@ -48,21 +50,15 @@ export function FareClient() {
       </div>
       <div className="flex flex-wrap gap-4 text-sm">
         <label className="flex items-center gap-2">
-          <input type="checkbox" checked={superfast} onChange={(e) => setSuperfast(e.target.checked)} />
-          Superfast train
-        </label>
+          <input type="checkbox" checked={superfast} onChange={(e) => setSuperfast(e.target.checked)} />{forms.superfast}</label>
         <label className="flex items-center gap-2">
-          <input type="checkbox" checked={senior} onChange={(e) => setSenior(e.target.checked)} />
-          Senior citizen concession
-        </label>
+          <input type="checkbox" checked={senior} onChange={(e) => setSenior(e.target.checked)} />{forms.seniorCitizen}</label>
       </div>
-      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">
-        Estimate Fare
-      </button>
+      <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">{forms.estimateFare}</button>
 
       {result && (
         <div className="mt-2 rounded-xl border border-primary/30 bg-primary/5 p-4 text-center">
-          <p className="text-sm text-muted">Estimated fare</p>
+          <p className="text-sm text-muted">{forms.estimatedFare}</p>
           <p className="text-2xl font-bold text-primary mt-1">₹{result.perPassenger}</p>
           <p className="text-xs text-muted mt-2">
             Base ₹{result.breakdown.base} + reservation ₹{result.breakdown.reservationCharge}

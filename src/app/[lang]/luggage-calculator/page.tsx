@@ -2,13 +2,21 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { LuggageClient } from "./LuggageClient";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { getDictionary } from "@/i18n/dictionary";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
   title: "Train Luggage Allowance Calculator",
   description: "Check your free luggage allowance by class and estimate whether you'll face excess baggage charges.",
   path: "/luggage-calculator",
   keywords: ["train luggage allowance", "IRCTC baggage rules", "railway luggage limit"],
-});
+    locale,
+  });
+}
 
 const faqs = [
   {
@@ -21,22 +29,32 @@ const faqs = [
   },
 ];
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
+  const page = localizePage(lang, "luggage-calculator", {
+    eyebrow: "Luggage Calculator",
+    title: "Train Luggage Allowance Calculator",
+    description: "Check your free baggage allowance by class and whether your luggage weight is likely to attract an excess charge.",
+    badges: ["Class-wise limits", "Instant check"],
+  });
+
   return (
     <CalculatorShell
-      eyebrow="Luggage Calculator"
-      title="Train Luggage Allowance Calculator"
-      breadcrumbLabel="Luggage Calculator"
+      eyebrow={page.eyebrow}
+      title={page.title}
+      breadcrumbLabel={page.eyebrow ?? "Luggage Calculator"}
       breadcrumbHref="/luggage-calculator"
-      description="Check your free baggage allowance by class and whether your luggage weight is likely to attract an excess charge."
-      badges={["Class-wise limits", "Instant check"]}
+      description={page.description}
+      badges={page.badges}
       faqs={faqs}
       relatedTools={[
         { href: "/journey-checklist", label: "Journey Checklist", description: "A full pre-travel checklist, not just luggage." },
         { href: "/fare-calculator", label: "Fare Calculator", description: "Estimate your ticket fare." },
       ]}
     >
-      <LuggageClient />
+      <LuggageClient forms={dict.forms} />
     </CalculatorShell>
   );
 }
