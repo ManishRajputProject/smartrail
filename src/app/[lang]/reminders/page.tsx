@@ -2,13 +2,20 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { RemindersClient } from "./RemindersClient";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
   title: "Train Booking Reminders — Tatkal & Advance Booking Alerts",
   description: "Free email and calendar reminders for Tatkal and 60-day advance booking windows, so you never miss the moment booking opens.",
   path: "/reminders",
   keywords: ["tatkal reminder", "IRCTC booking reminder", "advance booking alert"],
-});
+    locale,
+  });
+}
 
 const faqs = [
   {
@@ -29,15 +36,24 @@ const faqs = [
   },
 ];
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const page = localizePage(lang, "reminders", {
+    eyebrow: "Booking Reminders",
+    title: "Train Booking Reminders",
+    description: "Free email and calendar alerts before your Tatkal or 60-day advance booking window opens, so you're never caught logging in after the rush starts.",
+    badges: ["Email & calendar", "Free · No login", "Advance booking & Tatkal"],
+  });
+
   return (
     <CalculatorShell
-      eyebrow="Booking Reminders"
-      title="Train Booking Reminders"
-      breadcrumbLabel="Reminders"
+      eyebrow={page.eyebrow}
+      title={page.title}
+      breadcrumbLabel={page.eyebrow ?? "Reminders"}
       breadcrumbHref="/reminders"
-      description="Free email and calendar alerts before your Tatkal or 60-day advance booking window opens, so you're never caught logging in after the rush starts."
-      badges={["Email & calendar", "Free · No login", "Advance booking & Tatkal"]}
+      description={page.description}
+      badges={page.badges}
       faqs={faqs}
       relatedTools={[
         { href: "/booking-date-calculator", label: "Booking Date Calculator", description: "Find your exact advance booking date first." },

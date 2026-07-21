@@ -4,25 +4,41 @@ import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { computeLongWeekends } from "@/lib/holidays";
 import { nowIST, bookingOpenDate, formatDateLong } from "@/lib/irctc-rules";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
   title: "Long Weekend Planner — Upcoming Indian Holidays",
   description: "See upcoming Indian long weekends and exactly when advance booking opens for each.",
   path: "/long-weekend-planner",
   keywords: ["long weekend India 2026", "long weekend calendar", "holiday planner train booking"],
-});
+    locale,
+  });
+}
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const page = localizePage(lang, "long-weekend-planner", {
+    eyebrow: "Long Weekend Planner",
+    title: "Upcoming Long Weekends",
+    description: "Every upcoming Indian holiday that lines up with a weekend, with the exact IRCTC booking-opens date so you can book before the rush.",
+    badges: ["Holiday-aware", "Booking date included"],
+  });
+
   const longWeekends = computeLongWeekends(nowIST());
 
   return (
     <CalculatorShell
-      eyebrow="Long Weekend Planner"
-      title="Upcoming Long Weekends"
-      breadcrumbLabel="Long Weekend Planner"
+      eyebrow={page.eyebrow}
+      title={page.title}
+      breadcrumbLabel={page.eyebrow ?? "Long Weekend Planner"}
       breadcrumbHref="/long-weekend-planner"
-      description="Every upcoming Indian holiday that lines up with a weekend, with the exact IRCTC booking-opens date so you can book before the rush."
-      badges={["Holiday-aware", "Booking date included"]}
+      description={page.description}
+      badges={page.badges}
       relatedTools={[
         { href: "/plan-ticket", label: "Plan Ticket Calendar", description: "Day-by-day booking status for the next several months." },
         { href: "/reminders", label: "Set a Reminder", description: "Get pinged the moment booking opens for a long weekend date." },

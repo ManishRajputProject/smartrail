@@ -2,14 +2,21 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { WaitlistClient } from "./WaitlistClient";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
   title: "WL Confirmation Outlook — Indian Railways Waitlist Guide",
   description:
     "An honest, pattern-based outlook for your waitlisted ticket — five clear bands, no fake percentage. Covers GNWL, RLWL, PQWL, RSWL and TQWL.",
   path: "/waitlist-predictor",
   keywords: ["waitlist confirmation chances", "GNWL RLWL PQWL", "WL predictor IRCTC"],
-});
+    locale,
+  });
+}
 
 const faqs = [
   {
@@ -28,15 +35,24 @@ const faqs = [
   },
 ];
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const page = localizePage(lang, "waitlist-predictor", {
+    eyebrow: "WL Confirmation Outlook",
+    title: "Waitlist Confirmation Outlook",
+    description: "An honest, pattern-based read on your waitlisted ticket — five plain-language bands, not a fabricated percentage.",
+    badges: ["GNWL, RLWL, PQWL, RSWL, TQWL", "No fake percentages", "Instant outlook"],
+  });
+
   return (
     <CalculatorShell
-      eyebrow="WL Confirmation Outlook"
-      title="Waitlist Confirmation Outlook"
-      breadcrumbLabel="WL Confirmation Outlook"
+      eyebrow={page.eyebrow}
+      title={page.title}
+      breadcrumbLabel={page.eyebrow ?? "WL Confirmation Outlook"}
       breadcrumbHref="/waitlist-predictor"
-      description="An honest, pattern-based read on your waitlisted ticket — five plain-language bands, not a fabricated percentage."
-      badges={["GNWL, RLWL, PQWL, RSWL, TQWL", "No fake percentages", "Instant outlook"]}
+      description={page.description}
+      badges={page.badges}
       faqs={faqs}
       relatedTools={[
         { href: "/chart-preparation-time", label: "Chart Preparation Time", description: "Know the cutoff moment your ticket's fate is decided." },

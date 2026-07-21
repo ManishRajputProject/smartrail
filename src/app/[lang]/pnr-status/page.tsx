@@ -3,14 +3,21 @@ import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { PnrDecoderClient } from "./PnrDecoderClient";
 import { PNR_STATUS_TABLE, BOARD_LABEL } from "@/lib/pnr-status";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 
-export const metadata: Metadata = buildMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  return buildMetadata({
   title: "PNR Status Decoder — What Does Your Booking Status Mean?",
   description:
     "Decode every Indian Railways PNR status code — CNF, RAC, WL, GNWL, PQWL, RLWL, TQWL and more. Know if you can board and what to do next.",
   path: "/pnr-status",
   keywords: ["PNR status meaning", "CNF RAC WL", "GNWL PQWL RLWL", "what does my train status mean"],
-});
+    locale,
+  });
+}
 
 const faqs = [
   { question: "What does CNF mean on a train ticket?", answer: "CNF means Confirmed. Your seat is reserved; the coach and berth number are assigned at chart preparation, typically about 4 hours before departure." },
@@ -19,15 +26,24 @@ const faqs = [
   { question: "Is GNWL better than PQWL?", answer: "Yes — GNWL draws from the largest cancellation pool and confirms more reliably, while PQWL is shared across many intermediate stations and clears more slowly." },
 ];
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const page = localizePage(lang, "pnr-status", {
+    eyebrow: "PNR Status Decoder",
+    title: "What Does Your PNR Status Mean?",
+    description: "Decode any Indian Railways booking status — CNF, RAC, and every waiting-list type — to know whether you can board and what to do next.",
+    badges: ["Every status code", "Instant plain-English answer", "No login"],
+  });
+
   return (
     <CalculatorShell
-      eyebrow="PNR Status Decoder"
-      title="What Does Your PNR Status Mean?"
-      breadcrumbLabel="PNR Status Decoder"
+      eyebrow={page.eyebrow}
+      title={page.title}
+      breadcrumbLabel={page.eyebrow ?? "PNR Status Decoder"}
       breadcrumbHref="/pnr-status"
-      description="Decode any Indian Railways booking status — CNF, RAC, and every waiting-list type — to know whether you can board and what to do next."
-      badges={["Every status code", "Instant plain-English answer", "No login"]}
+      description={page.description}
+      badges={page.badges}
       faqs={faqs}
       relatedTools={[
         { href: "/waitlist-predictor", label: "WL Confirmation Outlook", description: "Estimate your waitlist confirmation odds." },

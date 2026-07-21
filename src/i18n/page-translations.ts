@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/locales";
+import { TOOL_PAGE_TRANSLATIONS } from "@/i18n/page-translations-tools";
 
 /**
  * Per-page hero text (eyebrow / title / description / badges) for the tool
@@ -379,7 +380,7 @@ export function localizePage(
   slug: string,
   fallback: { eyebrow?: string; title: string; description: string; badges?: string[] }
 ) {
-  const t = PAGE_TRANSLATIONS[locale]?.[slug];
+  const t = PAGE_TRANSLATIONS[locale]?.[slug] ?? TOOL_PAGE_TRANSLATIONS[locale]?.[slug];
   if (!t) return fallback;
   return {
     eyebrow: t.eyebrow ?? fallback.eyebrow,
