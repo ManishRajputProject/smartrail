@@ -11,10 +11,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
-  return buildMetadata({
+  const meta = localizePage(locale, "booking-date-calculator", {
     title: "IRCTC 60-Day Advance Booking Date Calculator",
-    description:
-      "Find the exact date IRCTC advance train ticket booking opens for your journey date. Booking opens 60 days before departure at 8 AM IST.",
+    description: "Find the exact date IRCTC advance train ticket booking opens for your journey date. Booking opens 60 days before departure at 8 AM IST.",
+  });
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
     path: "/booking-date-calculator",
     keywords: ["IRCTC booking date calculator", "60 day advance booking", "ARP calculator", "train booking date"],
     locale,

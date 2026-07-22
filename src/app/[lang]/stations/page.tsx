@@ -1,18 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { DataDisclaimer } from "@/components/DataDisclaimer";
 import { searchStationsFull, allStationsCount, type Station } from "@/lib/rail-data";
 import { STATIONS as POPULAR } from "@/lib/stations";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Indian Railway Station Code Directory — Search 8,900+ Stations",
-  description:
-    "Search over 8,900 Indian Railways stations by name or code. See the station code, railway zone and state for any station.",
-  path: "/stations",
-  keywords: ["railway station code list", "IRCTC station code lookup", "station code finder", "railway zone"],
-});
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "stations", {
+    title: "Indian Railway Station Code Directory — Search 8,900+ Stations",
+    description: "Search over 8,900 Indian Railways stations by name or code. See the station code, railway zone and state for any station.",
+  });
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/stations",
+    keywords: ["railway station code list", "IRCTC station code lookup", "station code finder", "railway zone"],
+    locale,
+  });
+}
 
 function Row({ s }: { s: Station }) {
   return (

@@ -9,10 +9,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "tatkal-charge-calculator", {
+    title: "Tatkal Charge Calculator — Estimate the Tatkal Surcharge",
+    description: "Estimate the Tatkal surcharge on top of the base fare for Sleeper, 3A, 2A, CC and other classes.",
+  });
   return buildMetadata({
-  title: "Tatkal Charge Calculator — Estimate the Tatkal Surcharge",
-  description:
-    "Estimate the Tatkal surcharge on top of the base fare for Sleeper, 3A, 2A, CC and other classes.",
+  title: meta.title,
+  description: meta.description,
   path: "/tatkal-charge-calculator",
   keywords: ["tatkal charge calculator", "tatkal surcharge", "tatkal fare"],
     locale,

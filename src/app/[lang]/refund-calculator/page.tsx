@@ -9,10 +9,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "refund-calculator", {
+    title: "IRCTC Train Ticket Refund Calculator",
+    description: "Estimate your refund after cancelling a confirmed IRCTC ticket, based on how far ahead of departure you cancel.",
+  });
   return buildMetadata({
-  title: "IRCTC Train Ticket Refund Calculator",
-  description:
-    "Estimate your refund after cancelling a confirmed IRCTC ticket, based on how far ahead of departure you cancel.",
+  title: meta.title,
+  description: meta.description,
   path: "/refund-calculator",
   keywords: ["IRCTC refund calculator", "train cancellation charges", "ticket cancellation refund"],
     locale,

@@ -9,10 +9,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "pnr-status", {
+    title: "PNR Status Decoder — What Does Your Booking Status Mean?",
+    description: "Decode every Indian Railways PNR status code — CNF, RAC, WL, GNWL, PQWL, RLWL, TQWL and more. Know if you can board and what to do next.",
+  });
   return buildMetadata({
-  title: "PNR Status Decoder — What Does Your Booking Status Mean?",
-  description:
-    "Decode every Indian Railways PNR status code — CNF, RAC, WL, GNWL, PQWL, RLWL, TQWL and more. Know if you can board and what to do next.",
+  title: meta.title,
+  description: meta.description,
   path: "/pnr-status",
   keywords: ["PNR status meaning", "CNF RAC WL", "GNWL PQWL RLWL", "what does my train status mean"],
     locale,

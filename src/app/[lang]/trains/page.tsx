@@ -1,17 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { DataDisclaimer } from "@/components/DataDisclaimer";
 import { searchTrains, popularTrains, allTrainsCount } from "@/lib/rail-data";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Train Finder — Search Indian Railways Trains by Number or Name",
-  description:
-    "Search over 5,000 Indian Railways trains by number or name. See source, destination, departure, arrival, duration and class availability.",
-  path: "/trains",
-  keywords: ["train finder", "train number search", "indian railways train list", "train by name"],
-});
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "trains", {
+    title: "Train Finder — Search Indian Railways Trains by Number or Name",
+    description: "Search over 5,000 Indian Railways trains by number or name. See source, destination, departure, arrival, duration and class availability.",
+  });
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/trains",
+    keywords: ["train finder", "train number search", "indian railways train list", "train by name"],
+    locale,
+  });
+}
 
 function fmtDuration(h: number | null, m: number | null) {
   if (h == null) return "—";

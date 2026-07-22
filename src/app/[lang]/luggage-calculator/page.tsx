@@ -9,9 +9,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "luggage-calculator", {
+    title: "Train Luggage Allowance Calculator",
+    description: "Check your free luggage allowance by class and estimate whether you'll face excess baggage charges.",
+  });
   return buildMetadata({
-  title: "Train Luggage Allowance Calculator",
-  description: "Check your free luggage allowance by class and estimate whether you'll face excess baggage charges.",
+  title: meta.title,
+  description: meta.description,
   path: "/luggage-calculator",
   keywords: ["train luggage allowance", "IRCTC baggage rules", "railway luggage limit"],
     locale,

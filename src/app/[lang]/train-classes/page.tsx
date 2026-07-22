@@ -1,17 +1,27 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { TRAIN_CLASSES } from "@/lib/train-classes";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Indian Train Classes Explained — 1A, 2A, 3A, SL, CC, EC, 2S",
-  description:
-    "Compare every Indian Railways travel class — First AC, 2A, 3A, Sleeper, Chair Car, Executive and Second Sitting — by comfort, berth layout, amenities and cost.",
-  path: "/train-classes",
-  keywords: ["train classes explained", "1A 2A 3A SL difference", "which train class to book", "chair car vs sleeper"],
-});
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "train-classes", {
+    title: "Indian Train Classes Explained — 1A, 2A, 3A, SL, CC, EC, 2S",
+    description: "Compare every Indian Railways travel class — First AC, 2A, 3A, Sleeper, Chair Car, Executive and Second Sitting — by comfort, berth layout, amenities and cost.",
+  });
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/train-classes",
+    keywords: ["train classes explained", "1A 2A 3A SL difference", "which train class to book", "chair car vs sleeper"],
+    locale,
+  });
+}
 
 const faqs = [
   { question: "What is the difference between 2A and 3A?", answer: "Both are air-conditioned. 2A has open bays of 6 berths with privacy curtains and fewer passengers per coach; 3A has bays of 8 berths (three tiers) and no curtains on most coaches, at a lower fare." },

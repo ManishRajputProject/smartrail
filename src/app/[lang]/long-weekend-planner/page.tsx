@@ -10,9 +10,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "long-weekend-planner", {
+    title: "Long Weekend Planner — Upcoming Indian Holidays",
+    description: "See upcoming Indian long weekends and exactly when advance booking opens for each.",
+  });
   return buildMetadata({
-  title: "Long Weekend Planner — Upcoming Indian Holidays",
-  description: "See upcoming Indian long weekends and exactly when advance booking opens for each.",
+  title: meta.title,
+  description: meta.description,
   path: "/long-weekend-planner",
   keywords: ["long weekend India 2026", "long weekend calendar", "holiday planner train booking"],
     locale,

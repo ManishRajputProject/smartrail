@@ -83,7 +83,9 @@
     "quickAnswer": "Quick Answer",
     "verifiedAgainst": "Facts verified against",
     "keepReading": "Keep reading",
-    "faqSubtitle": "Common IRCTC booking, Tatkal, cancellation and waiting-list questions, answered."
+    "faqSubtitle": "Common IRCTC booking, Tatkal, cancellation and waiting-list questions, answered.",
+    "homeMetaTitle": "Free IRCTC Booking Date, Tatkal & Refund Calculators",
+    "homeMetaDescription": "Free calculators for IRCTC booking dates, Tatkal timing, refunds and more — plus free reminders so you never miss the booking window. No sign-up, always accurate."
   },
   "forms": {
     "journeyDate": "Journey Date",

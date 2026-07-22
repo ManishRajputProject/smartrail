@@ -9,10 +9,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "fare-calculator", {
+    title: "Indian Railways Train Fare Calculator (Estimate)",
+    description: "Ballpark estimate of Indian Railways train fare by class and distance, including superfast charge, reservation charge and senior citizen concession.",
+  });
   return buildMetadata({
-  title: "Indian Railways Train Fare Calculator (Estimate)",
-  description:
-    "Ballpark estimate of Indian Railways train fare by class and distance, including superfast charge, reservation charge and senior citizen concession.",
+  title: meta.title,
+  description: meta.description,
   path: "/fare-calculator",
   keywords: ["train fare calculator", "IRCTC fare estimate", "railway fare by distance"],
     locale,

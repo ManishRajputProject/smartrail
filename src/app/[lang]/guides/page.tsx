@@ -4,15 +4,20 @@ import { buildMetadata } from "@/lib/seo";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { GUIDES } from "@/lib/guides";
 import { DEFAULT_LOCALE, isLocale, localePath, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizeGuides, categoryLabel } from "@/i18n/guide-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
-  return buildMetadata({
+  const meta = localizePage(locale, "guides", {
     title: "Railway Guides — IRCTC Booking, Tatkal, Waitlist & More",
     description: "In-depth guides to help you navigate Indian Railways booking, Tatkal timing, cancellation rules, waiting lists and quotas.",
+  });
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
     path: "/guides",
     keywords: ["IRCTC guides", "railway booking guides", "tatkal guide"],
     locale,

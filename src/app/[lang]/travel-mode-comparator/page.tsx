@@ -8,9 +8,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "travel-mode-comparator", {
+    title: "Train vs Flight vs Bus — Cost & Time Comparator",
+    description: "Compare rough travel time and cost across train, flight and bus for a given distance.",
+  });
   return buildMetadata({
-  title: "Train vs Flight vs Bus — Cost & Time Comparator",
-  description: "Compare rough travel time and cost across train, flight and bus for a given distance.",
+  title: meta.title,
+  description: meta.description,
   path: "/travel-mode-comparator",
   keywords: ["train vs flight vs bus", "travel mode comparison India", "cheapest way to travel India"],
     locale,

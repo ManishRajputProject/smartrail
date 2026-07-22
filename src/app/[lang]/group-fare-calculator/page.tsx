@@ -9,9 +9,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "group-fare-calculator", {
+    title: "Group / Multi-Passenger Train Fare Calculator",
+    description: "Estimate the total fare for a group booking multiple passengers on one PNR.",
+  });
   return buildMetadata({
-  title: "Group / Multi-Passenger Train Fare Calculator",
-  description: "Estimate the total fare for a group booking multiple passengers on one PNR.",
+  title: meta.title,
+  description: meta.description,
   path: "/group-fare-calculator",
   keywords: ["group fare calculator", "multi passenger train fare", "family train booking cost"],
     locale,

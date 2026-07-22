@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ReportFormClient } from "./ReportFormClient";
 import { getServerSupabase } from "@/lib/supabase/server";
@@ -8,12 +10,21 @@ import { getServerSupabase } from "@/lib/supabase/server";
 // prerendered once at build time and freeze on whatever data existed then.
 export const revalidate = 60;
 
-export const metadata: Metadata = buildMetadata({
-  title: "Journey Reports — Real Traveller Experiences",
-  description: "Real, moderated traveller reports on Tatkal confirmation, delays and coach comfort — crowdsourced, not scraped.",
-  path: "/journey-reports",
-  keywords: ["train journey reviews India", "tatkal confirmation experience", "IRCTC traveller reports"],
-});
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "journey-reports", {
+    title: "Journey Reports — Real Traveller Experiences",
+    description: "Real, moderated traveller reports on Tatkal confirmation, delays and coach comfort — crowdsourced, not scraped.",
+  });
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/journey-reports",
+    keywords: ["train journey reviews India", "tatkal confirmation experience", "IRCTC traveller reports"],
+    locale,
+  });
+}
 
 const CATEGORY_LABELS: Record<string, string> = {
   tatkal_experience: "Tatkal Experience",

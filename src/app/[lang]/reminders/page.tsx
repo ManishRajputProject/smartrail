@@ -8,9 +8,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "reminders", {
+    title: "Train Booking Reminders — Tatkal & Advance Booking Alerts",
+    description: "Free email and calendar reminders for Tatkal and 60-day advance booking windows, so you never miss the moment booking opens.",
+  });
   return buildMetadata({
-  title: "Train Booking Reminders — Tatkal & Advance Booking Alerts",
-  description: "Free email and calendar reminders for Tatkal and 60-day advance booking windows, so you never miss the moment booking opens.",
+  title: meta.title,
+  description: meta.description,
   path: "/reminders",
   keywords: ["tatkal reminder", "IRCTC booking reminder", "advance booking alert"],
     locale,

@@ -12,10 +12,13 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "plan-ticket", {
+    title: "Plan Ticket — Train Booking Calendar with Holidays",
+    description: "A calendar of upcoming journey dates with Indian holidays, weekends and IRCTC booking status marked, so you can plan around the rush.",
+  });
   return buildMetadata({
-  title: "Plan Ticket — Train Booking Calendar with Holidays",
-  description:
-    "A calendar of upcoming journey dates with Indian holidays, weekends and IRCTC booking status marked, so you can plan around the rush.",
+  title: meta.title,
+  description: meta.description,
   path: "/plan-ticket",
   keywords: ["train booking calendar", "Indian holiday calendar train booking", "when does booking open"],
     locale,

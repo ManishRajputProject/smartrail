@@ -9,10 +9,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "quota-selector", {
+    title: "Which Railway Quota Should I Book Under?",
+    description: "Answer a couple of quick questions to find the right Indian Railways booking quota for your situation — General, Tatkal, Ladies, Senior Citizen and more.",
+  });
   return buildMetadata({
-  title: "Which Railway Quota Should I Book Under?",
-  description:
-    "Answer a couple of quick questions to find the right Indian Railways booking quota for your situation — General, Tatkal, Ladies, Senior Citizen and more.",
+  title: meta.title,
+  description: meta.description,
   path: "/quota-selector",
   keywords: ["railway quota selector", "IRCTC quota types", "which quota to book"],
     locale,

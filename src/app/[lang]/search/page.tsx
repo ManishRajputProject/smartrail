@@ -1,15 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { searchSite } from "@/lib/search-index";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Search",
-  description: "Search RailSetu's calculators, guides and station directory.",
-  path: "/search",
-  noIndex: true,
-});
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "search", {
+    title: "Search",
+    description: "Search RailSetu's calculators, guides and station directory.",
+  });
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/search",
+    noIndex: true,
+    locale,
+  });
+}
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q = "" } = await searchParams;

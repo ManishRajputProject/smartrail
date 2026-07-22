@@ -4,15 +4,20 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { FAQ_CATEGORIES } from "@/lib/faq-data";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
 import { getDictionary } from "@/i18n/dictionary";
 import { faqCategoryTitle, faqItem } from "@/i18n/faq-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
-  return buildMetadata({
+  const meta = localizePage(locale, "faq", {
     title: "IRCTC FAQ — Booking, Tatkal & Cancellation Questions Answered",
     description: "Answers to the most common IRCTC booking, Tatkal, cancellation and waiting-list questions.",
+  });
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
     path: "/faq",
     keywords: ["IRCTC FAQ", "train booking questions", "tatkal FAQ"],
     locale,

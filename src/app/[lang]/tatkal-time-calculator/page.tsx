@@ -9,10 +9,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "tatkal-time-calculator", {
+    title: "IRCTC Tatkal Booking Time Calculator — AC & Non-AC",
+    description: "Find the exact Tatkal booking opening time for your journey and class. AC classes open at 10 AM IST, non-AC at 11 AM IST, one day before travel.",
+  });
   return buildMetadata({
-  title: "IRCTC Tatkal Booking Time Calculator — AC & Non-AC",
-  description:
-    "Find the exact Tatkal booking opening time for your journey and class. AC classes open at 10 AM IST, non-AC at 11 AM IST, one day before travel.",
+  title: meta.title,
+  description: meta.description,
   path: "/tatkal-time-calculator",
   keywords: ["tatkal time", "tatkal booking time AC", "tatkal booking time sleeper", "IRCTC tatkal timing"],
     locale,

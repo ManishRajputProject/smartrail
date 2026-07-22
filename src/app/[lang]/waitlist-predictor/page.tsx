@@ -8,10 +8,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "waitlist-predictor", {
+    title: "WL Confirmation Outlook — Indian Railways Waitlist Guide",
+    description: "An honest, pattern-based outlook for your waitlisted ticket — five clear bands, no fake percentage. Covers GNWL, RLWL, PQWL, RSWL and TQWL.",
+  });
   return buildMetadata({
-  title: "WL Confirmation Outlook — Indian Railways Waitlist Guide",
-  description:
-    "An honest, pattern-based outlook for your waitlisted ticket — five clear bands, no fake percentage. Covers GNWL, RLWL, PQWL, RSWL and TQWL.",
+  title: meta.title,
+  description: meta.description,
   path: "/waitlist-predictor",
   keywords: ["waitlist confirmation chances", "GNWL RLWL PQWL", "WL predictor IRCTC"],
     locale,

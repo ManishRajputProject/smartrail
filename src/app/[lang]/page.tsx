@@ -21,10 +21,10 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const d = getDictionary(locale);
   return buildMetadata({
-    title: `${SITE_NAME} — Free IRCTC Booking Date, Tatkal & Refund Calculators`,
-    description:
-      "Free calculators for IRCTC booking dates, Tatkal timing, refunds and more — plus free reminders so you never miss the booking window. No sign-up, always accurate.",
+    title: `${SITE_NAME} — ${d.common.homeMetaTitle}`,
+    description: d.common.homeMetaDescription,
     path: "/",
     locale,
   });

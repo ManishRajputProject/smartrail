@@ -8,9 +8,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "journey-checklist", {
+    title: "Train Journey Packing Checklist Generator",
+    description: "A pre-travel checklist generated for your journey type, class and season.",
+  });
   return buildMetadata({
-  title: "Train Journey Packing Checklist Generator",
-  description: "A pre-travel checklist generated for your journey type, class and season.",
+  title: meta.title,
+  description: meta.description,
   path: "/journey-checklist",
   keywords: ["train journey checklist", "packing list for train travel India"],
     locale,

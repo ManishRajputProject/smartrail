@@ -9,10 +9,13 @@ import { localizePage } from "@/i18n/page-translations";
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const meta = localizePage(locale, "chart-preparation-time", {
+    title: "Train Chart Preparation Time Calculator",
+    description: "Find roughly when the chart is prepared before your train departs — the moment waitlisted tickets are confirmed or auto-cancelled.",
+  });
   return buildMetadata({
-  title: "Train Chart Preparation Time Calculator",
-  description:
-    "Find roughly when the chart is prepared before your train departs — the moment waitlisted tickets are confirmed or auto-cancelled.",
+  title: meta.title,
+  description: meta.description,
   path: "/chart-preparation-time",
   keywords: ["chart preparation time", "train chart time", "IRCTC chart status"],
     locale,
