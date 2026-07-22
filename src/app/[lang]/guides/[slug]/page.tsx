@@ -8,6 +8,7 @@ import { GUIDES, getGuideBySlug } from "@/lib/guides";
 import { DEFAULT_LOCALE, isLocale, localePath, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizeGuide, categoryLabel } from "@/i18n/guide-translations";
+import { guideBody } from "@/i18n/guide-bodies";
 
 export function generateStaticParams() {
   return GUIDES.map((g) => ({ slug: g.slug }));
@@ -53,7 +54,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
   const dict = getDictionary(lang);
   const base = getGuideBySlug(slug);
   if (!base) notFound();
-  const guide = localizeGuide(lang, base);
+  const localized = localizeGuide(lang, base);
+  const translatedBody = guideBody(lang, slug);
+  const guide = translatedBody ? { ...localized, sections: translatedBody } : localized;
 
   const related = GUIDES.filter((g) => g.slug !== guide.slug && g.category === guide.category)
     .slice(0, 2)
