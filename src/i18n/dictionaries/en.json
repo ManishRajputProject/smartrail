@@ -82,7 +82,8 @@
     "selectLanguage": "Select language",
     "quickAnswer": "Quick Answer",
     "verifiedAgainst": "Facts verified against",
-    "keepReading": "Keep reading"
+    "keepReading": "Keep reading",
+    "faqSubtitle": "Common IRCTC booking, Tatkal, cancellation and waiting-list questions, answered."
   },
   "forms": {
     "journeyDate": "Journey Date",

@@ -49,7 +49,8 @@
     "selectLanguage": "ভাষা নির্বাচন করুন",
     "quickAnswer": "দ্রুত উত্তর",
     "verifiedAgainst": "তথ্য যাচাই করা হয়েছে",
-    "keepReading": "আরও পড়ুন"
+    "keepReading": "আরও পড়ুন",
+    "faqSubtitle": "IRCTC বুকিং, তৎকাল, বাতিলকরণ ও ওয়েটিং লিস্ট নিয়ে সাধারণ প্রশ্নের উত্তর।"
   },
   "links": {
     "/guides": "সব গাইড",

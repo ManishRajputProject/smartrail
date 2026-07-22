@@ -38,7 +38,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         {dict.common.faqTitle}
       </h1>
       <p className="mt-3 text-muted text-[16px] max-w-2xl leading-relaxed">
-        Common IRCTC booking, Tatkal, cancellation and waiting-list questions, answered.
+        {dict.common.faqSubtitle}
       </p>
 
       <nav aria-label="FAQ categories" className="mt-7 flex flex-wrap gap-2">
