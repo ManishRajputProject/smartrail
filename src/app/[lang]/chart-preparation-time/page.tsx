@@ -5,6 +5,7 @@ import { ChartPrepClient } from "./ChartPrepClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
+import { calcFaqs } from "@/i18n/calculator-faq-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -56,7 +57,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       breadcrumbHref="/chart-preparation-time"
       description={page.description}
       badges={page.badges}
-      faqs={faqs}
+      faqs={calcFaqs(lang, "chart-preparation-time", faqs)}
       relatedTools={[
         { href: "/waitlist-predictor", label: "WL Confirmation Outlook", description: "See your odds of confirming before the chart locks in." },
         { href: "/refund-calculator", label: "Refund Calculator", description: "Know your cancellation deadline relative to chart time." },

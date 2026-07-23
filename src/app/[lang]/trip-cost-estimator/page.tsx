@@ -4,6 +4,7 @@ import { CalculatorShell } from "@/components/CalculatorShell";
 import { TripCostClient } from "./TripCostClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { localizePage } from "@/i18n/page-translations";
+import { calcFaqs } from "@/i18n/calculator-faq-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -50,7 +51,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       breadcrumbHref="/trip-cost-estimator"
       description={page.description}
       badges={page.badges}
-      faqs={faqs}
+      faqs={calcFaqs(lang, "trip-cost-estimator", faqs)}
       relatedTools={[
         { href: "/fare-calculator", label: "Fare Calculator", description: "Just the train fare, one-way." },
         { href: "/travel-mode-comparator", label: "Train vs Flight vs Bus", description: "Compare cost and time across modes." },

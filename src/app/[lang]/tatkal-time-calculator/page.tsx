@@ -5,6 +5,7 @@ import { TatkalTimeClient } from "./TatkalTimeClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
+import { calcFaqs } from "@/i18n/calculator-faq-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -60,7 +61,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       breadcrumbHref="/tatkal-time-calculator"
       description={page.description}
       badges={page.badges}
-      faqs={faqs}
+      faqs={calcFaqs(lang, "tatkal-time-calculator", faqs)}
       relatedTools={[
         { href: "/reminders", label: "Set a Tatkal Reminder", description: "Get pinged minutes before Tatkal opens." },
         { href: "/tatkal-charge-calculator", label: "Tatkal Charge Calculator", description: "Estimate the Tatkal surcharge for your class." },

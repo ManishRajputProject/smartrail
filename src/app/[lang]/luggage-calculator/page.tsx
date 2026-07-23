@@ -5,6 +5,7 @@ import { LuggageClient } from "./LuggageClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
+import { calcFaqs } from "@/i18n/calculator-faq-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -52,7 +53,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       breadcrumbHref="/luggage-calculator"
       description={page.description}
       badges={page.badges}
-      faqs={faqs}
+      faqs={calcFaqs(lang, "luggage-calculator", faqs)}
       relatedTools={[
         { href: "/journey-checklist", label: "Journey Checklist", description: "A full pre-travel checklist, not just luggage." },
         { href: "/fare-calculator", label: "Fare Calculator", description: "Estimate your ticket fare." },

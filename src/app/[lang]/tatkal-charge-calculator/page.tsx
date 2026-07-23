@@ -5,6 +5,7 @@ import { TatkalChargeClient } from "./TatkalChargeClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
+import { calcFaqs } from "@/i18n/calculator-faq-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -57,7 +58,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       breadcrumbHref="/tatkal-charge-calculator"
       description={page.description}
       badges={page.badges}
-      faqs={faqs}
+      faqs={calcFaqs(lang, "tatkal-charge-calculator", faqs)}
       relatedTools={[
         { href: "/tatkal-time-calculator", label: "Tatkal Time Calculator", description: "Check exactly when Tatkal opens for your class." },
         { href: "/fare-calculator", label: "Train Fare Calculator", description: "Estimate the base fare first." },

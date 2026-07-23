@@ -5,6 +5,7 @@ import { FareClient } from "./FareClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
+import { calcFaqs } from "@/i18n/calculator-faq-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -57,7 +58,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       breadcrumbHref="/fare-calculator"
       description={page.description}
       badges={page.badges}
-      faqs={faqs}
+      faqs={calcFaqs(lang, "fare-calculator", faqs)}
       relatedTools={[
         { href: "/group-fare-calculator", label: "Group Fare Calculator", description: "Estimate total fare for multiple passengers." },
         { href: "/tatkal-charge-calculator", label: "Tatkal Charge Calculator", description: "Add the Tatkal surcharge on top of this estimate." },

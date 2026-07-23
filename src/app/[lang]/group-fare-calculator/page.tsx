@@ -5,6 +5,7 @@ import { GroupFareClient } from "./GroupFareClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
+import { calcFaqs } from "@/i18n/calculator-faq-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -52,7 +53,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       breadcrumbHref="/group-fare-calculator"
       description={page.description}
       badges={page.badges}
-      faqs={faqs}
+      faqs={calcFaqs(lang, "group-fare-calculator", faqs)}
       relatedTools={[
         { href: "/fare-calculator", label: "Single Passenger Fare", description: "Estimate fare for one traveller." },
         { href: "/trip-cost-estimator", label: "Trip Cost Estimator", description: "Add hotel, food and local transport to the trip budget." },

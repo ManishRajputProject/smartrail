@@ -5,6 +5,7 @@ import { RefundClient } from "./RefundClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
+import { calcFaqs } from "@/i18n/calculator-faq-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -59,7 +60,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       breadcrumbHref="/refund-calculator"
       description={page.description}
       badges={page.badges}
-      faqs={faqs}
+      faqs={calcFaqs(lang, "refund-calculator", faqs)}
       relatedTools={[
         { href: "/booking-date-calculator", label: "Booking Date Calculator", description: "Check when to book instead of cancelling and rebooking." },
         { href: "/chart-preparation-time", label: "Chart Preparation Time", description: "Know your real cancellation deadline before the chart locks in." },
