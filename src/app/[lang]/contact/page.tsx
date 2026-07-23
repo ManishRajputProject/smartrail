@@ -1,26 +1,38 @@
 import type { Metadata } from "next";
-import { buildMetadata, SITE_NAME } from "@/lib/seo";
-import { Breadcrumb } from "@/components/Breadcrumb";
+import { buildMetadata } from "@/lib/seo";
+import { LegalPage } from "@/components/LegalPage";
+import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { localizePage } from "@/i18n/page-translations";
+import { legalDoc } from "@/i18n/legal";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Contact",
-  description: `Get in touch with the ${SITE_NAME} team.`,
-  path: "/contact",
-});
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const doc = legalDoc(locale, "contact");
+  const meta = localizePage(locale, "contact", {
+    title: doc.title || "Contact",
+    description: "How to reach RailSetu for feedback, corrections and privacy requests.",
+  });
+  return buildMetadata({
+    title: meta.title,
+    description: meta.description,
+    path: "/contact",
+    locale,
+  });
+}
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 md:py-12 pb-24 md:pb-12">
-      <Breadcrumb items={[{ name: "Contact", href: "/contact" }]} />
-      <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Contact</h1>
-      <p className="text-muted leading-relaxed mb-4">
-        {SITE_NAME} is an independent project, not affiliated with IRCTC or Indian Railways. For official
-        booking support, use IRCTC&apos;s own customer care channels.
-      </p>
-      <div className="rounded-xl border border-border p-5 space-y-2 text-sm">
-        <p><strong>General &amp; feedback:</strong> hello@railsetu.in</p>
-        <p><strong>Privacy / data requests:</strong> hello@railsetu.in (see <a href="/data-deletion" className="text-primary underline underline-offset-2">Data Deletion</a>)</p>
-      </div>
-    </div>
+    <LegalPage
+      lang={lang}
+      doc={legalDoc(lang, "contact")}
+      href="/contact"
+      relatedLinks={[
+          { href: "/about", label: "About" },
+          { href: "/data-deletion", label: "Data Deletion" },
+      ]}
+    />
   );
 }
