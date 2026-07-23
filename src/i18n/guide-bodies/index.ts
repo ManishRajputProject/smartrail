@@ -5,6 +5,8 @@ import { bn } from "@/i18n/guide-bodies/bn";
 import { mr } from "@/i18n/guide-bodies/mr";
 import { ta } from "@/i18n/guide-bodies/ta";
 import { te } from "@/i18n/guide-bodies/te";
+import { gu } from "@/i18n/guide-bodies/gu";
+import { kn } from "@/i18n/guide-bodies/kn";
 
 /**
  * Translated guide article bodies, keyed by guide slug.
@@ -15,7 +17,7 @@ import { te } from "@/i18n/guide-bodies/te";
  */
 export type GuideBodyMap = Record<string, GuideSection[]>;
 
-const BODIES: Partial<Record<Locale, GuideBodyMap>> = { hi, bn, mr, ta, te };
+const BODIES: Partial<Record<Locale, GuideBodyMap>> = { hi, bn, mr, ta, te, gu, kn };
 
 export function guideBody(locale: Locale, slug: string): GuideSection[] | undefined {
   return BODIES[locale]?.[slug];
