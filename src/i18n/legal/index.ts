@@ -7,13 +7,15 @@ import { bn } from "@/i18n/legal/bn";
 import { mr } from "@/i18n/legal/mr";
 import { ta } from "@/i18n/legal/ta";
 import { te } from "@/i18n/legal/te";
+import { gu } from "@/i18n/legal/gu";
+import { kn } from "@/i18n/legal/kn";
 
 /**
  * Legal/about documents per locale. A locale absent from this registry falls
  * back to the English document, so a partially translated site still renders
  * complete, legally coherent pages.
  */
-const DOCS: Partial<Record<Locale, LegalDocs>> = { en, hi, bn, mr, ta, te };
+const DOCS: Partial<Record<Locale, LegalDocs>> = { en, hi, bn, mr, ta, te, gu, kn };
 
 export function legalDoc(locale: Locale, slug: LegalSlug): LegalDoc {
   return DOCS[locale]?.[slug] ?? DOCS[DEFAULT_LOCALE]![slug];
