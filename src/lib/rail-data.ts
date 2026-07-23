@@ -90,6 +90,16 @@ export function trainsBetween(fromCode: string, toCode: string, limit = 60): Tra
   return TRAINS.filter((tr) => tr.fromCode === f && tr.toCode === t).slice(0, limit);
 }
 
+/**
+ * Trains complete enough to deserve their own indexable page: we need both
+ * timings and a scheduled duration to render a real journey profile. Anything
+ * missing those would be a thin page, so it stays reachable via search but is
+ * kept out of the sitemap.
+ */
+export function sitemapTrains(): Train[] {
+  return TRAINS.filter((t) => t.dep && t.arr && t.durH != null);
+}
+
 /** Small curated set for landing-page grids (not the whole 5,000+). */
 export function popularTrains(): Train[] {
   const wanted = ["12951", "12301", "12259", "12002", "12009", "12019", "12627", "12621", "12723", "22691"];
