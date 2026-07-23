@@ -142,7 +142,9 @@
   --color-nav-fg: var(--nav-fg);
   --color-nav-muted: var(--nav-muted);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* System monospace: station codes and train numbers render identically in it,
+     and it keeps ~29KB of webfont off the critical path. */
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 html { scroll-behavior: smooth; }

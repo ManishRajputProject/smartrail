@@ -30,7 +30,7 @@ export const PNR_STATUS_TABLE: PnrStatusCode[] = PNR_STATUS_CODES.filter(
 
 export const BOARD_LABEL: Record<BoardChance, { text: string; className: string }> = {
   yes: { text: "✓ Yes", className: "text-success" },
-  maybe: { text: "? Maybe", className: "text-accent" },
+  maybe: { text: "? Maybe", className: "text-accent-foreground" },
   no: { text: "✕ No", className: "text-danger" },
 };
 

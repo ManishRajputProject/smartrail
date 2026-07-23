@@ -280,7 +280,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
                   r.state === "done"
                     ? "bg-success-soft border-success text-success"
                     : r.state === "active"
-                      ? "bg-accent-soft border-accent text-accent"
+                      ? "bg-accent-soft border-accent text-accent-foreground"
                       : "bg-surface border-border text-muted"
                 }`}
                 aria-hidden="true"

@@ -9,7 +9,7 @@ const CLASSES = Object.keys(WL_CLASS_CAPACITY_WEIGHT);
 const BAND_STYLES: Record<OutlookBand, string> = {
   "Very Likely": "text-success",
   Likely: "text-success",
-  Uncertain: "text-accent",
+  Uncertain: "text-accent-foreground",
   Unlikely: "text-danger",
   "Very Unlikely": "text-danger",
 };

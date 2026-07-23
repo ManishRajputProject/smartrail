@@ -64,7 +64,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
                     {lw.holiday.approximate && <span className="text-xs text-muted font-normal"> (date may vary ±1 day by region)</span>}
                   </p>
                   <p className="text-sm text-muted">{lw.days}-day weekend: {lw.start} → {lw.end}</p>
-                  {lw.bridgeTip && <p className="text-xs text-accent mt-1">{lw.bridgeTip}</p>}
+                  {lw.bridgeTip && <p className="text-xs text-accent-foreground mt-1">{lw.bridgeTip}</p>}
                 </div>
                 <Link
                   href="/reminders"

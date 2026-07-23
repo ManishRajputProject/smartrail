@@ -55,7 +55,7 @@ export function PlanTicketClient({ days }: { days: PlanTicketDay[] }) {
             <div key={d.date} className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm">
               <div>
                 <span className="font-medium">{label}</span>
-                {d.holiday && <span className="ml-2 text-xs rounded-full bg-accent/15 text-accent px-2 py-0.5">{d.holiday.name}</span>}
+                {d.holiday && <span className="ml-2 text-xs rounded-full bg-accent/15 text-accent-foreground px-2 py-0.5">{d.holiday.name}</span>}
                 {d.isWeekend && <span className="ml-2 text-xs rounded-full bg-surface-2 px-2 py-0.5">Weekend</span>}
               </div>
               <div className="flex items-center gap-2 shrink-0">
