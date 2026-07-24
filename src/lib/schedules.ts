@@ -15,8 +15,14 @@ import schedulesData from "@/data/schedules.json";
  * must be verified on IRCTC/NTES before travel.
  */
 
-/** Compact on-disk tuple: [code, name, arrival, departure, day] */
-type RawStop = [string, string, string | null, string | null, number];
+/** Compact on-disk tuple: [code, name, arrival, departure, day, kmFromOrigin] */
+type RawStop = [string, string, string | null, string | null, number, number | null];
+
+/** Per train: d = official total route km (null if unknown), s = stops. */
+interface RawSchedule {
+  d: number | null;
+  s: RawStop[];
+}
 
 export interface ScheduleStop {
   code: string;
@@ -29,11 +35,19 @@ export interface ScheduleStop {
   day: number;
   /** Minutes the train waits here; null where it cannot be derived. */
   haltMinutes: number | null;
-  /** Distance from the previous stop is not in the source data — see note in
-   *  the page copy. Kept out of the type rather than faked. */
+  /**
+   * Approximate km from the originating station, rounded to the nearest 5 km.
+   *
+   * Derived from the route polyline and calibrated so the final stop equals
+   * the official total distance. Intermediate stops drift a few percent
+   * because the polyline cuts corners on curved track, which is why this is
+   * rounded and must always be presented as approximate. Null when the
+   * geometry could not be aligned to the stop list.
+   */
+  kmFromOrigin: number | null;
 }
 
-const SCHEDULES = schedulesData as unknown as Record<string, RawStop[]>;
+const SCHEDULES = schedulesData as unknown as Record<string, RawSchedule>;
 
 function toMinutes(t: string | null): number | null {
   if (!t) return null;
@@ -55,18 +69,27 @@ export function haltMinutes(arrival: string | null, departure: string | null): n
 export function getSchedule(trainNumber: string): ScheduleStop[] {
   const raw = SCHEDULES[trainNumber];
   if (!raw) return [];
-  return raw.map(([code, name, arrival, departure, day]) => ({
+  return raw.s.map(([code, name, arrival, departure, day, km]) => ({
     code,
     name,
     arrival,
     departure,
     day,
     haltMinutes: haltMinutes(arrival, departure),
+    kmFromOrigin: km ?? null,
   }));
 }
 
+/**
+ * Official total route distance in km, straight from the source data — this
+ * one is authoritative, unlike the per-stop figures. Null if unpublished.
+ */
+export function routeDistanceKm(trainNumber: string): number | null {
+  return SCHEDULES[trainNumber]?.d ?? null;
+}
+
 export function hasSchedule(trainNumber: string): boolean {
-  return Array.isArray(SCHEDULES[trainNumber]);
+  return Boolean(SCHEDULES[trainNumber]);
 }
 
 export function scheduledTrainCount(): number {

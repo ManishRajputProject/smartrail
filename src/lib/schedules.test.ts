@@ -6,6 +6,7 @@ import {
   journeyMinutes,
   formatDurationMins,
   scheduledTrainCount,
+  routeDistanceKm,
 } from "./schedules";
 
 describe("haltMinutes", () => {
@@ -67,5 +68,36 @@ describe("journeyMinutes", () => {
 describe("dataset coverage", () => {
   it("covers the published train catalogue", () => {
     expect(scheduledTrainCount()).toBeGreaterThan(5000);
+  });
+});
+
+describe("distance", () => {
+  it("reports the official total route distance verbatim", () => {
+    // Authoritative value from the source data, not derived.
+    expect(routeDistanceKm("12951")).toBe(1384);
+  });
+
+  it("starts per-stop distance at zero and ends at the official total", () => {
+    const stops = getSchedule("12951");
+    expect(stops[0].kmFromOrigin).toBe(0);
+    // Calibrated, so the final stop matches the official total once rounded.
+    expect(stops[stops.length - 1].kmFromOrigin).toBe(1385);
+  });
+
+  it("increases monotonically along the route", () => {
+    const km = getSchedule("12951").map((s) => s.kmFromOrigin);
+    for (let i = 1; i < km.length; i++) {
+      expect(km[i]).toBeGreaterThanOrEqual(km[i - 1]);
+    }
+  });
+
+  it("rounds to the nearest 5 km, signalling the figure is approximate", () => {
+    for (const s of getSchedule("12951")) {
+      expect(s.kmFromOrigin % 5).toBe(0);
+    }
+  });
+
+  it("returns null distance rather than guessing for unknown trains", () => {
+    expect(routeDistanceKm("00000")).toBeNull();
   });
 });
