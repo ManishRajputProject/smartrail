@@ -9,6 +9,7 @@ import { DEFAULT_LOCALE, isLocale, localePath, type Locale } from "@/i18n/locale
 import { getDictionary } from "@/i18n/dictionary";
 import { localizeGuide, categoryLabel } from "@/i18n/guide-translations";
 import { guideBody } from "@/i18n/guide-bodies";
+import { AdSlot } from "@/components/AdSlot";
 
 export function generateStaticParams() {
   return GUIDES.map((g) => ({ slug: g.slug }));
@@ -100,6 +101,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
           </section>
         ))}
       </div>
+
+      <AdSlot placement="footer" />
 
       {guide.relatedTool && (
         <Link href={localePath(lang, guide.relatedTool.href)} className="btn-primary mt-6 inline-flex">

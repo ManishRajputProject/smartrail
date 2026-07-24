@@ -131,5 +131,21 @@
     "overAllowance": "over — excess charges apply",
     "confirmationOutlook": "Confirmation Outlook",
     "setFreeReminder": "Set a free reminder for this date"
+  },
+  "consent": {
+    "title": "Cookies on this site",
+    "body": "We use strictly necessary cookies to make the site work. With your permission we'd also use cookies for advertising, which keeps the calculators free, and for privacy-respecting analytics. You can change this any time.",
+    "acceptAll": "Accept all",
+    "rejectAll": "Reject all",
+    "customise": "Customise",
+    "save": "Save choices",
+    "necessaryLabel": "Strictly necessary",
+    "necessaryNote": "Always on. Needed for the site to function; stores nothing about you.",
+    "analyticsLabel": "Analytics",
+    "analyticsNote": "Aggregate page-view counts so we know which tools are useful. No personal profile.",
+    "advertisingLabel": "Advertising",
+    "advertisingNote": "Lets ad providers show relevant ads. This is what funds the free tools.",
+    "privacyLink": "Privacy Policy",
+    "manage": "Cookie settings"
   }
 }

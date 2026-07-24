@@ -7,6 +7,7 @@ import { JsonLd, organizationJsonLd, webSiteJsonLd } from "@/components/JsonLd";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ThemeScript } from "@/components/ThemeScript";
+import { ConsentBanner } from "@/components/ConsentBanner";
 import { LOCALES, DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 
@@ -84,6 +85,7 @@ export default async function LangLayout({
         <Header lang={lang} dict={dict} />
         <main className="flex-1">{children}</main>
         <Footer lang={lang} dict={dict} />
+        <ConsentBanner lang={lang} t={dict.consent} />
       </body>
     </html>
   );

@@ -5,6 +5,7 @@ import { absoluteUrl } from "@/lib/seo";
 import { FaqAccordion, type FaqItem } from "@/components/FaqAccordion";
 import { RelatedTools } from "@/components/RelatedTools";
 import { LAST_VERIFIED } from "@/lib/irctc-rules";
+import { AdSlot } from "@/components/AdSlot";
 
 export function CalculatorShell({
   eyebrow,
@@ -78,6 +79,7 @@ export function CalculatorShell({
         </p>
 
         {explainer && <div className="mt-8 leading-relaxed">{explainer}</div>}
+        <AdSlot placement="inline" />
         {faqs && <FaqAccordion items={faqs} />}
         {relatedTools && <RelatedTools items={relatedTools} />}
       </div>
