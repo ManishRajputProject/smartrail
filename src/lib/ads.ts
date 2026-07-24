@@ -1,15 +1,32 @@
 /**
  * Ad configuration.
  *
- * The publisher ID comes from NEXT_PUBLIC_ADSENSE_CLIENT (e.g. "ca-pub-…").
- * Until it is set, ad slots render nothing at all — no empty boxes, no
- * reserved gaps — so the live site never shows placeholder holes. Set the env
- * var and the slots activate; nothing else needs changing.
+ * Two independent switches, both of which must be on for any ad to render:
+ *
+ *  1. ADS_ENABLED  — an explicit master switch (NEXT_PUBLIC_ADS_ENABLED).
+ *                    Defaults to OFF. This is the flag to flip when you want
+ *                    ads back; it exists so ads are hidden deliberately rather
+ *                    than by accident of missing config.
+ *  2. ADSENSE_CLIENT — the publisher ID (NEXT_PUBLIC_ADSENSE_CLIENT,
+ *                    "ca-pub-…"), which AdSense only issues after approval.
+ *
+ * With either off, ad slots render nothing at all — no empty boxes, no
+ * reserved gaps, and no ad script is ever fetched. Consent is a separate,
+ * additional gate enforced in AdSlot.
+ *
+ * To turn ads on:
+ *   NEXT_PUBLIC_ADS_ENABLED=true
+ *   NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-XXXXXXXXXXXXXXXX
+ * then rebuild (both are inlined at build time).
  */
+
+/** Master switch. Off unless explicitly set to "true". */
+export const ADS_ENABLED = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
+
 export const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "";
 
 export function adsConfigured(): boolean {
-  return ADSENSE_CLIENT.startsWith("ca-pub-");
+  return ADS_ENABLED && ADSENSE_CLIENT.startsWith("ca-pub-");
 }
 
 /**
