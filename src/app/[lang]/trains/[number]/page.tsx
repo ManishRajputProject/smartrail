@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import { buildMetadata } from "@/lib/seo";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { DataDisclaimer } from "@/components/DataDisclaimer";
+import { ScheduleTable } from "@/components/ScheduleTable";
+import { getSchedule, routeDistanceKm } from "@/lib/schedules";
+import { scheduleStrings } from "@/i18n/schedule-strings";
 import { JsonLd } from "@/components/JsonLd";
 import { getTrainByNumber, popularTrains } from "@/lib/rail-data";
 import { trainFacts, formatDuration } from "@/lib/train-facts";
@@ -96,6 +99,9 @@ export default async function Page({
 
   const f = trainFacts(train);
   const durationText = formatDuration(f.durationMins);
+  const stops = getSchedule(train.number);
+  const totalKm = routeDistanceKm(train.number);
+  const sched = scheduleStrings(lang);
 
   const summary =
     train.dep && train.arr && durationText
@@ -257,6 +263,8 @@ export default async function Page({
           {f.hasNonAc && <li>{t.tatkalNonAc}</li>}
         </ul>
       </section>
+
+      <ScheduleTable stops={stops} totalKm={totalKm} t={sched} />
 
       {f.sameRoute.length > 0 && (
         <section className="mt-7">
