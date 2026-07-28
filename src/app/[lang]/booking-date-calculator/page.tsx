@@ -103,7 +103,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
           </>
         }
       >
-        <BookingDateClient forms={dict.forms} lang={lang} />
+        <BookingDateClient forms={dict.forms} lang={lang} datepicker={dict.datepicker} />
       </CalculatorShell>
     </>
   );

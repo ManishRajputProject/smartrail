@@ -4,10 +4,19 @@ import type { Dictionary } from "@/i18n/dictionary";
 
 import { useState } from "react";
 import { tatkalOpenDateTime, formatDateLong, TATKAL_CLASS_GROUP } from "@/lib/irctc-rules";
+import { DatePicker, todayISO } from "@/components/DatePicker";
 
 const CLASSES = ["1A", "2A", "3A", "CC", "EC", "SL", "2S"];
 
-export function TatkalTimeClient({ forms }: { forms: Dictionary["forms"] }) {
+export function TatkalTimeClient({
+  forms,
+  locale,
+  datepicker,
+}: {
+  forms: Dictionary["forms"];
+  locale: string;
+  datepicker: Dictionary["datepicker"];
+}) {
   const [journeyDate, setJourneyDate] = useState("");
   const [travelClass, setTravelClass] = useState("3A");
   const [result, setResult] = useState<Date | null>(null);
@@ -24,13 +33,14 @@ export function TatkalTimeClient({ forms }: { forms: Dictionary["forms"] }) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="journey-date" className="block text-sm font-medium mb-1">{forms.journeyDate}</label>
-        <input
+        <DatePicker
           id="journey-date"
-          type="date"
-          required
           value={journeyDate}
-          onChange={(e) => setJourneyDate(e.target.value)}
-          className="w-full rounded-lg border border-border bg-[var(--background)] px-3 py-2.5 text-base"
+          onChange={setJourneyDate}
+          locale={locale}
+          t={datepicker}
+          min={todayISO()}
+          required
         />
       </div>
       <div>

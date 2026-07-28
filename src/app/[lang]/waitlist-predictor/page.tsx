@@ -3,6 +3,7 @@ import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { WaitlistClient } from "./WaitlistClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
@@ -41,6 +42,7 @@ const faqs = [
 export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
   const { lang: raw } = await params;
   const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
   const page = localizePage(lang, "waitlist-predictor", {
     eyebrow: "WL Confirmation Outlook",
     title: "Waitlist Confirmation Outlook",
@@ -74,7 +76,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         </>
       }
     >
-      <WaitlistClient />
+      <WaitlistClient locale={lang} datepicker={dict.datepicker} />
     </CalculatorShell>
   );
 }

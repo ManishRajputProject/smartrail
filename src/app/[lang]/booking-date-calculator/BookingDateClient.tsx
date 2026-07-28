@@ -5,13 +5,16 @@ import Link from "next/link";
 import { bookingOpenDate, formatDateLong, ARP_DAYS, ARP_OPEN_HOUR_IST } from "@/lib/irctc-rules";
 import { localePath, DEFAULT_LOCALE, type Locale } from "@/i18n/locales";
 import type { Dictionary } from "@/i18n/dictionary";
+import { DatePicker, todayISO } from "@/components/DatePicker";
 
 export function BookingDateClient({
   forms,
   lang = DEFAULT_LOCALE,
+  datepicker,
 }: {
   forms: Dictionary["forms"];
   lang?: Locale;
+  datepicker: Dictionary["datepicker"];
 }) {
   const [journeyDate, setJourneyDate] = useState("");
   const [result, setResult] = useState<Date | null>(null);
@@ -30,13 +33,14 @@ export function BookingDateClient({
         <label htmlFor="journey-date" className="block text-sm font-medium mb-1">
           {forms.journeyDate}
         </label>
-        <input
+        <DatePicker
           id="journey-date"
-          type="date"
-          required
           value={journeyDate}
-          onChange={(e) => setJourneyDate(e.target.value)}
-          className="input"
+          onChange={setJourneyDate}
+          locale={lang}
+          t={datepicker}
+          min={todayISO()}
+          required
         />
         <p className="mt-1 text-xs text-muted">{forms.journeyDateHint}</p>
       </div>

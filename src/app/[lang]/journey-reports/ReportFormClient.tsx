@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { DatePicker } from "@/components/DatePicker";
+import type { Dictionary } from "@/i18n/dictionary";
 
 const CATEGORIES = [
   { key: "tatkal_experience", label: "Tatkal Experience" },
@@ -10,7 +12,13 @@ const CATEGORIES = [
   { key: "other", label: "Other" },
 ];
 
-export function ReportFormClient() {
+export function ReportFormClient({
+  locale,
+  datepicker,
+}: {
+  locale: string;
+  datepicker: Dictionary["datepicker"];
+}) {
   const [category, setCategory] = useState("tatkal_experience");
   const [trainRef, setTrainRef] = useState("");
   const [journeyDate, setJourneyDate] = useState("");
@@ -70,7 +78,7 @@ export function ReportFormClient() {
         </div>
         <div>
           <label htmlFor="jr-date" className="block text-sm font-medium mb-1">Journey Date (optional)</label>
-          <input id="jr-date" type="date" value={journeyDate} onChange={(e) => setJourneyDate(e.target.value)} className="w-full rounded-lg border border-border bg-[var(--background)] px-3 py-2.5 text-base" />
+          <DatePicker id="jr-date" value={journeyDate} onChange={setJourneyDate} locale={locale} t={datepicker} required />
         </div>
       </div>
       <div>

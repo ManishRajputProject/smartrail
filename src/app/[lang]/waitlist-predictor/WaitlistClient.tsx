@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { DatePicker, todayISO } from "@/components/DatePicker";
+import type { Dictionary } from "@/i18n/dictionary";
 import { estimateWlOutlook, WL_TYPE_INFO, WL_CLASS_CAPACITY_WEIGHT, daysBetween, type WlType, type OutlookBand } from "@/lib/irctc-rules";
 
 const WL_TYPES = Object.keys(WL_TYPE_INFO) as WlType[];
@@ -14,7 +16,13 @@ const BAND_STYLES: Record<OutlookBand, string> = {
   "Very Unlikely": "text-danger",
 };
 
-export function WaitlistClient() {
+export function WaitlistClient({
+  locale,
+  datepicker,
+}: {
+  locale: string;
+  datepicker: Dictionary["datepicker"];
+}) {
   const [wlNumber, setWlNumber] = useState("");
   const [wlType, setWlType] = useState<WlType>("GNWL");
   const [travelClass, setTravelClass] = useState("SL");
@@ -72,14 +80,8 @@ export function WaitlistClient() {
       </div>
       <div>
         <label htmlFor="wl-date" className="block text-sm font-medium mb-1">Journey Date</label>
-        <input
-          id="wl-date"
-          type="date"
-          required
-          value={journeyDate}
-          onChange={(e) => setJourneyDate(e.target.value)}
-          className="w-full rounded-lg border border-border bg-[var(--background)] px-3 py-2.5 text-base"
-        />
+        <DatePicker id="wl-date" value={journeyDate} onChange={setJourneyDate} locale={locale} t={datepicker}
+          min={todayISO()} required />
       </div>
       <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">
         Check Outlook

@@ -81,7 +81,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         </>
       }
     >
-      <TatkalTimeClient forms={dict.forms} />
+      <TatkalTimeClient forms={dict.forms} locale={lang} datepicker={dict.datepicker} />
     </CalculatorShell>
   );
 }

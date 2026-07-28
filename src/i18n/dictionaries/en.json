@@ -147,5 +147,14 @@
     "advertisingNote": "Lets ad providers show relevant ads. This is what funds the free tools.",
     "privacyLink": "Privacy Policy",
     "manage": "Cookie settings"
+  },
+  "datepicker": {
+    "selectDate": "Select date",
+    "today": "Today",
+    "clear": "Clear",
+    "done": "Done",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "chooseMonth": "Choose month and year"
   }
 }

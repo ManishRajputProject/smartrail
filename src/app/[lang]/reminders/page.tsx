@@ -3,6 +3,7 @@ import { buildMetadata } from "@/lib/seo";
 import { CalculatorShell } from "@/components/CalculatorShell";
 import { RemindersClient } from "./RemindersClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
@@ -43,6 +44,7 @@ const faqs = [
 export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
   const { lang: raw } = await params;
   const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
   const page = localizePage(lang, "reminders", {
     eyebrow: "Booking Reminders",
     title: "Train Booking Reminders",
@@ -65,7 +67,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         { href: "/long-weekend-planner", label: "Long Weekend Planner", description: "Spot high-demand dates worth setting a reminder for." },
       ]}
     >
-      <RemindersClient />
+      <RemindersClient locale={lang} datepicker={dict.datepicker} />
     </CalculatorShell>
   );
 }

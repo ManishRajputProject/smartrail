@@ -3,10 +3,18 @@
 import { useMemo, useState } from "react";
 import { bookingOpenDate, tatkalOpenDateTime } from "@/lib/irctc-rules";
 import { downloadReminderIcs } from "@/lib/ics-download";
+import { DatePicker, todayISO } from "@/components/DatePicker";
+import type { Dictionary } from "@/i18n/dictionary";
 
 type ReminderType = "advance_booking" | "tatkal";
 
-export function RemindersClient() {
+export function RemindersClient({
+  locale,
+  datepicker,
+}: {
+  locale: string;
+  datepicker: Dictionary["datepicker"];
+}) {
   const [journeyDate, setJourneyDate] = useState("");
   const [trainRef, setTrainRef] = useState("");
   const [reminderType, setReminderType] = useState<ReminderType>("advance_booking");
@@ -79,14 +87,8 @@ export function RemindersClient() {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="rm-date" className="block text-sm font-medium mb-1">Journey Date *</label>
-        <input
-          id="rm-date"
-          type="date"
-          required
-          value={journeyDate}
-          onChange={(e) => setJourneyDate(e.target.value)}
-          className="w-full rounded-lg border border-border bg-[var(--background)] px-3 py-2.5 text-base"
-        />
+        <DatePicker id="rm-date" value={journeyDate} onChange={setJourneyDate} locale={locale} t={datepicker}
+          min={todayISO()} required />
       </div>
       <div>
         <label htmlFor="rm-train" className="block text-sm font-medium mb-1">Train Number / Remarks</label>

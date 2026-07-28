@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { localizePage } from "@/i18n/page-translations";
+import { getDictionary } from "@/i18n/dictionary";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ReportFormClient } from "./ReportFormClient";
 import { getServerSupabase } from "@/lib/supabase/server";
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return buildMetadata({
     title: meta.title,
     description: meta.description,
-    path: "/journey-reports",
+    path: "/journey-reports",
     keywords: ["train journey reviews India", "tatkal confirmation experience", "IRCTC traveller reports"],
     locale,
   });
@@ -64,7 +65,10 @@ async function getApprovedReports(): Promise<JourneyReportRow[]> {
   }
 }
 
-export default async function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const dict = getDictionary(lang);
   const reports = await getApprovedReports();
 
   return (
@@ -78,7 +82,7 @@ export default async function Page() {
       </p>
 
       <div className="mt-6">
-        <ReportFormClient />
+        <ReportFormClient locale={lang} datepicker={dict.datepicker} />
       </div>
 
       <div className="mt-10">
