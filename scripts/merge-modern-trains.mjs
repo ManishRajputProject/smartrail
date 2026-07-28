@@ -29,10 +29,27 @@ const stations = JSON.parse(readFileSync(join(root, "src", "data", "stations.jso
 const stationByCode = new Map(stations.map((s) => [s.code, s.name]));
 
 const existing = new Set(trains.map((t) => t.number));
-const supplement = JSON.parse(readFileSync(join(scratch, "vb-extracted.json"), "utf8"));
+
+// Each modern category is compiled into its own extracted file; merge them all.
+const SUPPLEMENT_FILES = [
+  "vb-extracted.json",
+  "hs-extracted.json",
+  "ab-extracted.json",
+  "tj-extracted.json",
+];
+const supplement = SUPPLEMENT_FILES.flatMap((f) => {
+  try {
+    return JSON.parse(readFileSync(join(scratch, f), "utf8"));
+  } catch {
+    return [];
+  }
+});
 
 const CLASSES_BY_CATEGORY = {
   "Vande Bharat": ["EC", "CC"],
+  Humsafar: ["3A"],
+  "Amrit Bharat": ["SL", "2S"],
+  Tejas: ["CC", "EC"],
 };
 
 let added = 0;
