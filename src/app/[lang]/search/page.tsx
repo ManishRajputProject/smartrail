@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
-import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { DEFAULT_LOCALE, isLocale, localePath, type Locale } from "@/i18n/locales";
 import { localizePage } from "@/i18n/page-translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { searchSite } from "@/lib/search-index";
+import { searchSite, type SearchItem } from "@/lib/search-index";
+import { searchStationsFull } from "@/lib/rail-data";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -16,15 +17,38 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return buildMetadata({
     title: meta.title,
     description: meta.description,
-    path: "/search",
+    path: "/search",
     noIndex: true,
     locale,
   });
 }
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
   const { q = "" } = await searchParams;
-  const results = q ? searchSite(q, 20) : [];
+
+  // Tools, guides and pages from the static index...
+  const siteResults = q ? searchSite(q, 12) : [];
+  // ...plus stations from the full 8,900-entry directory (server-only), which
+  // the static index deliberately omits. Each links into the directory
+  // pre-filtered to that station.
+  const stationResults: SearchItem[] = q
+    ? searchStationsFull(q, 12).map((s) => ({
+        title: `${s.name} (${s.code})`,
+        href: `/stations?q=${encodeURIComponent(s.code)}`,
+        group: "Station" as const,
+        keywords: "",
+        hint: s.state || undefined,
+      }))
+    : [];
+  const results = [...siteResults, ...stationResults];
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 md:py-8 pb-20 md:pb-10">
@@ -50,7 +74,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
       <div className="mt-5 space-y-2">
         {q && results.length === 0 && <p className="text-muted">No matches. Try a broader term.</p>}
         {results.map((item) => (
-          <Link key={`${item.group}-${item.href}-${item.title}`} href={item.href} className="card card-hover flex items-center gap-3 p-3.5">
+          <Link key={`${item.group}-${item.href}-${item.title}`} href={localePath(lang, item.href)} className="card card-hover flex items-center gap-3 p-3.5">
             <span className="flex-1">
               <span className="font-semibold text-[15px]">{item.title}</span>
               {item.hint && <span className="text-[12px] text-muted ml-2">{item.hint}</span>}

@@ -1,6 +1,5 @@
 import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, COMMUNITY_ROUTES, CONTENT_ROUTES } from "@/lib/site-routes";
 import { GUIDES } from "@/lib/guides";
-import { STATIONS } from "@/lib/stations";
 
 export interface SearchItem {
   title: string;
@@ -10,8 +9,15 @@ export interface SearchItem {
   hint?: string;
 }
 
-/** Flat, client-searchable catalog of everything on the site. Built once at
- *  module load — no network, works offline. */
+/**
+ * Flat catalog of tools, guides and content pages. Built once at module load —
+ * no network, safe in any runtime.
+ *
+ * Stations are intentionally NOT here: the full directory is ~8,900 entries
+ * (too heavy to inline everywhere) and lives in the server-only rail-data
+ * module. The search page merges full station results in separately; see
+ * src/app/[lang]/search/page.tsx.
+ */
 export const SEARCH_INDEX: SearchItem[] = [
   ...[...CALCULATOR_ROUTES, ...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES].map((t) => ({
     title: t.label,
@@ -32,13 +38,6 @@ export const SEARCH_INDEX: SearchItem[] = [
     href: c.href,
     group: "Page" as const,
     keywords: c.label.toLowerCase(),
-  })),
-  ...STATIONS.map((s) => ({
-    title: `${s.name} (${s.code})`,
-    href: "/stations",
-    group: "Station" as const,
-    keywords: `${s.name} ${s.code} ${s.city} ${s.state}`.toLowerCase(),
-    hint: s.city,
   })),
 ];
 
