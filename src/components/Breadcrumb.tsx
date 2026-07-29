@@ -13,7 +13,7 @@ export function Breadcrumb({ items, dark = false }: { items: { name: string; hre
       <nav aria-label="Breadcrumb" className={`text-sm ${base} mb-3`}>
         <ol className="flex flex-wrap items-center gap-1">
           {full.map((item, i) => (
-            <li key={item.href} className="flex items-center gap-1">
+            <li key={`${item.href}-${i}`} className="flex items-center gap-1">
               {i > 0 && <span aria-hidden="true">/</span>}
               {i === full.length - 1 ? (
                 <span className={current}>{item.name}</span>

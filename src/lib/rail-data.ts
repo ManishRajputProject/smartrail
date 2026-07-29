@@ -146,3 +146,39 @@ export function getStationByCode(code: string): Station | undefined {
   const c = code.trim().toUpperCase();
   return STATIONS.find((s) => s.code === c);
 }
+
+/**
+ * A–Z browse index, keyed by the first letter of the station code (uppercased).
+ * Codes that don't start with A–Z are bucketed under "#". Built once and
+ * cached, since the browse pages are generated for every letter x locale.
+ */
+let STATION_LETTER_INDEX: Map<string, Station[]> | null = null;
+function stationLetterIndex(): Map<string, Station[]> {
+  if (STATION_LETTER_INDEX) return STATION_LETTER_INDEX;
+  const map = new Map<string, Station[]>();
+  for (const s of STATIONS) {
+    const first = (s.code.trim()[0] ?? "").toUpperCase();
+    const key = /[A-Z]/.test(first) ? first : "#";
+    const bucket = map.get(key);
+    if (bucket) bucket.push(s);
+    else map.set(key, [s]);
+  }
+  for (const bucket of map.values()) {
+    bucket.sort((a, b) => a.code.localeCompare(b.code));
+  }
+  STATION_LETTER_INDEX = map;
+  return map;
+}
+
+/** Letters that actually have stations, in order, with counts — for the A–Z nav. */
+export function stationIndexLetters(): { letter: string; count: number }[] {
+  const map = stationLetterIndex();
+  return [...map.keys()]
+    .sort((a, b) => (a === "#" ? 1 : b === "#" ? -1 : a.localeCompare(b)))
+    .map((letter) => ({ letter, count: map.get(letter)!.length }));
+}
+
+/** All stations whose code starts with the given letter ("#" for non-alpha). */
+export function stationsByLetter(letter: string): Station[] {
+  return stationLetterIndex().get(letter.toUpperCase()) ?? [];
+}

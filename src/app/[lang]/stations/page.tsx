@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildMetadata } from "@/lib/seo";
-import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
+import { DEFAULT_LOCALE, isLocale, localePath, type Locale } from "@/i18n/locales";
 import { localizePage } from "@/i18n/page-translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { DataDisclaimer } from "@/components/DataDisclaimer";
-import { searchStationsFull, allStationsCount, type Station } from "@/lib/rail-data";
+import { searchStationsFull, allStationsCount, stationIndexLetters, type Station } from "@/lib/rail-data";
 import { STATIONS as POPULAR } from "@/lib/stations";
+import { stationIndexStrings } from "@/i18n/station-index-strings";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return buildMetadata({
     title: meta.title,
     description: meta.description,
-    path: "/stations",
+    path: "/stations",
     keywords: ["railway station code list", "IRCTC station code lookup", "station code finder", "railway zone"],
     locale,
   });
@@ -38,9 +39,20 @@ function Row({ s }: { s: Station }) {
   );
 }
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { lang: rawLang } = await params;
+  const lang: Locale = isLocale(rawLang) ? rawLang : DEFAULT_LOCALE;
+  const lp = (href: string) => localePath(lang, href);
   const { q = "" } = await searchParams;
   const results = q ? searchStationsFull(q, 60) : [];
+  const idx = stationIndexStrings(lang);
+  const letters = stationIndexLetters();
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 md:py-8 pb-20 md:pb-10">
@@ -87,6 +99,29 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
       )}
 
       <DataDisclaimer />
+
+      {/* A–Z station code glossary — every station is one hop from here, for crawlers and browsing. */}
+      <section className="mt-8" aria-labelledby="browse-station-az">
+        <h2 id="browse-station-az" className="text-lg font-bold tracking-tight mb-1">{idx.browseAZ}</h2>
+        <p className="text-[13px] text-muted mb-3">
+          {idx.hubSubtitle.replace("{count}", allStationsCount().toLocaleString("en-IN"))}
+        </p>
+        <nav aria-label={idx.jumpToLetter} className="flex flex-wrap gap-1.5">
+          {letters.map(({ letter, count }) => {
+            const slug = letter === "#" ? "0-9" : letter.toLowerCase();
+            return (
+              <Link
+                key={letter}
+                href={lp(`/stations/browse/${slug}`)}
+                title={`${count.toLocaleString("en-IN")}`}
+                className="inline-grid place-items-center h-9 min-w-9 px-2 rounded-lg text-[14px] font-semibold bg-surface-2 hover:bg-primary-soft hover:text-primary transition-colors"
+              >
+                {letter === "#" ? "0–9" : letter}
+              </Link>
+            );
+          })}
+        </nav>
+      </section>
 
       <div className="mt-6">
         <Link href="/trains" className="card card-hover p-3.5 block">
