@@ -128,6 +128,29 @@ export const PREVIOUS_NIGHT_CHART_HOUR_IST = 21; // ~9 PM the day before
 /** A second, final chart is typically prepared this many minutes before departure. */
 export const SECOND_CHART_MINUTES_BEFORE = 30;
 
+export interface ChartTimes {
+  firstChart: Date;
+  finalChart: Date;
+  /** True if departure falls in the early-morning window, so the first chart
+   *  moves to the previous evening instead of 4 hours before departure. */
+  earlyMorning: boolean;
+}
+
+/** First and final chart preparation times for a given scheduled departure. */
+export function computeChartTimes(departure: Date): ChartTimes {
+  const earlyMorning = departure.getHours() < EARLY_MORNING_DEPARTURE_END_HOUR;
+  const firstChart = earlyMorning
+    ? (() => {
+        const prevNight = new Date(departure);
+        prevNight.setDate(prevNight.getDate() - 1);
+        prevNight.setHours(PREVIOUS_NIGHT_CHART_HOUR_IST, 0, 0, 0);
+        return prevNight;
+      })()
+    : new Date(departure.getTime() - CHART_HOURS_BEFORE_DEPARTURE * 60 * 60 * 1000);
+  const finalChart = new Date(departure.getTime() - SECOND_CHART_MINUTES_BEFORE * 60 * 1000);
+  return { firstChart, finalChart, earlyMorning };
+}
+
 // ---------------------------------------------------------------------------
 // Waitlist
 // ---------------------------------------------------------------------------

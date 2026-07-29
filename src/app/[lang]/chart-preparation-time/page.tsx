@@ -54,6 +54,14 @@ const faqs = [
     question: "How do I check chart preparation status on IRCTC?",
     answer: "Once the chart is prepared, IRCTC shows a 'Chart Prepared' status and lets you view the vacant-berth position for the train. Until then it reads 'Chart Not Prepared'. Your live PNR status also updates at chart preparation — that is the moment a waitlisted or RAC ticket reaches its final state.",
   },
+  {
+    question: "Does chart preparation time change for my boarding station if it's not the origin?",
+    answer: "No — the chart is always prepared relative to the train's departure from its originating station, not from wherever you board. If you board partway along the route, use the calculator's optional boarding-station field to see your own arrival time; the chart timing itself stays anchored to the origin.",
+  },
+  {
+    question: "How do I check the chart preparation time for my train by train number?",
+    answer: "Search your train by number or name in the calculator above, optionally pick your boarding station, and choose your journey date — it looks up the train's actual scheduled origin departure and works out both the first and final chart times for you.",
+  },
 ];
 
 export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
