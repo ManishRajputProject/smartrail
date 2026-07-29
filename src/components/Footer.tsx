@@ -3,6 +3,7 @@ import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, COMMUNITY_ROUTES, CONTENT_ROUT
 import { SITE_NAME } from "@/lib/seo";
 import { localePath, type Locale } from "@/i18n/locales";
 import { localizeTools } from "@/i18n/tool-translations";
+import { trainIndexStrings } from "@/i18n/train-index-strings";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import type { Dictionary } from "@/i18n/dictionary";
 
@@ -103,6 +104,8 @@ export function Footer({ lang, dict }: { lang: Locale; dict: Dictionary }) {
             {CONTENT_ROUTES.map((r) => (
               <li key={r.href}><Link href={lp(r.href)} className={col}>{linkLabel(r.href, r.label)}</Link></li>
             ))}
+            {/* One link to the A–Z train index — the hub, not 5,477 footer links. */}
+            <li><Link href={lp("/trains/browse/a")} className={col}>{trainIndexStrings(lang).browseAZ}</Link></li>
             {LEGAL_ROUTES.map((r) => (
               <li key={r.href}><Link href={lp(r.href)} className={col}>{linkLabel(r.href, r.label)}</Link></li>
             ))}

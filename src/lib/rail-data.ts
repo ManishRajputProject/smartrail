@@ -100,6 +100,42 @@ export function sitemapTrains(): Train[] {
   return TRAINS.filter((t) => t.dep && t.arr && t.durH != null);
 }
 
+/**
+ * A–Z browse index, keyed by the first letter of the train name (uppercased).
+ * Trains whose name doesn't start with A–Z are bucketed under "#". Built once
+ * and cached, since the browse pages are generated for every letter x locale.
+ */
+let LETTER_INDEX: Map<string, Train[]> | null = null;
+function letterIndex(): Map<string, Train[]> {
+  if (LETTER_INDEX) return LETTER_INDEX;
+  const map = new Map<string, Train[]>();
+  for (const t of TRAINS) {
+    const first = (t.name.trim()[0] ?? "").toUpperCase();
+    const key = /[A-Z]/.test(first) ? first : "#";
+    const bucket = map.get(key);
+    if (bucket) bucket.push(t);
+    else map.set(key, [t]);
+  }
+  for (const bucket of map.values()) {
+    bucket.sort((a, b) => a.name.localeCompare(b.name) || a.number.localeCompare(b.number));
+  }
+  LETTER_INDEX = map;
+  return map;
+}
+
+/** Letters that actually have trains, in order, with counts — for the A–Z nav. */
+export function trainIndexLetters(): { letter: string; count: number }[] {
+  const map = letterIndex();
+  return [...map.keys()]
+    .sort((a, b) => (a === "#" ? 1 : b === "#" ? -1 : a.localeCompare(b)))
+    .map((letter) => ({ letter, count: map.get(letter)!.length }));
+}
+
+/** All trains whose name starts with the given letter ("#" for non-alpha). */
+export function trainsByLetter(letter: string): Train[] {
+  return letterIndex().get(letter.toUpperCase()) ?? [];
+}
+
 /** Small curated set for landing-page grids (not the whole 5,000+). */
 export function popularTrains(): Train[] {
   const wanted = ["12951", "12301", "12259", "12002", "12009", "12019", "12627", "12621", "12723", "22691"];

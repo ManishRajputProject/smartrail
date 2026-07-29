@@ -5,7 +5,9 @@ import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { localizePage } from "@/i18n/page-translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { DataDisclaimer } from "@/components/DataDisclaimer";
-import { searchTrains, popularTrains, allTrainsCount } from "@/lib/rail-data";
+import { searchTrains, popularTrains, allTrainsCount, trainIndexLetters } from "@/lib/rail-data";
+import { localePath } from "@/i18n/locales";
+import { trainIndexStrings } from "@/i18n/train-index-strings";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -17,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return buildMetadata({
     title: meta.title,
     description: meta.description,
-    path: "/trains",
+    path: "/trains",
     keywords: ["train finder", "train number search", "indian railways train list", "train by name"],
     locale,
   });
@@ -28,10 +30,21 @@ function fmtDuration(h: number | null, m: number | null) {
   return `${h}h${m ? ` ${m}m` : ""}`;
 }
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { lang: raw } = await params;
+  const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const lp = (href: string) => localePath(lang, href);
   const { q = "" } = await searchParams;
   const results = q ? searchTrains(q, 50) : [];
   const popular = popularTrains();
+  const letters = trainIndexLetters();
+  const idx = trainIndexStrings(lang);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 md:py-8 pb-20 md:pb-10">
@@ -82,6 +95,29 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
       {!q && <p className="mt-2 text-[12px] text-muted">Showing popular trains — search above for any of {allTrainsCount().toLocaleString("en-IN")}.</p>}
 
       <DataDisclaimer />
+
+      {/* A–Z browse index — every train is one hop from here, for crawlers and browsing. */}
+      <section className="mt-8" aria-labelledby="browse-az">
+        <h2 id="browse-az" className="text-lg font-bold tracking-tight mb-1">{idx.browseAZ}</h2>
+        <p className="text-[13px] text-muted mb-3">
+          {idx.hubSubtitle.replace("{count}", allTrainsCount().toLocaleString("en-IN"))}
+        </p>
+        <nav aria-label={idx.jumpToLetter} className="flex flex-wrap gap-1.5">
+          {letters.map(({ letter, count }) => {
+            const slug = letter === "#" ? "0-9" : letter.toLowerCase();
+            return (
+              <Link
+                key={letter}
+                href={lp(`/trains/browse/${slug}`)}
+                title={`${count.toLocaleString("en-IN")}`}
+                className="inline-grid place-items-center h-9 min-w-9 px-2 rounded-lg text-[14px] font-semibold bg-surface-2 hover:bg-primary-soft hover:text-primary transition-colors"
+              >
+                {letter === "#" ? "0–9" : letter}
+              </Link>
+            );
+          })}
+        </nav>
+      </section>
 
       <div className="mt-8">
         <h2 className="text-lg font-bold tracking-tight mb-2.5">Related</h2>
