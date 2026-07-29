@@ -78,7 +78,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         </>
       }
     >
-      <RefundClient forms={dict.forms} />
+      <RefundClient forms={dict.forms} locale={lang} datepicker={dict.datepicker} />
     </CalculatorShell>
   );
 }

@@ -8,8 +8,17 @@ import {
   EARLY_MORNING_DEPARTURE_END_HOUR,
   PREVIOUS_NIGHT_CHART_HOUR_IST,
 } from "@/lib/irctc-rules";
+import { DatePicker, todayISO } from "@/components/DatePicker";
 
-export function ChartPrepClient({ forms }: { forms: Dictionary["forms"] }) {
+export function ChartPrepClient({
+  forms,
+  locale,
+  datepicker,
+}: {
+  forms: Dictionary["forms"];
+  locale: string;
+  datepicker: Dictionary["datepicker"];
+}) {
   const [departure, setDeparture] = useState("");
   const [result, setResult] = useState<{ text: string; note: string } | null>(null);
 
@@ -40,13 +49,15 @@ export function ChartPrepClient({ forms }: { forms: Dictionary["forms"] }) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label htmlFor="cp-departure" className="block text-sm font-medium mb-1">{forms.scheduledDeparture}</label>
-        <input
+        <DatePicker
           id="cp-departure"
-          type="datetime-local"
-          required
           value={departure}
-          onChange={(e) => setDeparture(e.target.value)}
-          className="w-full rounded-lg border border-border bg-[var(--background)] px-3 py-2.5 text-base"
+          onChange={setDeparture}
+          locale={locale}
+          t={datepicker}
+          min={todayISO()}
+          withTime
+          required
         />
         <p className="mt-1 text-xs text-muted">Use the train&apos;s scheduled departure from its source station.</p>
       </div>

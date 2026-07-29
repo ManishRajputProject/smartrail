@@ -40,6 +40,7 @@ export function DatePicker({
   max,
   required,
   placeholder,
+  withTime,
 }: {
   id?: string;
   value: string;
@@ -52,6 +53,8 @@ export function DatePicker({
   max?: string;
   required?: boolean;
   placeholder?: string;
+  /** Also pick a time. Value contract becomes "YYYY-MM-DDTHH:MM". */
+  withTime?: boolean;
 }) {
   const reactId = useId();
   const inputId = id ?? reactId;
@@ -60,9 +63,16 @@ export function DatePicker({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const selected = parseISO(value);
+  // With time, value is "YYYY-MM-DDTHH:MM"; the calendar works on the date part.
+  const [datePart, timePart] = value.includes("T") ? value.split("T") : [value, ""];
+  const time = withTime ? timePart || "10:00" : "";
+  const selected = parseISO(datePart);
   const minDate = parseISO(min);
   const maxDate = parseISO(max);
+
+  /** Emit the value in the right shape (with or without the time part). */
+  const emit = (isoDate: string, hhmm = time) =>
+    onChange(withTime ? `${isoDate}T${hhmm}` : isoDate);
 
   // The month currently shown, and the day that holds keyboard focus.
   const [view, setView] = useState<Date>(startOfMonth(selected ?? clampToday(minDate, maxDate)));
@@ -74,7 +84,12 @@ export function DatePicker({
   );
   const weekdayNames = useMemo(() => weekdays(locale), [locale]);
   const displayValue = selected
-    ? new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric" }).format(selected)
+    ? new Intl.DateTimeFormat(locale, {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        ...(withTime ? { hour: "numeric", minute: "2-digit", hour12: true } : {}),
+      }).format(withTime ? withClock(selected, time) : selected)
     : "";
 
   // Close on outside click / Escape.
@@ -103,9 +118,13 @@ export function DatePicker({
 
   function commit(day: Date) {
     if (isDisabled(day, minDate, maxDate)) return;
-    onChange(toISO(day));
-    setOpen(false);
-    triggerRef.current?.focus();
+    emit(toISO(day));
+    // With a time to set, keep the popover open so the user can pick it, then
+    // close via Done. Date-only closes immediately, as before.
+    if (!withTime) {
+      setOpen(false);
+      triggerRef.current?.focus();
+    }
   }
 
   function onGridKey(e: React.KeyboardEvent) {
@@ -221,7 +240,7 @@ export function DatePicker({
               {grid.map((day) => {
                 const inMonth = day.getMonth() === view.getMonth();
                 const iso = toISO(day);
-                const isSelected = iso === value;
+                const isSelected = iso === datePart;
                 const isFocus = iso === toISO(focusDay);
                 const isToday = iso === todayStr;
                 const disabled = isDisabled(day, minDate, maxDate);
@@ -257,6 +276,37 @@ export function DatePicker({
                 );
               })}
             </div>
+
+            {/* Time row (only when picking a datetime) */}
+            {withTime && (
+              <div className="mt-2 flex items-center gap-2 border-t border-border pt-2.5">
+                <svg viewBox="0 0 24 24" width="16" height="16" className="text-muted shrink-0" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
+                </svg>
+                <select
+                  aria-label="Hour"
+                  value={time.split(":")[0]}
+                  onChange={(e) => emit(datePart || toISO(clampToday(minDate, maxDate)), `${e.target.value}:${time.split(":")[1]}`)}
+                  className="rounded-lg border border-border bg-[var(--background)] px-2 py-1.5 text-sm tabular-nums"
+                >
+                  {Array.from({ length: 24 }, (_, h) => String(h).padStart(2, "0")).map((h) => (
+                    <option key={h} value={h}>{h}</option>
+                  ))}
+                </select>
+                <span className="text-muted font-semibold">:</span>
+                <select
+                  aria-label="Minute"
+                  value={time.split(":")[1]}
+                  onChange={(e) => emit(datePart || toISO(clampToday(minDate, maxDate)), `${time.split(":")[0]}:${e.target.value}`)}
+                  className="rounded-lg border border-border bg-[var(--background)] px-2 py-1.5 text-sm tabular-nums"
+                >
+                  {["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"].map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+                <span className="text-[12px] text-muted">IST</span>
+              </div>
+            )}
 
             {/* Footer */}
             <div className="mt-2 flex items-center justify-between border-t border-border pt-2">
@@ -300,6 +350,12 @@ function Chevron({ dir }: { dir: "left" | "right" }) {
 }
 
 /* ---- date helpers (local time, no timezone drift) ---- */
+
+/** A copy of `day` with the given "HH:MM" applied, for display formatting. */
+function withClock(day: Date, hhmm: string): Date {
+  const [h, m] = hhmm.split(":").map(Number);
+  return new Date(day.getFullYear(), day.getMonth(), day.getDate(), h || 0, m || 0);
+}
 
 function parseISO(s?: string): Date | null {
   if (!s) return null;

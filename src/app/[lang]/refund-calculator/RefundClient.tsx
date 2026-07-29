@@ -4,10 +4,19 @@ import type { Dictionary } from "@/i18n/dictionary";
 
 import { useState } from "react";
 import { CANCELLATION_SLABS, hoursBetween } from "@/lib/irctc-rules";
+import { DatePicker, todayISO } from "@/components/DatePicker";
 
 const CLASSES = ["2S", "SL", "CC", "3A", "2A", "EC", "1A"];
 
-export function RefundClient({ forms }: { forms: Dictionary["forms"] }) {
+export function RefundClient({
+  forms,
+  locale,
+  datepicker,
+}: {
+  forms: Dictionary["forms"];
+  locale: string;
+  datepicker: Dictionary["datepicker"];
+}) {
   const [travelClass, setTravelClass] = useState("3A");
   const [fare, setFare] = useState("");
   const [departure, setDeparture] = useState("");
@@ -64,13 +73,14 @@ export function RefundClient({ forms }: { forms: Dictionary["forms"] }) {
       </div>
       <div>
         <label htmlFor="rf-departure" className="block text-sm font-medium mb-1">{forms.departureDateTime}</label>
-        <input
+        <DatePicker
           id="rf-departure"
-          type="datetime-local"
-          required
           value={departure}
-          onChange={(e) => setDeparture(e.target.value)}
-          className="w-full rounded-lg border border-border bg-[var(--background)] px-3 py-2.5 text-base"
+          onChange={setDeparture}
+          locale={locale}
+          t={datepicker}
+          withTime
+          required
         />
       </div>
       <button type="submit" className="w-full rounded-lg bg-primary text-primary-foreground font-semibold py-2.5 hover:opacity-90 transition-opacity">{forms.estimateRefund}</button>
