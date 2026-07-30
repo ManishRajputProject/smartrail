@@ -216,6 +216,9 @@
     "destination": "Destination",
     "haltStop": "Halt",
     "liveDataBadge": "Live",
-    "staticDataBadge": "Reference"
+    "staticDataBadge": "Reference",
+    "stationPageTitle": "{name} ({code}) — Station Code, Live Departures & Trains",
+    "stationPageDescription": "{name} station ({code}): live train departures and arrivals, station code lookup, and every train passing through.",
+    "trainsBetweenEyebrow": "Trains Between Stations"
   }
 }

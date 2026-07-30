@@ -7,6 +7,7 @@ import { getStationByCode } from "@/lib/rail-data";
 import { STATIONS as POPULAR_STATIONS } from "@/lib/stations";
 import { DEFAULT_LOCALE, isLocale, LOCALES, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
+import { fill } from "@/i18n/train-page-strings";
 
 export function generateStaticParams() {
   return LOCALES.flatMap((lang) =>
@@ -23,13 +24,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang, code: raw } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  const dict = getDictionary(locale);
   const code = raw.toUpperCase();
   const station = getStationByCode(code);
   const name = station?.name ?? code;
 
   return buildMetadata({
-    title: `${name} (${code}) — Station Code, Live Departures & Trains`,
-    description: `${name} station (${code}): live train departures and arrivals, station code lookup, and every train passing through.`,
+    title: fill(dict.live.stationPageTitle, { name, code }),
+    description: fill(dict.live.stationPageDescription, { name, code }),
     path: `/stations/${code.toLowerCase()}`,
     keywords: [code, `${name} station code`, `${name} live status`, "station departures"],
     locale,
