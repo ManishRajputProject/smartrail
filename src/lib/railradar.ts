@@ -44,34 +44,42 @@ interface RailRadarEnvelope<T> {
   meta?: { traceId?: string; timestamp?: string; executionTime?: number; source?: string };
 }
 
-/**
- * Best-effort shape for the "train details" endpoint. Modeled on a
- * same-class competitor's server-proxied response, since we don't yet have
- * a live key to confirm RailRadar's own /v1/trains/{number} response
- * against its documented shape. VERIFY this against a real response the
- * first time RAILRADAR_API_KEY is set, and adjust field names here if they
- * differ — everything below is defensive (falls back to null / static data)
- * specifically so a shape mismatch degrades safely instead of breaking pages.
- */
-interface RailRadarStop {
-  stop_sequence?: number;
-  station_code: string;
-  station_name: string;
-  arrival_time: string | null;
-  departure_time: string | null;
-  day_count: number;
-  distance?: number;
+// The shapes below are confirmed against a live GET /v1/trains/{number}
+// response (2026-07-30) — not a guess.
+interface RailRadarStation {
+  code: string;
+  name: string;
+  lat?: number;
+  lng?: number;
+}
+
+interface RailRadarRouteStop {
+  sequence: number;
+  station: RailRadarStation;
+  isHalt: boolean;
+  platform?: string;
+  speedToNextStationKmph?: number;
+  arrival?: string;
+  arrivalDay?: number;
+  departure?: string;
+  departureDay?: number;
+  distance: number;
 }
 
 interface RailRadarTrainDetails {
-  train_no: string;
-  train_name: string;
-  train_type?: string;
-  source_station: string;
-  source_name: string;
-  destination_station: string;
-  destination_name: string;
-  stops: RailRadarStop[];
+  train: {
+    number: string;
+    name: string;
+    type?: string;
+    category?: string;
+    source: RailRadarStation;
+    destination: RailRadarStation;
+    runDays?: string[];
+    distance?: number;
+    duration?: number;
+    totalHalts?: number;
+  };
+  route: RailRadarRouteStop[];
 }
 
 function apiKey(): string | null {
@@ -80,11 +88,7 @@ function apiKey(): string | null {
 }
 
 function titleCase(s: string): string {
-  return s
-    .toLowerCase()
-    .replace(/\b\w/g, (c) => c.toUpperCase())
-    .replace(/\bJn\b/i, "Jn")
-    .replace(/\bJunction\b/i, "Junction");
+  return s.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export async function getLiveTrainDetails(
@@ -101,30 +105,32 @@ export async function getLiveTrainDetails(
     if (!res.ok) return null;
 
     const envelope = (await res.json()) as RailRadarEnvelope<RailRadarTrainDetails>;
-    if (!envelope.success || !envelope.data?.stops?.length) return null;
+    if (!envelope.success || !envelope.data?.route?.length) return null;
 
     const d = envelope.data;
-    const stops: LiveStop[] = d.stops.map((s) => ({
-      code: s.station_code,
-      name: titleCase(s.station_name),
-      arrival: s.arrival_time,
-      departure: s.departure_time,
-      day: s.day_count,
-    }));
+    const stops: LiveStop[] = d.route
+      .filter((s) => s.isHalt)
+      .map((s) => ({
+        code: s.station.code,
+        name: titleCase(s.station.name),
+        arrival: s.arrival ?? null,
+        departure: s.departure ?? null,
+        day: s.departureDay ?? s.arrivalDay ?? 1,
+      }));
     const origin = stops[0];
     const destination = stops[stops.length - 1];
     if (!origin?.departure || !destination?.arrival) return null;
 
     const train: LiveTrain = {
-      number: d.train_no,
-      name: titleCase(d.train_name),
-      fromCode: d.source_station,
-      fromName: titleCase(d.source_name),
-      toCode: d.destination_station,
-      toName: titleCase(d.destination_name),
+      number: d.train.number,
+      name: titleCase(d.train.name),
+      fromCode: d.train.source.code,
+      fromName: titleCase(d.train.source.name),
+      toCode: d.train.destination.code,
+      toName: titleCase(d.train.destination.name),
       dep: origin.departure,
       arr: destination.arrival,
-      type: d.train_type ?? "",
+      type: d.train.type ?? "",
     };
 
     return { train, stops };
