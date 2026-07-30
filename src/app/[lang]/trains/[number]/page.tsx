@@ -15,6 +15,7 @@ import { DEFAULT_LOCALE, isLocale, localePath, LOCALES, type Locale } from "@/i1
 import { getDictionary } from "@/i18n/dictionary";
 import { trainStrings, fill } from "@/i18n/train-page-strings";
 import { LiveStatusPanel } from "@/components/LiveStatusPanel";
+import { CoachFormation } from "@/components/CoachFormation";
 import { getLiveTrainDetails } from "@/lib/railradar";
 import { RouteMap } from "@/components/RouteMapLoader";
 
@@ -217,6 +218,13 @@ export default async function Page({
       </div>
 
       <LiveStatusPanel trainNumber={train.number} t={dict.live} />
+
+      {live?.train.coachPosition && (
+        <section className="mt-5">
+          <h2 className="text-[17px] font-bold tracking-tight">{dict.live.coachFormation}</h2>
+          <CoachFormation composition={live.train.coachPosition} t={dict.live} />
+        </section>
+      )}
 
       <div className="card mt-4 p-5">
         <div className="flex items-center justify-between gap-3">

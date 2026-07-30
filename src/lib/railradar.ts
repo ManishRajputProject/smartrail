@@ -30,6 +30,16 @@ export interface LiveTrain {
   type: string;
   /** Total scheduled journey time in minutes, straight from RailRadar. */
   durationMin: number | null;
+  /**
+   * Dash-separated coach codes in physical order, e.g.
+   * "ENG-EOG-B1-B2-...-H1-A1-...-HCP" — straight from RailRadar, verbatim.
+   * We deliberately do NOT expand individual codes (B1, H1, A1...) into full
+   * class names or berth counts: those vary by rake/coach variant and we
+   * have no verified source for them, so showing the raw code is the
+   * honest option. Only the handful of universally-standard non-passenger
+   * codes (engine, power car, pantry, general, brake van) get expanded.
+   */
+  coachPosition: string | null;
 }
 
 export interface LiveStop {
@@ -81,6 +91,7 @@ interface RailRadarTrainDetails {
     distance?: number;
     duration?: number;
     totalHalts?: number;
+    coachPosition?: string;
   };
   route: RailRadarRouteStop[];
 }
@@ -159,6 +170,7 @@ export async function getLiveTrainDetails(
       arr: destination.arrival,
       type: d.train.type ?? "",
       durationMin: d.train.duration ?? null,
+      coachPosition: d.train.coachPosition ?? null,
     };
 
     return { train, stops };
