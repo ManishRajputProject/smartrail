@@ -23,7 +23,17 @@ const OG_LOCALE: Record<Locale, string> = {
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
-  const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
+  // The layout body calls notFound() for an invalid locale segment below, but
+  // that alone doesn't produce an HTTP 404 in this streaming setup (Next.js
+  // sends 200 once streaming starts, and can only mark the response noindex
+  // via metadata — see loading.js docs, "Status Codes"). Every other
+  // notFound()-calling page in this app sets noIndex on this path already;
+  // this was the one gap, silently claiming a normal, indexable page while
+  // rendering a not-found body.
+  if (!isLocale(lang)) {
+    return { robots: { index: false, follow: false } };
+  }
+  const locale: Locale = lang;
   const languages = Object.fromEntries(LOCALES.map((l) => [l, `${SITE_URL}/${l}`]));
   return {
     metadataBase: new URL(SITE_URL),
