@@ -5,17 +5,24 @@ import { buildMetadata } from "@/lib/seo";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { DataDisclaimer } from "@/components/DataDisclaimer";
 import { ScheduleTable } from "@/components/ScheduleTable";
-import { getSchedule, routeDistanceKm } from "@/lib/schedules";
+import { getSchedule, haltMinutes, routeDistanceKm, type ScheduleStop } from "@/lib/schedules";
 import { scheduleStrings } from "@/i18n/schedule-strings";
 import { JsonLd } from "@/components/JsonLd";
-import { getTrainByNumber, popularTrains } from "@/lib/rail-data";
+import { getTrainByNumber, popularTrains, type Train } from "@/lib/rail-data";
 import { trainFacts, formatDuration } from "@/lib/train-facts";
 import { ARP_DAYS } from "@/lib/irctc-rules";
 import { DEFAULT_LOCALE, isLocale, localePath, LOCALES, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { trainStrings, fill } from "@/i18n/train-page-strings";
+import { LiveStatusPanel } from "@/components/LiveStatusPanel";
+import { getLiveTrainDetails } from "@/lib/railradar";
+import { RouteMap } from "@/components/RouteMapLoader";
 
 export const dynamicParams = true;
+// Re-run the page (including the live-data fetch below) daily, so a train
+// page never stays frozen on a stale departure/arrival time indefinitely —
+// matches the 24h cache on the underlying RailRadar call.
+export const revalidate = 86400;
 
 // SSG the popular trains at build; the rest render on demand and are cached.
 export function generateStaticParams() {
@@ -31,8 +38,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang, number } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
-  const train = getTrainByNumber(number);
-  if (!train) {
+  const staticTrain = getTrainByNumber(number);
+  if (!staticTrain) {
     return buildMetadata({
       title: "Train Not Found",
       description: "No such train number.",
@@ -41,6 +48,20 @@ export async function generateMetadata({
       locale,
     });
   }
+
+  // Same live-first merge as the page body — Next dedupes this fetch against
+  // the identical call made there, so this costs no extra RailRadar request.
+  const live = await getLiveTrainDetails(number);
+  const train: Train = live
+    ? {
+        ...staticTrain,
+        name: live.train.name,
+        fromName: live.train.fromName,
+        toName: live.train.toName,
+        dep: live.train.dep,
+        arr: live.train.arr,
+      }
+    : staticTrain;
 
   const s = trainStrings(locale);
   const f = trainFacts(train);
@@ -94,13 +115,46 @@ export default async function Page({
   const t = trainStrings(lang);
   const lp = (href: string) => localePath(lang, href);
 
-  const train = getTrainByNumber(number);
-  if (!train) notFound();
+  const staticTrain = getTrainByNumber(number);
+  if (!staticTrain) notFound();
+
+  // Prefer live data for anything schedule-related — the static dataset is a
+  // 2016 snapshot that drifts from real IRCTC timings (see the 12951 fix).
+  // Only fall back to it when RailRadar has nothing for this train.
+  const live = await getLiveTrainDetails(number);
+  const isLiveData = live != null;
+
+  const train: Train = live
+    ? {
+        ...staticTrain,
+        name: live.train.name,
+        fromCode: live.train.fromCode,
+        fromName: live.train.fromName,
+        toCode: live.train.toCode,
+        toName: live.train.toName,
+        dep: live.train.dep,
+        arr: live.train.arr,
+        type: live.train.type || staticTrain.type,
+        durH: live.train.durationMin != null ? Math.floor(live.train.durationMin / 60) : staticTrain.durH,
+        durM: live.train.durationMin != null ? live.train.durationMin % 60 : staticTrain.durM,
+      }
+    : staticTrain;
+
+  const stops: ScheduleStop[] = live
+    ? live.stops.map((s) => ({
+        code: s.code,
+        name: s.name,
+        arrival: s.arrival,
+        departure: s.departure,
+        day: s.day,
+        haltMinutes: haltMinutes(s.arrival, s.departure),
+        kmFromOrigin: s.distanceKm,
+      }))
+    : getSchedule(train.number);
+  const totalKm = live ? (stops[stops.length - 1]?.kmFromOrigin ?? null) : routeDistanceKm(train.number);
 
   const f = trainFacts(train);
   const durationText = formatDuration(f.durationMins);
-  const stops = getSchedule(train.number);
-  const totalKm = routeDistanceKm(train.number);
   const sched = scheduleStrings(lang);
 
   const summary =
@@ -144,7 +198,12 @@ export default async function Page({
         ]}
       />
 
-      <p className="font-mono font-bold text-primary tabular-nums">{train.number}</p>
+      <div className="flex items-center gap-2">
+        <p className="font-mono font-bold text-primary tabular-nums">{train.number}</p>
+        <span className={`chip ${isLiveData ? "bg-emerald-500/10 text-emerald-600" : "bg-surface-2 text-muted"}`}>
+          {isLiveData ? dict.live.liveDataBadge : dict.live.staticDataBadge}
+        </span>
+      </div>
       <h1 className="text-[24px] md:text-[30px] font-extrabold tracking-tight leading-tight mt-0.5">
         {train.name}
       </h1>
@@ -156,6 +215,8 @@ export default async function Page({
         </p>
         <p className="mt-1.5 text-[15px] leading-relaxed">{summary}</p>
       </div>
+
+      <LiveStatusPanel trainNumber={train.number} t={dict.live} />
 
       <div className="card mt-4 p-5">
         <div className="flex items-center justify-between gap-3">
@@ -262,6 +323,11 @@ export default async function Page({
           {f.hasAc && <li>{t.tatkalAc}</li>}
           {f.hasNonAc && <li>{t.tatkalNonAc}</li>}
         </ul>
+      </section>
+
+      <section className="mt-7">
+        <h2 className="text-[19px] font-bold tracking-tight">{dict.live.routeMap}</h2>
+        <RouteMap trainNumber={train.number} fromName={train.fromName} toName={train.toName} t={dict.live} />
       </section>
 
       <ScheduleTable stops={stops} totalKm={totalKm} t={sched} />

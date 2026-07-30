@@ -100,7 +100,7 @@ export default async function Page({
         {stations.map((s) => (
           <li key={s.code}>
             <Link
-              href={lp(`/stations?q=${s.code}`)}
+              href={lp(`/stations/${s.code.toLowerCase()}`)}
               className="flex items-center gap-3 px-3.5 py-3 hover:bg-primary-soft transition-colors"
             >
               <span className="font-mono font-bold text-primary text-[14px] tabular-nums min-w-[52px]">

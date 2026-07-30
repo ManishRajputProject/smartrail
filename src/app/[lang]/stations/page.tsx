@@ -25,9 +25,9 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   });
 }
 
-function Row({ s }: { s: Station }) {
+function Row({ s, href }: { s: Station; href: string }) {
   return (
-    <div className="flex items-center justify-between gap-3 px-3.5 py-2.5 text-sm">
+    <Link href={href} className="flex items-center justify-between gap-3 px-3.5 py-2.5 text-sm hover:bg-primary-soft transition-colors">
       <div className="min-w-0">
         <span className="font-mono font-bold text-primary">{s.code}</span>
         <span className="ml-2">{s.name}</span>
@@ -35,7 +35,7 @@ function Row({ s }: { s: Station }) {
       <span className="text-[12px] text-muted shrink-0 text-right">
         {s.state || "—"}{s.zone ? ` · ${s.zone}` : ""}
       </span>
-    </div>
+    </Link>
   );
 }
 
@@ -80,7 +80,7 @@ export default async function Page({
         <>
           <p className="mt-3 text-sm text-muted">{results.length} station{results.length === 1 ? "" : "s"} for &quot;{q}&quot;</p>
           <div className="mt-2 card divide-y divide-border overflow-hidden">
-            {results.map((s) => <Row key={s.code} s={s} />)}
+            {results.map((s) => <Row key={s.code} s={s} href={lp(`/stations/${s.code.toLowerCase()}`)} />)}
             {results.length === 0 && <p className="px-4 py-6 text-center text-sm text-muted">No matching stations.</p>}
           </div>
         </>
@@ -89,10 +89,14 @@ export default async function Page({
           <p className="mt-4 text-[11px] font-semibold uppercase tracking-wide text-muted">Major stations</p>
           <div className="mt-1.5 card divide-y divide-border overflow-hidden">
             {POPULAR.slice(0, 30).map((s) => (
-              <div key={s.code} className="flex items-center justify-between gap-3 px-3.5 py-2.5 text-sm">
+              <Link
+                key={s.code}
+                href={lp(`/stations/${s.code.toLowerCase()}`)}
+                className="flex items-center justify-between gap-3 px-3.5 py-2.5 text-sm hover:bg-primary-soft transition-colors"
+              >
                 <div><span className="font-mono font-bold text-primary">{s.code}</span><span className="ml-2">{s.name}</span></div>
                 <span className="text-[12px] text-muted shrink-0">{s.city}, {s.state}</span>
-              </div>
+              </Link>
             ))}
           </div>
         </>

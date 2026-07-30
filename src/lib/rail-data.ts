@@ -43,6 +43,11 @@ const TRAINS = trainsData as Train[];
 export function allStationsCount() {
   return STATIONS.length;
 }
+
+/** Every station, for the sitemap generator. */
+export function sitemapStations(): Station[] {
+  return STATIONS;
+}
 export function allTrainsCount() {
   return TRAINS.length;
 }

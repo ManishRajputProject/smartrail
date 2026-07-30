@@ -146,6 +146,13 @@ export const COMMUNITY_ROUTES: ToolRoute[] = [
     icon: "🚆",
   },
   {
+    href: "/trains-between",
+    label: "Trains Between Stations",
+    tag: "Live",
+    description: "Find every train running between two stations, with live timings where available.",
+    icon: "🔀",
+  },
+  {
     href: "/stations",
     label: "Station Directory",
     tag: "8,900+ Stations",

@@ -8,3 +8,6 @@
  * 50,000-URL / 50 MB limits even with full hreflang blocks on every entry.
  */
 export const TRAINS_PER_SITEMAP = 650;
+
+/** Same reasoning as TRAINS_PER_SITEMAP, for src/app/stations/sitemap.ts. */
+export const STATIONS_PER_SITEMAP = 650;
