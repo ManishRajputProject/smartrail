@@ -352,20 +352,34 @@ export async function getLiveTrainsBetween(
 }
 
 // ---------------------------------------------------------------------------
-// Station live board — GET /v1/stations/{code}/trains
+// Station live board — GET /v1/stations/{code}/live
+//
+// (Not /trains — that's the older static schedule-only "Station Board"
+// endpoint. This one carries real per-train status: at-station / upcoming /
+// departed, actual delay minutes, and platform. Confirmed against a live
+// response for NDLS: e.g. {"live":{"type":"upcoming","delayMinutes":89,...}}
+// on a train scheduled 5:54am but running ~89min late.)
 // ---------------------------------------------------------------------------
 
-interface RailRadarStationBoardResponse {
+interface RailRadarStationLiveResponse {
   station: { code: string; name: string; city?: string; lat?: number; lng?: number };
   trains: Array<{
     train: {
       number: string;
       name: string;
       type?: string;
-      source: { code: string; name: string };
-      destination: { code: string; name: string };
+      // Plain codes here, unlike other endpoints' {code,name} objects —
+      // resolved against the station lookup map below.
+      source: string;
+      destination: string;
     };
-    stop: { arrival: string | null; departure: string | null; stopType: string };
+    stop: { arrival: string | null; departure: string | null; platform?: string };
+    live: {
+      type: "at-station" | "upcoming" | "departed" | "scheduled";
+      expectedArrivalTime?: string;
+      expectedDepartureTime?: string;
+      delayMinutes: number;
+    };
   }>;
 }
 
@@ -387,20 +401,32 @@ export interface LiveStationTrain {
   toName: string;
   arrival: string | null;
   departure: string | null;
-  stopType: string;
+  platform: string | null;
+  stopType: "origin" | "halt" | "destination";
+  liveStatus: "at-station" | "upcoming" | "departed" | "scheduled";
+  delayMinutes: number;
+  expectedArrival: string | null;
+  expectedDeparture: string | null;
 }
 
-/** 30-minute cache — a departures board should feel current without
- *  spending a request on every single visitor. */
+/** 2-minute cache — this is the one feature where minutes matter (delay,
+ *  at-station status), so we trade more quota for real freshness rather
+ *  than the 24h-30min caching used elsewhere in this module. */
 export async function getLiveStationBoard(
   stationCode: string
 ): Promise<{ station: LiveStationInfo; trains: LiveStationTrain[] } | null> {
   try {
-    const d = await fetchRailRadar<RailRadarStationBoardResponse>(
-      `/stations/${encodeURIComponent(stationCode)}/trains`,
-      1800
-    );
+    const [d, stationNames] = await Promise.all([
+      fetchRailRadar<RailRadarStationLiveResponse>(
+        `/stations/${encodeURIComponent(stationCode)}/live?hours=4`,
+        120
+      ),
+      getLiveStationLookup(),
+    ]);
     if (!d?.station) return null;
+
+    const nameFor = (code: string) => (stationNames?.[code] ? titleCase(stationNames[code]) : code);
+
     return {
       station: {
         code: d.station.code,
@@ -413,13 +439,18 @@ export async function getLiveStationBoard(
         number: t.train.number,
         name: titleCase(t.train.name),
         type: t.train.type ?? "",
-        fromCode: t.train.source.code,
-        fromName: titleCase(t.train.source.name),
-        toCode: t.train.destination.code,
-        toName: titleCase(t.train.destination.name),
+        fromCode: t.train.source,
+        fromName: nameFor(t.train.source),
+        toCode: t.train.destination,
+        toName: nameFor(t.train.destination),
         arrival: t.stop.arrival,
         departure: t.stop.departure,
-        stopType: t.stop.stopType,
+        platform: t.stop.platform ?? null,
+        stopType: t.stop.arrival == null ? "origin" : t.stop.departure == null ? "destination" : "halt",
+        liveStatus: t.live.type,
+        delayMinutes: t.live.delayMinutes,
+        expectedArrival: t.live.expectedArrivalTime ? isoTimeOnly(t.live.expectedArrivalTime) : null,
+        expectedDeparture: t.live.expectedDepartureTime ? isoTimeOnly(t.live.expectedDepartureTime) : null,
       })),
     };
   } catch {

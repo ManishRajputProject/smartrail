@@ -221,6 +221,10 @@
     "stationPageDescription": "{name} station ({code}): live train departures and arrivals, station code lookup, and every train passing through.",
     "trainsBetweenEyebrow": "Trains Between Stations",
     "coachFormation": "Coach Formation",
-    "coachFormationHint": "Real-time coach order from RailRadar. Codes are shown exactly as reported — exact class and berth layout can vary by rake, so we don't guess at those."
+    "coachFormationHint": "Real-time coach order from RailRadar. Codes are shown exactly as reported — exact class and berth layout can vary by rake, so we don't guess at those.",
+    "liveTypeAtStation": "At Station",
+    "liveTypeUpcoming": "Upcoming",
+    "liveTypeDeparted": "Departed",
+    "liveTypeScheduled": "Scheduled"
   }
 }
