@@ -40,7 +40,15 @@ export async function generateMetadata({
   const { lang, number } = await params;
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
   const staticTrain = getTrainByNumber(number);
-  if (!staticTrain) {
+
+  // Same live-first merge as the page body — Next dedupes this fetch against
+  // the identical call made there, so this costs no extra RailRadar request.
+  // RailRadar covers ~13,000 active trains (EMUs, specials, etc.) against our
+  // ~5,500-train static dataset, so a train can be real and linked to from a
+  // live feature (station board, trains-between) without having a static
+  // record at all — only 404 when NEITHER source has anything for it.
+  const live = await getLiveTrainDetails(number);
+  if (!staticTrain && !live) {
     return buildMetadata({
       title: "Train Not Found",
       description: "No such train number.",
@@ -50,19 +58,23 @@ export async function generateMetadata({
     });
   }
 
-  // Same live-first merge as the page body — Next dedupes this fetch against
-  // the identical call made there, so this costs no extra RailRadar request.
-  const live = await getLiveTrainDetails(number);
   const train: Train = live
     ? {
-        ...staticTrain,
+        number: live.train.number,
         name: live.train.name,
+        fromCode: live.train.fromCode,
         fromName: live.train.fromName,
+        toCode: live.train.toCode,
         toName: live.train.toName,
         dep: live.train.dep,
         arr: live.train.arr,
+        type: live.train.type || staticTrain?.type || "",
+        durH: live.train.durationMin != null ? Math.floor(live.train.durationMin / 60) : staticTrain?.durH ?? null,
+        durM: live.train.durationMin != null ? live.train.durationMin % 60 : staticTrain?.durM ?? null,
+        zone: staticTrain?.zone ?? "",
+        classes: staticTrain?.classes ?? [],
       }
-    : staticTrain;
+    : staticTrain!;
 
   const s = trainStrings(locale);
   const f = trainFacts(train);
@@ -117,17 +129,20 @@ export default async function Page({
   const lp = (href: string) => localePath(lang, href);
 
   const staticTrain = getTrainByNumber(number);
-  if (!staticTrain) notFound();
 
   // Prefer live data for anything schedule-related — the static dataset is a
-  // 2016 snapshot that drifts from real IRCTC timings (see the 12951 fix).
-  // Only fall back to it when RailRadar has nothing for this train.
+  // 2016 snapshot that drifts from real IRCTC timings (see the 12951 fix) and
+  // only covers ~5,500 of RailRadar's ~13,000 active trains. A train linked
+  // to from a live feature (station board, trains-between) can be entirely
+  // real without ever having had a static record — only 404 when neither
+  // source has anything for this number.
   const live = await getLiveTrainDetails(number);
+  if (!staticTrain && !live) notFound();
   const isLiveData = live != null;
 
   const train: Train = live
     ? {
-        ...staticTrain,
+        number: live.train.number,
         name: live.train.name,
         fromCode: live.train.fromCode,
         fromName: live.train.fromName,
@@ -135,11 +150,13 @@ export default async function Page({
         toName: live.train.toName,
         dep: live.train.dep,
         arr: live.train.arr,
-        type: live.train.type || staticTrain.type,
-        durH: live.train.durationMin != null ? Math.floor(live.train.durationMin / 60) : staticTrain.durH,
-        durM: live.train.durationMin != null ? live.train.durationMin % 60 : staticTrain.durM,
+        type: live.train.type || staticTrain?.type || "",
+        durH: live.train.durationMin != null ? Math.floor(live.train.durationMin / 60) : staticTrain?.durH ?? null,
+        durM: live.train.durationMin != null ? live.train.durationMin % 60 : staticTrain?.durM ?? null,
+        zone: staticTrain?.zone ?? "",
+        classes: staticTrain?.classes ?? [],
       }
-    : staticTrain;
+    : staticTrain!;
 
   const stops: ScheduleStop[] = live
     ? live.stops.map((s) => ({
