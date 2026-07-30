@@ -36,9 +36,9 @@ describe("getSchedule", () => {
   it("marks the origin with no arrival and the terminus with no departure", () => {
     const stops = getSchedule("12951");
     expect(stops[0].arrival).toBeNull();
-    expect(stops[0].departure).toBe("16:40");
+    expect(stops[0].departure).toBe("17:00");
     expect(stops[stops.length - 1].departure).toBeNull();
-    expect(stops[stops.length - 1].arrival).toBe("08:30");
+    expect(stops[stops.length - 1].arrival).toBe("08:32");
   });
 
   it("carries a day counter that increments on an overnight run", () => {
@@ -55,9 +55,9 @@ describe("getSchedule", () => {
 
 describe("journeyMinutes", () => {
   it("spans midnight correctly using the day counter", () => {
-    // 12951: 16:40 day 1 -> 08:30 day 2 = 15h 50m
-    expect(journeyMinutes(getSchedule("12951"))).toBe(950);
-    expect(formatDurationMins(950)).toBe("15h 50m");
+    // 12951: 17:00 day 1 -> 08:32 day 2 = 15h 32m
+    expect(journeyMinutes(getSchedule("12951"))).toBe(932);
+    expect(formatDurationMins(932)).toBe("15h 32m");
   });
 
   it("returns null when there are too few stops", () => {
