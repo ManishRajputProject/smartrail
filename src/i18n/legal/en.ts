@@ -140,6 +140,14 @@ export const en: LegalDocs = {
     title: "Who we are & how we keep the numbers right",
     sections: [
       {
+        heading: "Why we built this",
+        paragraphs: [
+          "Every Tatkal season plays out the same way: the window opens, and thousands of people scramble across a dozen browser tabs — old forum threads, screenshots forwarded on WhatsApp, half-updated blog posts — just to answer three questions. When exactly does booking open for my journey? What time does Tatkal open for my class? If I have to cancel, what do I actually get back? The official rules exist, but they're scattered across circulars and FAQ pages that don't always keep pace with what changes.",
+          "RailSetu started as a small set of scripts built to answer those three questions without the tab-hunting — nothing more. It grew into a full set of tools because the same handful of questions come up for practically every traveller, every single day: not just when to book, but whether a waitlisted ticket is worth holding onto, what a refund will really look like, and which quota actually applies to a given trip.",
+          "It stays free, login-free, and ad-supported on purpose. The moment a tool this ordinary needs an account or a subscription, it's stopped solving the problem it was built for.",
+        ],
+      },
+      {
         heading: "What RailSetu is",
         paragraphs: [
           "RailSetu is an independent, free set of calculators and planning tools for Indian Railways travellers — booking dates, Tatkal timing, refund estimates, waitlist outlooks and reminders. It is built and maintained as a solo project, is supported by advertising, and requires no login for any tool.",
