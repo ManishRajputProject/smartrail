@@ -6,7 +6,8 @@ import { useRef, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { ToolIcon } from "@/components/ToolIcon";
-import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, COMMUNITY_ROUTES } from "@/lib/site-routes";
+import { LiveDot } from "@/components/LiveDot";
+import { CALCULATOR_ROUTES, DECISION_TOOL_ROUTES, COMMUNITY_ROUTES, type ToolRoute } from "@/lib/site-routes";
 import { GUIDES } from "@/lib/guides";
 import { SITE_NAME } from "@/lib/seo";
 import { localePath, type Locale } from "@/i18n/locales";
@@ -14,23 +15,40 @@ import { localizeTools } from "@/i18n/tool-translations";
 import { localizeGuides } from "@/i18n/guide-translations";
 import type { Dictionary } from "@/i18n/dictionary";
 
-export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
-  const [toolsOpen, setToolsOpen] = useState(false);
-  const [guidesOpen, setGuidesOpen] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  // Hover intent: a small close delay stops the panel vanishing while the
-  // pointer travels from the trigger into the menu.
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const cancelClose = () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
-  const open = (set: (v: boolean) => void) => { cancelClose(); set(true); };
-  const scheduleClose = (set: (v: boolean) => void) => {
-    cancelClose();
-    closeTimer.current = setTimeout(() => set(false), 220);
+// Routes backed by RailRadar live data, not just the static 2016 dataset —
+// flagged in the menu so users know these can show real-time status.
+const LIVE_HREFS = new Set(["/trains", "/trains-between", "/stations"]);
+
+// Each hover-dropdown gets its own open state + close timer. Sharing one
+// timer across menus meant entering menu B canceled menu A's pending close,
+// so A never closed once the cursor left it — every dropdown needs its own.
+function useHoverMenu() {
+  const [isOpen, setIsOpen] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancel = () => { if (timer.current) clearTimeout(timer.current); };
+  return {
+    open: isOpen,
+    onEnter: () => { cancel(); setIsOpen(true); },
+    onLeave: () => { cancel(); timer.current = setTimeout(() => setIsOpen(false), 220); },
+    toggle: () => { cancel(); setIsOpen((v) => !v); },
+    close: () => { cancel(); setIsOpen(false); },
   };
+}
+
+export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
+  const calculatorsMenu = useHoverMenu();
+  const planDecideMenu = useHoverMenu();
+  const liveToolsMenu = useHoverMenu();
+  const guidesMenu = useHoverMenu();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const lp = (href: string) => localePath(lang, href);
   const n = dict.nav;
-  const allTools = localizeTools(lang, [...CALCULATOR_ROUTES, ...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES]);
+  const s = dict.sections;
+
+  const calcTools = localizeTools(lang, CALCULATOR_ROUTES);
+  const decisionTools = localizeTools(lang, DECISION_TOOL_ROUTES);
+  const directoryTools = localizeTools(lang, COMMUNITY_ROUTES);
   const guides = localizeGuides(lang, GUIDES).slice(0, 7);
 
   const isActive = (href: string) => pathname === lp(href) || pathname.startsWith(lp(href) + "/");
@@ -47,6 +65,44 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-primary" aria-hidden="true" />
       )}
     </Link>
+  );
+
+  const menuRow = (t: ToolRoute, onClick: () => void) => (
+    <Link
+      key={t.href}
+      href={lp(t.href)}
+      className="flex items-center gap-2 rounded-lg px-2.5 py-2 hover:bg-primary-soft transition-colors group min-w-0"
+      onClick={onClick}
+    >
+      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary group-hover:bg-surface transition-colors">
+        <ToolIcon href={t.href} className="h-4 w-4" />
+      </span>
+      <span className="text-[13px] font-medium leading-snug truncate min-w-0">{t.label}</span>
+      {LIVE_HREFS.has(t.href) && (
+        <span className="ml-auto shrink-0"><LiveDot /></span>
+      )}
+    </Link>
+  );
+
+  const navDropdown = (label: string, menu: ReturnType<typeof useHoverMenu>, tools: ToolRoute[]) => (
+    <div className="relative" onMouseEnter={menu.onEnter} onMouseLeave={menu.onLeave}>
+      <button
+        type="button"
+        className="px-4 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5"
+        aria-expanded={menu.open}
+        onClick={menu.toggle}
+      >
+        {label}
+        <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${menu.open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+      </button>
+      {menu.open && (
+        <div className="absolute left-0 top-full pt-2 w-72">
+          <div className="card p-2.5 space-y-0.5">
+            {tools.map((t) => menuRow(t, menu.close))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 
   return (
@@ -70,55 +126,29 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         </Link>
 
         <div className="hidden md:flex items-center gap-1">
-          {/* Tools mega-menu */}
-          <div className="relative" onMouseEnter={() => open(setToolsOpen)} onMouseLeave={() => scheduleClose(setToolsOpen)}>
-            <button
-              type="button"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5"
-              aria-expanded={toolsOpen}
-              onClick={() => setToolsOpen((v) => !v)}
-            >
-              {n.tools}
-              <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${toolsOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
-            </button>
-            {toolsOpen && (
-              <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-[600px] max-w-[92vw]"><div className="card p-3 grid grid-cols-2 gap-1">
-                {allTools.map((t) => (
-                  <Link
-                    key={t.href}
-                    href={lp(t.href)}
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-primary-soft transition-colors group"
-                    onClick={() => setToolsOpen(false)}
-                  >
-                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-surface-2 text-primary group-hover:bg-surface transition-colors">
-                      <ToolIcon href={t.href} className="h-[18px] w-[18px]" />
-                    </span>
-                    <span className="text-[13px] font-medium leading-snug">{t.label}</span>
-                  </Link>
-                ))}
-              </div></div>
-            )}
-          </div>
+          {navDropdown(s.calculators, calculatorsMenu, calcTools)}
+          {navDropdown(s.planDecide, planDecideMenu, decisionTools)}
+          {navDropdown(n.liveTools, liveToolsMenu, directoryTools)}
 
           {/* Guides menu */}
-          <div className="relative" onMouseEnter={() => open(setGuidesOpen)} onMouseLeave={() => scheduleClose(setGuidesOpen)}>
+          <div className="relative" onMouseEnter={guidesMenu.onEnter} onMouseLeave={guidesMenu.onLeave}>
             <button
               type="button"
               className="px-4 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5"
-              aria-expanded={guidesOpen}
-              onClick={() => setGuidesOpen((v) => !v)}
+              aria-expanded={guidesMenu.open}
+              onClick={guidesMenu.toggle}
             >
               {n.guides}
-              <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${guidesOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+              <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${guidesMenu.open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
             </button>
-            {guidesOpen && (
+            {guidesMenu.open && (
               <div className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-80"><div className="card p-2.5">
-                <Link href={lp("/guides")} className="block rounded-lg px-3 py-2 text-sm font-semibold text-primary hover:bg-primary-soft transition-colors" onClick={() => setGuidesOpen(false)}>
+                <Link href={lp("/guides")} className="block rounded-lg px-3 py-2 text-sm font-semibold text-primary hover:bg-primary-soft transition-colors" onClick={guidesMenu.close}>
                   {n.allGuides} →
                 </Link>
                 <span className="my-1.5 block h-px bg-border" />
                 {guides.map((g) => (
-                  <Link key={g.slug} href={lp(`/guides/${g.slug}`)} className="block rounded-lg px-3 py-2 text-[13px] text-muted hover:text-foreground hover:bg-surface-2 transition-colors leading-snug" onClick={() => setGuidesOpen(false)}>
+                  <Link key={g.slug} href={lp(`/guides/${g.slug}`)} className="block rounded-lg px-3 py-2 text-[13px] text-muted hover:text-foreground hover:bg-surface-2 transition-colors leading-snug" onClick={guidesMenu.close}>
                     {g.title}
                   </Link>
                 ))}
@@ -128,7 +158,6 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
 
           {navLink("/trains", n.trains)}
           {navLink("/plan-ticket", n.planTicket)}
-          {navLink("/faq", n.faq)}
         </div>
 
         <div className="flex items-center gap-2">
@@ -150,24 +179,30 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       </nav>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-border px-6 py-5 space-y-6 max-h-[75vh] overflow-y-auto bg-[var(--background)]">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted mb-3">{n.tools}</p>
-            <div className="grid grid-cols-1 gap-1">
-              {allTools.map((t) => (
-                <Link key={t.href} href={lp(t.href)} className="flex items-center gap-3 rounded-lg py-2.5 text-sm" onClick={() => setMobileOpen(false)}>
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
-                    <ToolIcon href={t.href} className="h-4 w-4" />
-                  </span>
-                  {t.label}
-                </Link>
-              ))}
+        <div className="md:hidden border-t border-border px-6 py-5 space-y-5 max-h-[75vh] overflow-y-auto bg-[var(--background)]">
+          <div className="space-y-5">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted mb-1.5 px-1">{s.calculators}</p>
+              <div className="grid grid-cols-1 gap-0.5">
+                {calcTools.map((t) => menuRow(t, () => setMobileOpen(false)))}
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted mb-1.5 px-1">{s.planDecide}</p>
+              <div className="grid grid-cols-1 gap-0.5">
+                {decisionTools.map((t) => menuRow(t, () => setMobileOpen(false)))}
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted mb-1.5 px-1">{n.liveTools}</p>
+              <div className="grid grid-cols-1 gap-0.5">
+                {directoryTools.map((t) => menuRow(t, () => setMobileOpen(false)))}
+              </div>
             </div>
           </div>
           <div className="flex flex-col gap-1 pt-4 border-t border-border text-sm font-medium">
             <Link href={lp("/guides")} className="py-2.5" onClick={() => setMobileOpen(false)}>{n.guides}</Link>
             <Link href={lp("/plan-ticket")} className="py-2.5" onClick={() => setMobileOpen(false)}>{n.planTicket}</Link>
-            <Link href={lp("/faq")} className="py-2.5" onClick={() => setMobileOpen(false)}>{n.faq}</Link>
           </div>
         </div>
       )}

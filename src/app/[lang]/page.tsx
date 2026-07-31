@@ -8,6 +8,7 @@ import { computeLongWeekends } from "@/lib/holidays";
 import { allTrainsCount, allStationsCount } from "@/lib/rail-data";
 import { FeedbackVoteWidget } from "@/components/FeedbackVoteWidget";
 import { TrainAnnouncementBar } from "@/components/TrainAnnouncementBar";
+import { LiveDot } from "@/components/LiveDot";
 import { ToolIcon } from "@/components/ToolIcon";
 import { StatCounter } from "@/components/StatCounter";
 import { JsonLd, faqJsonLd } from "@/components/JsonLd";
@@ -43,7 +44,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const lp = (href: string) => localePath(lang, href);
   const { hero, sections, cta } = dict;
   const calculators = localizeTools(lang, CALCULATOR_ROUTES);
-  const planTools = localizeTools(lang, [...DECISION_TOOL_ROUTES, ...COMMUNITY_ROUTES]);
+  const planTools = localizeTools(lang, DECISION_TOOL_ROUTES);
+  const directoryTools = localizeTools(lang, COMMUNITY_ROUTES);
   const guides = localizeGuides(lang, GUIDES).slice(0, 6);
 
   const today = nowIST();
@@ -61,9 +63,9 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const roadmap = [
     { state: "done", title: "Calculators & planners", body: "All 8 calculators plus the planning and decision tools." },
     { state: "done", title: "Train & station lookup", body: "5,000+ trains and 8,900+ stations from open government data." },
+    { state: "done", title: "Live train tracking", body: "Real-time status, delay, platform, coach formation and route maps for any train." },
     { state: "done", title: "8 Indian languages", body: "Interface, tools and guide summaries fully localized." },
-    { state: "active", title: "Full guide translation", body: "Long-form articles being translated language by language." },
-    { state: "next", title: "More regional languages", body: "Beyond the current eight, chosen by where readers actually come from." },
+    { state: "active", title: "Live features in every language", body: "Live tracking UI is translated; guide articles are still rolling out language by language." },
     { state: "next", title: "Deeper station guides", body: "Layouts, facilities and getting-there notes for major stations." },
   ];
 
@@ -139,6 +141,44 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         </div>
       </section>
 
+      {/* ================= LIVE RIGHT NOW ================= */}
+      <section className="border-b border-border bg-primary-soft/50">
+        <div className="mx-auto max-w-6xl px-6 py-14 md:py-20">
+          <div className="max-w-2xl">
+            <p className="eyebrow inline-flex items-center gap-2">
+              <LiveDot />
+              {sections.liveEyebrow}
+            </p>
+            <h2 className="mt-3 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
+              {sections.liveTitle}
+            </h2>
+            <p className="mt-3 text-muted text-[17px] leading-relaxed">{sections.liveSub}</p>
+          </div>
+
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { href: "/trains", icon: "trains" as const, title: sections.liveTrackTitle, desc: sections.liveTrackDesc },
+              { href: "/trains-between", icon: "trains-between" as const, title: sections.liveBetweenTitle, desc: sections.liveBetweenDesc },
+              { href: "/stations", icon: "stations" as const, title: sections.liveBoardTitle, desc: sections.liveBoardDesc },
+            ].map((c) => (
+              <Link key={c.href} href={lp(c.href)} className="card card-hover group p-6 flex flex-col bg-surface">
+                <div className="flex items-center justify-between">
+                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-primary-soft text-primary transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3">
+                    <ToolIcon href={c.href} className="h-6 w-6" />
+                  </span>
+                  <span className="chip bg-emerald-500/10 text-emerald-600 inline-flex items-center gap-1.5">
+                    <LiveDot />
+                    LIVE
+                  </span>
+                </div>
+                <h3 className="mt-5 font-semibold text-[17px] leading-snug group-hover:text-primary transition-colors">{c.title}</h3>
+                <p className="mt-3 text-[14px] text-muted leading-relaxed">{c.desc}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ================= CALCULATORS ================= */}
       <section id="tools" className="reveal mx-auto max-w-6xl px-6 py-14 md:py-20">
         <div className="max-w-2xl">
@@ -186,6 +226,31 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ================= DIRECTORIES & LIVE TOOLS ================= */}
+      <section className="reveal mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <div className="max-w-2xl">
+          <p className="eyebrow">{sections.directoryEyebrow}</p>
+          <h2 className="mt-3 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
+            {sections.directoryTitle}
+          </h2>
+          <p className="mt-3 text-muted text-[17px] leading-relaxed">{sections.directorySub}</p>
+        </div>
+
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {directoryTools.map((t) => (
+            <Link key={t.href} href={lp(t.href)} className="card card-hover group p-6 flex items-start gap-5">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary transition-transform duration-300 group-hover:scale-110">
+                <ToolIcon href={t.href} className="h-6 w-6" />
+              </span>
+              <div>
+                <h3 className="font-semibold text-[16px] leading-snug group-hover:text-primary transition-colors">{t.label}</h3>
+                <p className="mt-2 text-[14px] text-muted leading-relaxed">{t.description}</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 

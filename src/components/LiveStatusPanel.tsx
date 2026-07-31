@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fill } from "@/i18n/train-page-strings";
+import { LiveDot } from "@/components/LiveDot";
 import type { Dictionary } from "@/i18n/dictionary";
 
 interface LiveStopStatus {
@@ -74,10 +75,7 @@ export function LiveStatusPanel({ trainNumber, t }: { trainNumber: string; t: Di
     <div className="mt-4 rounded-xl border border-primary/30 bg-primary/5 p-4">
       <div className="flex items-center justify-between gap-2">
         <p className="text-[11px] font-semibold uppercase tracking-wide text-primary flex items-center gap-1.5">
-          <span className="relative flex h-2 w-2" aria-hidden="true">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
-          </span>
+          <LiveDot />
           {t.liveStatus}
         </p>
         <span className={`text-[12px] font-semibold ${delayColor(delay)}`}>{delayLabel}</span>
