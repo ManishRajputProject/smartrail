@@ -101,30 +101,37 @@ export const en: LegalDocs = {
         ],
       },
       {
-        heading: "3. Community Content",
+        heading: "3. Live Tracking Data",
+        paragraphs: [
+          "Live train position, delay, platform and station-board information shown on RailSetu is sourced from a third-party crowdsourced GPS telemetry provider, not directly from Indian Railways, IRCTC, or the National Train Enquiry System (NTES). This data can be incomplete, delayed, or occasionally inaccurate, especially for trains with limited GPS reporting.",
+          "Live data is a convenience feature, not a booking or boarding authority. Always confirm platform and timing on the official station announcement system or with railway staff before boarding.",
+        ],
+      },
+      {
+        heading: "4. Community Content",
         paragraphs: [
           "Journey Reports are submitted by site visitors and reflect individual experiences, not verified data. We moderate submissions for spam and abuse but do not independently verify the accuracy of any individual report.",
         ],
       },
       {
-        heading: "4. Limitation of Liability",
+        heading: "5. Limitation of Liability",
         paragraphs: [
           "To the fullest extent permitted by applicable law, RailSetu, its operators and contributors are not liable for any direct, indirect, incidental or consequential loss, damage, cost or inconvenience arising from use of, or reliance on, any information, tool or content on this site. Use of this site is entirely at your own risk.",
         ],
       },
       {
-        heading: "5. Trademarks",
+        heading: "6. Trademarks",
         paragraphs: [
           '"IRCTC", "Indian Railways" and related names and marks are the registered trademarks of their respective owners. Any reference to these names on RailSetu is strictly descriptive and informational and does not imply affiliation, association or endorsement.',
         ],
       },
       {
-        heading: "6. Governing Law",
+        heading: "7. Governing Law",
         paragraphs: [
           "This Disclaimer is governed by the laws of India, with exclusive jurisdiction in the competent courts of India.",
         ],
       },
-      { heading: "7. Contact", paragraphs: [`Questions about this Disclaimer: ${EMAIL}`] },
+      { heading: "8. Contact", paragraphs: [`Questions about this Disclaimer: ${EMAIL}`] },
     ],
   },
 
