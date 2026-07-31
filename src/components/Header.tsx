@@ -217,21 +217,31 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       className="md:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-xl border-t border-border grid grid-cols-4 text-[11px] font-medium"
       style={{ background: "var(--nav-bg-blur)", paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      {[
-        { href: "/", label: n.home, d: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5Z" },
-        { href: "/trains", label: n.trains, d: "M8 3h8a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4ZM4 10h16M8 17l-2 4M16 17l2 4" },
-        { href: "/booking-date-calculator", label: n.tools, d: "M5 5h14v16H5zM9 3v4M15 3v4M8 12h8M8 16h5" },
-        { href: "/reminders", label: n.reminders, d: "M6 10a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6ZM10 19.5a2.2 2.2 0 0 0 4 0" },
-      ].map((i) => (
-        <Link
-          key={i.href}
-          href={lp(i.href)}
-          className={`flex flex-col items-center gap-1 py-2.5 ${isActive(i.href) ? "text-primary" : "text-muted"}`}
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={i.d} /></svg>
-          {i.label}
-        </Link>
-      ))}
+      <Link href={lp("/")} className={`flex flex-col items-center gap-1 py-2.5 ${isActive("/") ? "text-primary" : "text-muted"}`}>
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5Z" /></svg>
+        {n.home}
+      </Link>
+      <Link href={lp("/trains")} className={`flex flex-col items-center gap-1 py-2.5 ${isActive("/trains") ? "text-primary" : "text-muted"}`}>
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3h8a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4ZM4 10h16M8 17l-2 4M16 17l2 4" /></svg>
+        {n.trains}
+      </Link>
+      {/* Opens the categorized hamburger menu (Calculators / Plan & Decide /
+          Live Tools) instead of deep-linking to one specific calculator —
+          a single tool page here was misleading users expecting a directory. */}
+      <button
+        type="button"
+        aria-label={n.tools}
+        aria-expanded={mobileOpen}
+        onClick={() => setMobileOpen((v) => !v)}
+        className={`flex flex-col items-center gap-1 py-2.5 ${mobileOpen ? "text-primary" : "text-muted"}`}
+      >
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 5h14v16H5zM9 3v4M15 3v4M8 12h8M8 16h5" /></svg>
+        {n.tools}
+      </button>
+      <Link href={lp("/reminders")} className={`flex flex-col items-center gap-1 py-2.5 ${isActive("/reminders") ? "text-primary" : "text-muted"}`}>
+        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 10a6 6 0 1 1 12 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6ZM10 19.5a2.2 2.2 0 0 0 4 0" /></svg>
+        {n.reminders}
+      </Link>
     </div>
     </>
   );
