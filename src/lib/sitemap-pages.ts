@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { ALL_TOOL_ROUTES, CONTENT_ROUTES, LEGAL_ROUTES } from "@/lib/site-routes";
 import { GUIDES } from "@/lib/guides";
 import { trainIndexLetters, stationIndexLetters } from "@/lib/rail-data";
+import { TRAIN_CATEGORIES } from "@/lib/train-categories";
 
 export interface PageEntry {
   path: string;
@@ -54,6 +55,13 @@ export function pageEntries(now = new Date()): PageEntry[] {
       path: `/stations/browse/${letter === "#" ? "0-9" : letter.toLowerCase()}`,
       changeFrequency: "weekly" as const,
       priority: 0.5,
+      lastModified: now,
+    })),
+    // Premium train category hubs (Vande Bharat, Rajdhani, Shatabdi, etc.).
+    ...TRAIN_CATEGORIES.map((c) => ({
+      path: `/trains/category/${c.slug}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
       lastModified: now,
     })),
   ];

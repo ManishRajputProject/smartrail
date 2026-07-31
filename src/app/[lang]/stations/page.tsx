@@ -8,6 +8,9 @@ import { DataDisclaimer } from "@/components/DataDisclaimer";
 import { searchStationsFull, allStationsCount, stationIndexLetters, type Station } from "@/lib/rail-data";
 import { STATIONS as POPULAR } from "@/lib/stations";
 import { stationIndexStrings } from "@/i18n/station-index-strings";
+import { HowItWorks } from "@/components/HowItWorks";
+import { howItWorksStrings } from "@/i18n/how-it-works-strings";
+import { RecentStationChips } from "@/components/RecentStationChips";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -76,6 +79,8 @@ export default async function Page({
         <button type="submit" className="btn-primary shrink-0">Search</button>
       </form>
 
+      {!q && <RecentStationChips lang={lang} />}
+
       {q ? (
         <>
           <p className="mt-3 text-sm text-muted">{results.length} station{results.length === 1 ? "" : "s"} for &quot;{q}&quot;</p>
@@ -103,6 +108,8 @@ export default async function Page({
       )}
 
       <DataDisclaimer />
+
+      <HowItWorks variant={howItWorksStrings(lang).board} />
 
       {/* A–Z station code glossary — every station is one hop from here, for crawlers and browsing. */}
       <section className="mt-8" aria-labelledby="browse-station-az">

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Dictionary } from "@/i18n/dictionary";
 import { fill } from "@/i18n/train-page-strings";
+import { addRecentItem, getRecentItems, RECENT_KEYS } from "@/lib/recent-storage";
 
 interface StationResult {
   code: string;
@@ -100,6 +101,14 @@ function StationInput({
   );
 }
 
+interface RecentPair {
+  id: string;
+  fromCode: string;
+  fromLabel: string;
+  toCode: string;
+  toLabel: string;
+}
+
 export function TrainsBetweenClient({ locale, t }: { locale: string; t: Dictionary["live"] }) {
   const lp = (href: string) => `/${locale}${href}`;
   const [from, setFrom] = useState({ code: "", label: "" });
@@ -107,19 +116,38 @@ export function TrainsBetweenClient({ locale, t }: { locale: string; t: Dictiona
   const [results, setResults] = useState<TrainResult[] | null>(null);
   const [source, setSource] = useState<"live" | "static" | null>(null);
   const [loading, setLoading] = useState(false);
+  const [recentPairs, setRecentPairs] = useState<RecentPair[]>([]);
+
+  useEffect(() => {
+    setRecentPairs(getRecentItems<RecentPair>(RECENT_KEYS.stationPairs));
+  }, []);
+
+  async function runSearch(fromCode: string, fromLabel: string, toCode: string, toLabel: string) {
+    setFrom({ code: fromCode, label: fromLabel });
+    setTo({ code: toCode, label: toLabel });
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/trains-between?from=${fromCode}&to=${toCode}`);
+      const data = await res.json();
+      setResults(data.trains ?? []);
+      setSource(data.source ?? null);
+      const next = addRecentItem<RecentPair>(RECENT_KEYS.stationPairs, {
+        id: `${fromCode}-${toCode}`,
+        fromCode,
+        fromLabel,
+        toCode,
+        toLabel,
+      });
+      setRecentPairs(next);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!from.code || !to.code) return;
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/trains-between?from=${from.code}&to=${to.code}`);
-      const data = await res.json();
-      setResults(data.trains ?? []);
-      setSource(data.source ?? null);
-    } finally {
-      setLoading(false);
-    }
+    runSearch(from.code, from.label, to.code, to.label);
   }
 
   function swap() {
@@ -164,6 +192,24 @@ export function TrainsBetweenClient({ locale, t }: { locale: string; t: Dictiona
           {t.searchTrains}
         </button>
       </form>
+
+      {recentPairs.length > 0 && results === null && (
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+          <span className="text-[12px] text-muted mr-0.5">Recent:</span>
+          {recentPairs.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              onClick={() => runSearch(p.fromCode, p.fromLabel, p.toCode, p.toLabel)}
+              className="inline-flex items-center gap-1 rounded-full bg-surface-2 hover:bg-primary-soft px-3 py-1 text-[12px] font-medium transition-colors"
+            >
+              <span className="font-mono font-bold text-primary">{p.fromCode}</span>
+              <span aria-hidden="true">→</span>
+              <span className="font-mono font-bold text-primary">{p.toCode}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {!from.code || !to.code ? (
         results === null && <p className="mt-3 text-sm text-muted">{t.selectBothStations}</p>

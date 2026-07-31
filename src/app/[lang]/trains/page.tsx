@@ -8,6 +8,10 @@ import { DataDisclaimer } from "@/components/DataDisclaimer";
 import { searchTrains, popularTrains, allTrainsCount, trainIndexLetters } from "@/lib/rail-data";
 import { localePath } from "@/i18n/locales";
 import { trainIndexStrings } from "@/i18n/train-index-strings";
+import { TRAIN_CATEGORIES } from "@/lib/train-categories";
+import { HowItWorks } from "@/components/HowItWorks";
+import { howItWorksStrings } from "@/i18n/how-it-works-strings";
+import { RecentTrainChips } from "@/components/RecentTrainChips";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -70,6 +74,8 @@ export default async function Page({
         <button type="submit" className="btn-primary shrink-0">Search</button>
       </form>
 
+      {!q && <RecentTrainChips lang={lang} />}
+
       {q && (
         <p className="mt-3 text-sm text-muted">{results.length} result{results.length === 1 ? "" : "s"} for &quot;{q}&quot;</p>
       )}
@@ -95,6 +101,21 @@ export default async function Page({
       {!q && <p className="mt-2 text-[12px] text-muted">Showing popular trains — search above for any of {allTrainsCount().toLocaleString("en-IN")}.</p>}
 
       <DataDisclaimer />
+
+      <HowItWorks variant={howItWorksStrings(lang).track} />
+
+      {/* Premium train categories — Vande Bharat, Rajdhani, Shatabdi, etc. */}
+      <section className="mt-8" aria-labelledby="browse-by-type">
+        <h2 id="browse-by-type" className="text-lg font-bold tracking-tight mb-3">Browse by train type</h2>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {TRAIN_CATEGORIES.map((c) => (
+            <Link key={c.slug} href={lp(`/trains/category/${c.slug}`)} className="card card-hover p-3.5">
+              <p className="font-semibold text-[14px]">{c.name}</p>
+              <p className="text-[12px] text-muted mt-0.5">{c.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {/* A–Z browse index — every train is one hop from here, for crawlers and browsing. */}
       <section className="mt-8" aria-labelledby="browse-az">

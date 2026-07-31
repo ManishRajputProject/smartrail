@@ -6,6 +6,8 @@ import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { localizePage } from "@/i18n/page-translations";
 import { getDictionary } from "@/i18n/dictionary";
 import { TrainsBetweenClient } from "./TrainsBetweenClient";
+import { HowItWorks } from "@/components/HowItWorks";
+import { howItWorksStrings } from "@/i18n/how-it-works-strings";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -43,6 +45,8 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       <div className="mt-5">
         <TrainsBetweenClient locale={lang} t={dict.live} />
       </div>
+
+      <HowItWorks variant={howItWorksStrings(lang).between} />
 
       <DataDisclaimer />
     </div>

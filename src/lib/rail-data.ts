@@ -141,6 +141,16 @@ export function trainsByLetter(letter: string): Train[] {
   return letterIndex().get(letter.toUpperCase()) ?? [];
 }
 
+/** All trains matching a raw `type` value (e.g. "Vande Bharat", "Raj", "Shtb").
+ *  Deliberately not filtered by schedule completeness — newer categories like
+ *  Vande Bharat are mostly missing dep/arr/duration in this 2016-era static
+ *  dataset (only ~3 of 143 have it), so gating on that would show an almost
+ *  empty page. Each entry still links to /trains/[number], which resolves
+ *  live data for these anyway. */
+export function trainsByType(type: string, limit = 200): Train[] {
+  return TRAINS.filter((t) => t.type === type).slice(0, limit);
+}
+
 /** Small curated set for landing-page grids (not the whole 5,000+). */
 export function popularTrains(): Train[] {
   const wanted = ["12951", "12301", "12259", "12002", "12009", "12019", "12627", "12621", "12723", "22691"];

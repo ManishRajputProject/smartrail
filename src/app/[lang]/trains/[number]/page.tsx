@@ -18,6 +18,7 @@ import { LiveStatusPanel } from "@/components/LiveStatusPanel";
 import { CoachFormation } from "@/components/CoachFormation";
 import { getLiveTrainDetails } from "@/lib/railradar";
 import { RouteMap } from "@/components/RouteMapLoader";
+import { RecordRecentTrain } from "@/components/RecordRecentTrain";
 
 export const dynamicParams = true;
 // Re-run the page (including the live-data fetch below) daily, so a train
@@ -215,6 +216,7 @@ export default async function Page({
           { name: train.number, href: `/trains/${train.number}` },
         ]}
       />
+      <RecordRecentTrain number={train.number} name={train.name} fromName={train.fromName} toName={train.toName} />
 
       <div className="flex items-center gap-2">
         <p className="font-mono font-bold text-primary tabular-nums">{train.number}</p>

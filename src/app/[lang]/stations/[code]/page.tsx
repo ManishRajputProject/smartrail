@@ -8,6 +8,7 @@ import { STATIONS as POPULAR_STATIONS } from "@/lib/stations";
 import { DEFAULT_LOCALE, isLocale, LOCALES, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { fill } from "@/i18n/train-page-strings";
+import { RecordRecentStation } from "@/components/RecordRecentStation";
 
 export function generateStaticParams() {
   return LOCALES.flatMap((lang) =>
@@ -58,6 +59,7 @@ export default async function Page({
           { name: code, href: `/stations/${rawCode}` },
         ]}
       />
+      <RecordRecentStation code={code} name={name} />
 
       <p className="font-mono font-bold text-primary tabular-nums">{code}</p>
       <h1 className="text-[24px] md:text-[30px] font-extrabold tracking-tight leading-tight mt-0.5">
