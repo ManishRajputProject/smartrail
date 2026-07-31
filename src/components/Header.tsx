@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { ToolIcon } from "@/components/ToolIcon";
@@ -42,6 +42,28 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const guidesMenu = useHoverMenu();
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+
+  // A route change always means the user picked something — every menu
+  // (desktop dropdowns and the mobile sheet) should close, not just the one
+  // that happened to contain the link that was clicked.
+  useEffect(() => {
+    setMobileOpen(false);
+    calculatorsMenu.close();
+    planDecideMenu.close();
+    liveToolsMenu.close();
+    guidesMenu.close();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  // Desktop dropdowns should be mutually exclusive: opening one (by click or
+  // hover) closes any other that's still open, instead of letting two sit
+  // open side by side.
+  const allDesktopMenus = [calculatorsMenu, planDecideMenu, liveToolsMenu, guidesMenu];
+  const exclusive = (menu: ReturnType<typeof useHoverMenu>) => ({
+    ...menu,
+    onEnter: () => { allDesktopMenus.forEach((m) => { if (m !== menu) m.close(); }); menu.onEnter(); },
+    toggle: () => { allDesktopMenus.forEach((m) => { if (m !== menu) m.close(); }); menu.toggle(); },
+  });
   const lp = (href: string) => localePath(lang, href);
   const n = dict.nav;
   const s = dict.sections;
@@ -127,17 +149,17 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         </Link>
 
         <div className="hidden md:flex items-center gap-1">
-          {navDropdown(s.calculators, calculatorsMenu, calcTools)}
-          {navDropdown(s.planDecide, planDecideMenu, decisionTools)}
-          {navDropdown(n.liveTools, liveToolsMenu, directoryTools)}
+          {navDropdown(s.calculators, exclusive(calculatorsMenu), calcTools)}
+          {navDropdown(s.planDecide, exclusive(planDecideMenu), decisionTools)}
+          {navDropdown(n.liveTools, exclusive(liveToolsMenu), directoryTools)}
 
           {/* Guides menu */}
-          <div className="relative" onMouseEnter={guidesMenu.onEnter} onMouseLeave={guidesMenu.onLeave}>
+          <div className="relative" onMouseEnter={exclusive(guidesMenu).onEnter} onMouseLeave={guidesMenu.onLeave}>
             <button
               type="button"
               className="px-4 py-2 rounded-lg text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5"
               aria-expanded={guidesMenu.open}
-              onClick={guidesMenu.toggle}
+              onClick={exclusive(guidesMenu).toggle}
             >
               {n.guides}
               <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${guidesMenu.open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
