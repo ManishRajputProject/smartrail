@@ -215,7 +215,7 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         viewport bottom. */}
     <div
       className="md:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-xl border-t border-border grid grid-cols-4 text-[11px] font-medium"
-      style={{ background: "var(--nav-bg-blur)" }}
+      style={{ background: "var(--nav-bg-blur)", paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       {[
         { href: "/", label: n.home, d: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5Z" },

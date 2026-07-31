@@ -93,7 +93,7 @@ export default async function LangLayout({
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={webSiteJsonLd()} />
         <Header lang={lang} dict={dict} />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
         <Footer lang={lang} dict={dict} />
         <ConsentBanner lang={lang} t={dict.consent} />
       </body>
