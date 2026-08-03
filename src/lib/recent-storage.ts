@@ -3,6 +3,26 @@
 
 const MAX_DEFAULT = 5;
 
+// The native "storage" event only fires in OTHER tabs, never the tab that
+// made the write — so same-tab consumers (useRecentItems, via
+// useSyncExternalStore) need their own notification for a write to be
+// reflected immediately without a full page reload.
+const sameTabListeners = new Map<string, Set<() => void>>();
+
+export function subscribeRecentItems(key: string, onChange: () => void): () => void {
+  let set = sameTabListeners.get(key);
+  if (!set) {
+    set = new Set();
+    sameTabListeners.set(key, set);
+  }
+  set.add(onChange);
+  return () => set!.delete(onChange);
+}
+
+function notifySameTab(key: string): void {
+  sameTabListeners.get(key)?.forEach((fn) => fn());
+}
+
 function read<T>(key: string): T[] {
   if (typeof window === "undefined") return [];
   try {
@@ -30,6 +50,7 @@ export function addRecentItem<T extends { id: string }>(key: string, item: T, ma
   const existing = read<T>(key).filter((i) => i.id !== item.id);
   const next = [item, ...existing].slice(0, max);
   write(key, next);
+  notifySameTab(key);
   return next;
 }
 

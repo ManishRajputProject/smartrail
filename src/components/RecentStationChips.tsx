@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getRecentItems, RECENT_KEYS } from "@/lib/recent-storage";
+import { RECENT_KEYS } from "@/lib/recent-storage";
+import { useRecentItems } from "@/lib/use-recent-items";
 import { localePath, type Locale } from "@/i18n/locales";
 
 interface RecentStation {
@@ -12,11 +12,7 @@ interface RecentStation {
 }
 
 export function RecentStationChips({ lang }: { lang: Locale }) {
-  const [items, setItems] = useState<RecentStation[]>([]);
-
-  useEffect(() => {
-    setItems(getRecentItems<RecentStation>(RECENT_KEYS.stations));
-  }, []);
+  const items = useRecentItems<RecentStation>(RECENT_KEYS.stations);
 
   if (items.length === 0) return null;
 
