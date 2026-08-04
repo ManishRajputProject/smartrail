@@ -4,7 +4,7 @@ import type { Dictionary } from "@/i18n/dictionary";
 
 import { useState } from "react";
 import { CANCELLATION_SLABS, hoursBetween } from "@/lib/irctc-rules";
-import { DatePicker, todayISO } from "@/components/DatePicker";
+import { DatePicker } from "@/components/DatePicker";
 
 const CLASSES = ["2S", "SL", "CC", "3A", "2A", "EC", "1A"];
 

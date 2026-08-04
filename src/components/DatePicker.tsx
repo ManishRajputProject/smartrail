@@ -229,7 +229,6 @@ export function DatePicker({
             </div>
 
             {/* Day grid */}
-            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <div
               ref={gridRef}
               role="grid"
