@@ -320,6 +320,48 @@ export interface LiveTrainBetween {
   haltsBetween: number;
 }
 
+/** RailRadar's own /lookup/stations sometimes lists several codes under the
+ *  identical station name (Mumbai Central: BCT, MMCT, BCL all present), but
+ *  the /trains/between endpoint only has schedules indexed under one of
+ *  them — querying an alias returns a confident-looking empty array, not an
+ *  error, so a user can pick a station straight out of our own autocomplete
+ *  and still see a false "no trains found" for a route that runs daily.
+ *  Find the other codes sharing that station's name, so a genuinely empty
+ *  result can be distinguished from an aliasing dead end. */
+async function findAlternateCodes(code: string): Promise<string[]> {
+  const map = await getLiveStationLookup();
+  if (!map) return [];
+  const name = map[code.toUpperCase()];
+  if (!name) return [];
+  // Capped: bounds the from x to retry combinations below, in the rare case
+  // a name has an unusually large number of code aliases.
+  return Object.keys(map)
+    .filter((c) => c !== code.toUpperCase() && map[c] === name)
+    .slice(0, 4);
+}
+
+async function fetchBetween(fromCode: string, toCode: string): Promise<LiveTrainBetween[] | null> {
+  const d = await fetchRailRadar<RailRadarBetweenResponse>(
+    `/trains/between/${encodeURIComponent(fromCode)}/${encodeURIComponent(toCode)}`,
+    3600
+  );
+  if (!d?.trains) return null;
+  return d.trains.map((t) => ({
+    number: t.train.number,
+    name: titleCase(t.train.name),
+    type: t.train.type ?? "",
+    fromCode: t.from.code,
+    fromName: titleCase(t.from.name),
+    dep: t.from.departure,
+    toCode: t.to.code,
+    toName: titleCase(t.to.name),
+    arr: t.to.arrival,
+    distanceKm: t.distance,
+    durationMin: t.duration,
+    haltsBetween: t.totalHaltsBetween,
+  }));
+}
+
 /** Hourly cache — a schedule listing, not a live position, so it doesn't
  *  need 60s freshness, but should feel current across a browsing session. */
 export async function getLiveTrainsBetween(
@@ -327,25 +369,33 @@ export async function getLiveTrainsBetween(
   toCode: string
 ): Promise<LiveTrainBetween[] | null> {
   try {
-    const d = await fetchRailRadar<RailRadarBetweenResponse>(
-      `/trains/between/${encodeURIComponent(fromCode)}/${encodeURIComponent(toCode)}`,
-      3600
-    );
-    if (!d?.trains) return null;
-    return d.trains.map((t) => ({
-      number: t.train.number,
-      name: titleCase(t.train.name),
-      type: t.train.type ?? "",
-      fromCode: t.from.code,
-      fromName: titleCase(t.from.name),
-      dep: t.from.departure,
-      toCode: t.to.code,
-      toName: titleCase(t.to.name),
-      arr: t.to.arrival,
-      distanceKm: t.distance,
-      durationMin: t.duration,
-      haltsBetween: t.totalHaltsBetween,
-    }));
+    const direct = await fetchBetween(fromCode, toCode);
+    if (direct && direct.length > 0) return direct;
+
+    // Empty (not an error) — try alias codes for whichever station(s) have
+    // one. Different aliases can be indexed with different completeness
+    // (see getLiveStationBoard), so try every from x to combination and
+    // keep whichever returns the most trains, not just the first non-empty
+    // combination — these are the same physical route either way, nothing
+    // to merge, just pick the fullest listing of it.
+    const [fromAlts, toAlts] = await Promise.all([findAlternateCodes(fromCode), findAlternateCodes(toCode)]);
+    if (fromAlts.length === 0 && toAlts.length === 0) return direct;
+
+    const fromCandidates = [fromCode, ...fromAlts];
+    const toCandidates = [toCode, ...toAlts];
+    const attempts: Promise<LiveTrainBetween[] | null>[] = [];
+    for (const f of fromCandidates) {
+      for (const t of toCandidates) {
+        if (f === fromCode && t === toCode) continue; // already tried above
+        attempts.push(fetchBetween(f, t));
+      }
+    }
+    const results = await Promise.all(attempts);
+    return results.reduce<LiveTrainBetween[] | null>((best, r) => {
+      if (!r) return best;
+      if (!best || r.length > best.length) return r;
+      return best;
+    }, direct);
   } catch {
     return null;
   }
@@ -409,6 +459,48 @@ export interface LiveStationTrain {
   expectedDeparture: string | null;
 }
 
+async function fetchStationBoard(
+  stationCode: string
+): Promise<{ station: LiveStationInfo; trains: LiveStationTrain[] } | null> {
+  const [d, stationNames] = await Promise.all([
+    fetchRailRadar<RailRadarStationLiveResponse>(
+      `/stations/${encodeURIComponent(stationCode)}/live?hours=4`,
+      120
+    ),
+    getLiveStationLookup(),
+  ]);
+  if (!d?.station) return null;
+
+  const nameFor = (code: string) => (stationNames?.[code] ? titleCase(stationNames[code]) : code);
+
+  return {
+    station: {
+      code: d.station.code,
+      name: titleCase(d.station.name),
+      city: d.station.city,
+      lat: d.station.lat,
+      lng: d.station.lng,
+    },
+    trains: (d.trains ?? []).map((t) => ({
+      number: t.train.number,
+      name: titleCase(t.train.name),
+      type: t.train.type ?? "",
+      fromCode: t.train.source,
+      fromName: nameFor(t.train.source),
+      toCode: t.train.destination,
+      toName: nameFor(t.train.destination),
+      arrival: t.stop.arrival,
+      departure: t.stop.departure,
+      platform: t.stop.platform ?? null,
+      stopType: t.stop.arrival == null ? "origin" : t.stop.departure == null ? "destination" : "halt",
+      liveStatus: t.live.type,
+      delayMinutes: t.live.delayMinutes,
+      expectedArrival: t.live.expectedArrivalTime ? isoTimeOnly(t.live.expectedArrivalTime) : null,
+      expectedDeparture: t.live.expectedDepartureTime ? isoTimeOnly(t.live.expectedDepartureTime) : null,
+    })),
+  };
+}
+
 /** 2-minute cache — this is the one feature where minutes matter (delay,
  *  at-station status), so we trade more quota for real freshness rather
  *  than the 24h-30min caching used elsewhere in this module. */
@@ -416,43 +508,25 @@ export async function getLiveStationBoard(
   stationCode: string
 ): Promise<{ station: LiveStationInfo; trains: LiveStationTrain[] } | null> {
   try {
-    const [d, stationNames] = await Promise.all([
-      fetchRailRadar<RailRadarStationLiveResponse>(
-        `/stations/${encodeURIComponent(stationCode)}/live?hours=4`,
-        120
-      ),
-      getLiveStationLookup(),
-    ]);
-    if (!d?.station) return null;
+    const direct = await fetchStationBoard(stationCode);
+    if (direct && direct.trains.length > 0) return direct;
 
-    const nameFor = (code: string) => (stationNames?.[code] ? titleCase(stationNames[code]) : code);
+    // Same station-code-aliasing issue as getLiveTrainsBetween: a code that
+    // resolves to a real station but zero scheduled trains is suspicious
+    // for anywhere with real traffic. Aliases aren't equally complete
+    // though (e.g. Mumbai Central: BCL only carries one local EMU, MMCT
+    // carries the full mainline board) — try every alias and keep whichever
+    // returns the most trains, not just the first non-empty one.
+    const alts = await findAlternateCodes(stationCode);
+    if (alts.length === 0) return direct;
 
-    return {
-      station: {
-        code: d.station.code,
-        name: titleCase(d.station.name),
-        city: d.station.city,
-        lat: d.station.lat,
-        lng: d.station.lng,
-      },
-      trains: (d.trains ?? []).map((t) => ({
-        number: t.train.number,
-        name: titleCase(t.train.name),
-        type: t.train.type ?? "",
-        fromCode: t.train.source,
-        fromName: nameFor(t.train.source),
-        toCode: t.train.destination,
-        toName: nameFor(t.train.destination),
-        arrival: t.stop.arrival,
-        departure: t.stop.departure,
-        platform: t.stop.platform ?? null,
-        stopType: t.stop.arrival == null ? "origin" : t.stop.departure == null ? "destination" : "halt",
-        liveStatus: t.live.type,
-        delayMinutes: t.live.delayMinutes,
-        expectedArrival: t.live.expectedArrivalTime ? isoTimeOnly(t.live.expectedArrivalTime) : null,
-        expectedDeparture: t.live.expectedDepartureTime ? isoTimeOnly(t.live.expectedDepartureTime) : null,
-      })),
-    };
+    const results = await Promise.all(alts.map((alt) => fetchStationBoard(alt)));
+    const best = results.reduce<typeof direct>((best, r) => {
+      if (!r) return best;
+      if (!best || r.trains.length > best.trains.length) return r;
+      return best;
+    }, direct);
+    return best;
   } catch {
     return null;
   }
