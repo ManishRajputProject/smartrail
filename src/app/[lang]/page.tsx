@@ -91,21 +91,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             {hero.subtitle}
           </p>
 
-          {/* Universal search — a plain GET form, no popup and no JS */}
-          <form action={lp("/search")} method="get" className="mt-8 w-full max-w-xl mx-auto flex gap-2.5 rise-in-3">
-            <label htmlFor="site-search" className="sr-only">{dict.nav.searchFull}</label>
-            <input
-              id="site-search"
-              type="search"
-              name="q"
-              placeholder={dict.nav.searchFull}
-              className="input"
-              autoComplete="off"
-            />
-            <button type="submit" className="btn-primary shrink-0">{dict.nav.search.replace("…", "")}</button>
-          </form>
-
-          <div className="mt-7 flex flex-wrap justify-center gap-3 rise-in-3">
+          <div className="mt-8 flex flex-wrap justify-center gap-3 rise-in-3">
             <Link href={lp("/booking-date-calculator")} className="btn-primary">{hero.checkBooking}</Link>
             <Link href={lp("/reminders")} className="btn-secondary">{hero.setReminder}</Link>
           </div>
