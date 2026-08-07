@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   return buildMetadata({
     title: meta.title,
     description: meta.description,
-    path: "/train-classes",
+    path: "/train-classes",
     keywords: ["train classes explained", "1A 2A 3A SL difference", "which train class to book", "chair car vs sleeper"],
     locale,
   });
@@ -32,21 +32,16 @@ const faqs = [
 
 export default function Page() {
   return (
-    <div className="pb-20 md:pb-12">
-      <div className="section-dark hero-glow">
-        <div className="mx-auto max-w-4xl px-4 pt-6 pb-9 md:pt-8 md:pb-11">
-          <Breadcrumb items={[{ name: "Train Classes", href: "/train-classes" }]} dark />
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--primary-strong)] mb-1.5">Reference</p>
-          <h1 className="text-[26px] md:text-[34px] font-extrabold tracking-tight leading-tight text-white">Indian Train Classes Explained</h1>
-          <p className="mt-2.5 text-white/75 text-[15px] leading-relaxed max-w-2xl">
-            1A, 2A, 3A, SL, CC, EC and 2S — what each class means, how the berths are laid out, and which to
-            choose for your journey.
-          </p>
-        </div>
-      </div>
+    <div className="mx-auto max-w-4xl px-4 py-6 md:py-8 pb-20 md:pb-12">
+      <Breadcrumb items={[{ name: "Train Classes", href: "/train-classes" }]} />
+      <p className="eyebrow mb-1">Reference</p>
+      <h1 className="text-[26px] md:text-[34px] font-extrabold tracking-tight leading-tight">Indian Train Classes Explained</h1>
+      <p className="mt-2.5 text-muted text-[15px] leading-relaxed max-w-2xl">
+        1A, 2A, 3A, SL, CC, EC and 2S — what each class means, how the berths are laid out, and which to
+        choose for your journey.
+      </p>
 
-      <div className="mx-auto max-w-4xl px-4">
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {TRAIN_CLASSES.map((c) => (
             <div key={c.code} className="card p-4">
               <div className="flex items-center gap-2">
@@ -100,7 +95,6 @@ export default function Page() {
         </div>
 
         <FaqAccordion items={faqs} />
-      </div>
     </div>
   );
 }
