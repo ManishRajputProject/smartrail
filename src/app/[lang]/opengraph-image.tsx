@@ -24,6 +24,7 @@ export default function Image() {
           <div
             style={{
               display: "flex",
+              position: "relative",
               alignItems: "center",
               justifyContent: "center",
               width: 96,
@@ -35,6 +36,15 @@ export default function Image() {
             <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
               <rect x="5" y="3" width="14" height="14" rx="4" />
               <path d="M5 10h14M8 17l-2 4M16 17l2 4" />
+            </svg>
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="#ffab6b"
+              style={{ position: "absolute", top: -8, right: -8 }}
+            >
+              <path d="M12 2l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" />
             </svg>
           </div>
           <div style={{ display: "flex", fontSize: 84, fontWeight: 800, color: "#e9edf7", letterSpacing: -2 }}>

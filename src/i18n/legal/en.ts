@@ -1,7 +1,7 @@
 import type { LegalDocs } from "@/i18n/legal/types";
 
 const UPDATED = "Last updated: 20 July 2026";
-const EMAIL = "hello@railsetu.in";
+const EMAIL = "hello@smartrail.in";
 
 /** English source of record. Every other locale is a convenience translation
  *  of this text and defers to it in case of discrepancy. */
@@ -13,7 +13,7 @@ export const en: LegalDocs = {
       {
         heading: "Using this site",
         paragraphs: [
-          "RailSetu provides free calculators, planning tools and reminders for Indian Railways travellers. By using this site you agree to use it for lawful, personal purposes and not to attempt to disrupt, scrape at scale, or abuse the reminder and community-submission features (for example, submitting spam or automated bulk entries).",
+          "SmartRail provides free calculators, planning tools and reminders for Indian Railways travellers. By using this site you agree to use it for lawful, personal purposes and not to attempt to disrupt, scrape at scale, or abuse the reminder and community-submission features (for example, submitting spam or automated bulk entries).",
         ],
       },
       {
@@ -48,7 +48,7 @@ export const en: LegalDocs = {
     title: "Privacy Policy",
     updated: UPDATED,
     intro: [
-      "RailSetu is designed to be usable without an account. Most tools on this site — the calculators, the quota selector, the checklist generator — process everything in your browser and send nothing to our servers. This policy covers the few features that do collect data.",
+      "SmartRail is designed to be usable without an account. Most tools on this site — the calculators, the quota selector, the checklist generator — process everything in your browser and send nothing to our servers. This policy covers the few features that do collect data.",
     ],
     sections: [
       {
@@ -89,7 +89,7 @@ export const en: LegalDocs = {
       {
         heading: "1. No Government Affiliation",
         paragraphs: [
-          "RailSetu is a privately operated, independent informational service. We have no formal affiliation, authorisation, licence, or endorsement from Indian Railways, IRCTC (Indian Railway Catering and Tourism Corporation), the Ministry of Railways, or any governmental or quasi-governmental entity. All tools, calculators and guides on this site are created and maintained independently, for general informational and convenience purposes only.",
+          "SmartRail is a privately operated, independent informational service. We have no formal affiliation, authorisation, licence, or endorsement from Indian Railways, IRCTC (Indian Railway Catering and Tourism Corporation), the Ministry of Railways, or any governmental or quasi-governmental entity. All tools, calculators and guides on this site are created and maintained independently, for general informational and convenience purposes only.",
           "For official services — ticket booking, PNR status, live train schedules and cancellations — use the official IRCTC website at irctc.co.in.",
         ],
       },
@@ -103,7 +103,7 @@ export const en: LegalDocs = {
       {
         heading: "3. Live Tracking Data",
         paragraphs: [
-          "Live train position, delay, platform and station-board information shown on RailSetu is sourced from a third-party crowdsourced GPS telemetry provider, not directly from Indian Railways, IRCTC, or the National Train Enquiry System (NTES). This data can be incomplete, delayed, or occasionally inaccurate, especially for trains with limited GPS reporting.",
+          "Live train position, delay, platform and station-board information shown on SmartRail is sourced from a third-party crowdsourced GPS telemetry provider, not directly from Indian Railways, IRCTC, or the National Train Enquiry System (NTES). This data can be incomplete, delayed, or occasionally inaccurate, especially for trains with limited GPS reporting.",
           "Live data is a convenience feature, not a booking or boarding authority. Always confirm platform and timing on the official station announcement system or with railway staff before boarding.",
         ],
       },
@@ -116,13 +116,13 @@ export const en: LegalDocs = {
       {
         heading: "5. Limitation of Liability",
         paragraphs: [
-          "To the fullest extent permitted by applicable law, RailSetu, its operators and contributors are not liable for any direct, indirect, incidental or consequential loss, damage, cost or inconvenience arising from use of, or reliance on, any information, tool or content on this site. Use of this site is entirely at your own risk.",
+          "To the fullest extent permitted by applicable law, SmartRail, its operators and contributors are not liable for any direct, indirect, incidental or consequential loss, damage, cost or inconvenience arising from use of, or reliance on, any information, tool or content on this site. Use of this site is entirely at your own risk.",
         ],
       },
       {
         heading: "6. Trademarks",
         paragraphs: [
-          '"IRCTC", "Indian Railways" and related names and marks are the registered trademarks of their respective owners. Any reference to these names on RailSetu is strictly descriptive and informational and does not imply affiliation, association or endorsement.',
+          '"IRCTC", "Indian Railways" and related names and marks are the registered trademarks of their respective owners. Any reference to these names on SmartRail is strictly descriptive and informational and does not imply affiliation, association or endorsement.',
         ],
       },
       {
@@ -143,14 +143,14 @@ export const en: LegalDocs = {
         heading: "Why we built this",
         paragraphs: [
           "Every Tatkal season plays out the same way: the window opens, and thousands of people scramble across a dozen browser tabs — old forum threads, screenshots forwarded on WhatsApp, half-updated blog posts — just to answer three questions. When exactly does booking open for my journey? What time does Tatkal open for my class? If I have to cancel, what do I actually get back? The official rules exist, but they're scattered across circulars and FAQ pages that don't always keep pace with what changes.",
-          "RailSetu started as a small set of scripts built to answer those three questions without the tab-hunting — nothing more. It grew into a full set of tools because the same handful of questions come up for practically every traveller, every single day: not just when to book, but whether a waitlisted ticket is worth holding onto, what a refund will really look like, and which quota actually applies to a given trip.",
+          "SmartRail started as a small set of scripts built to answer those three questions without the tab-hunting — nothing more. It grew into a full set of tools because the same handful of questions come up for practically every traveller, every single day: not just when to book, but whether a waitlisted ticket is worth holding onto, what a refund will really look like, and which quota actually applies to a given trip.",
           "It stays free, login-free, and ad-supported on purpose. The moment a tool this ordinary needs an account or a subscription, it's stopped solving the problem it was built for.",
         ],
       },
       {
-        heading: "What RailSetu is",
+        heading: "What SmartRail is",
         paragraphs: [
-          "RailSetu is an independent, free set of calculators and planning tools for Indian Railways travellers — booking dates, Tatkal timing, refund estimates, waitlist outlooks and reminders. It is built and maintained as a solo project, is supported by advertising, and requires no login for any tool.",
+          "SmartRail is an independent, free set of calculators and planning tools for Indian Railways travellers — booking dates, Tatkal timing, refund estimates, waitlist outlooks and reminders. It is built and maintained as a solo project, is supported by advertising, and requires no login for any tool.",
           "We are not affiliated with, endorsed by, or connected to IRCTC, Indian Railways, or the Government of India in any way. For official bookings and live data, always use irctc.co.in.",
         ],
       },
@@ -183,7 +183,7 @@ export const en: LegalDocs = {
   contact: {
     title: "Contact",
     intro: [
-      "RailSetu is an independent project, not affiliated with IRCTC or Indian Railways. For official booking support, use IRCTC's own customer care channels.",
+      "SmartRail is an independent project, not affiliated with IRCTC or Indian Railways. For official booking support, use IRCTC's own customer care channels.",
     ],
     sections: [
       {
@@ -198,7 +198,7 @@ export const en: LegalDocs = {
   "data-deletion": {
     title: "Data Deletion Request",
     intro: [
-      "Since RailSetu doesn't require an account, the only data we hold tied to you is whatever email or phone number you gave us when setting a reminder.",
+      "Since SmartRail doesn't require an account, the only data we hold tied to you is whatever email or phone number you gave us when setting a reminder.",
     ],
     sections: [
       {

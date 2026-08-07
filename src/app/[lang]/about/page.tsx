@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const doc = legalDoc(locale, "about");
   const meta = localizePage(locale, "about", {
     title: doc.title || "About & Methodology",
-    description: "Who runs RailSetu, how every railway rule is verified, and what we deliberately refuse to do.",
+    description: "Who runs SmartRail, how every railway rule is verified, and what we deliberately refuse to do.",
   });
   return buildMetadata({
     title: meta.title,

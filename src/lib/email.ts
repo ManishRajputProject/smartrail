@@ -6,7 +6,7 @@ import { Resend } from "resend";
  * crash) instead of silently trying and failing per-request.
  */
 const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
-const EMAIL_FROM = process.env.EMAIL_FROM ?? "RailSetu <reminders@railsetu.in>";
+const EMAIL_FROM = process.env.EMAIL_FROM ?? "SmartRail <reminders@smartrail.in>";
 
 export function emailConfigured(): boolean {
   return RESEND_API_KEY.length > 0;

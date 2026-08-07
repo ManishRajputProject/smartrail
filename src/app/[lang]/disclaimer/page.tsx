@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const doc = legalDoc(locale, "disclaimer");
   const meta = localizePage(locale, "disclaimer", {
     title: doc.title || "Disclaimer",
-    description: "RailSetu is an independent informational service, not affiliated with IRCTC or Indian Railways.",
+    description: "SmartRail is an independent informational service, not affiliated with IRCTC or Indian Railways.",
   });
   return buildMetadata({
     title: meta.title,

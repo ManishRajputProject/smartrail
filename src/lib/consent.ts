@@ -7,7 +7,7 @@
  * and (for any EEA traffic) GDPR/ePrivacy expect.
  */
 
-export const CONSENT_STORAGE_KEY = "railsetu-consent";
+export const CONSENT_STORAGE_KEY = "smartrail-consent";
 
 /** Bump when the categories change so stored consent is re-asked rather than
  *  silently reused for purposes the visitor never agreed to. */
@@ -67,4 +67,4 @@ export function writeConsent(next: Omit<ConsentState, "decidedAt">): ConsentStat
 
 /** Fired on the window whenever consent changes, so ad slots mounted earlier
  *  can react without a full reload. */
-export const CONSENT_EVENT = "railsetu:consent";
+export const CONSENT_EVENT = "smartrail:consent";

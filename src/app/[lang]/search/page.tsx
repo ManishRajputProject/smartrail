@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const locale: Locale = isLocale(lang) ? lang : DEFAULT_LOCALE;
   const meta = localizePage(locale, "search", {
     title: "Search",
-    description: "Search RailSetu's calculators, guides and station directory.",
+    description: "Search SmartRail's calculators, guides and station directory.",
   });
   return buildMetadata({
     title: meta.title,

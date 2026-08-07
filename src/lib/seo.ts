@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import { LOCALES, DEFAULT_LOCALE, type Locale } from "@/i18n/locales";
 
-/**
- * Placeholder brand name/domain — deliberately NOT reusing any existing
- * product's name. Swap SITE_NAME and SITE_URL (via env var) before launch.
- */
-export const SITE_NAME = "RailSetu";
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://railsetu.in";
+export const SITE_NAME = "SmartRail";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://smartrail.in";
 export const SITE_DESCRIPTION =
   "Free IRCTC booking date, Tatkal timing, refund and waitlist calculators for Indian Railways travellers — no login, always current.";
 

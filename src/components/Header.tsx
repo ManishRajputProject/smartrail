@@ -136,13 +136,18 @@ export function Header({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 h-16" aria-label="Main navigation">
         <Link href={lp("/")} className="flex items-center gap-2.5 font-bold text-[17px] shrink-0 tracking-tight">
           <span
-            className="grid h-9 w-9 place-items-center rounded-xl text-white shadow-sm"
+            className="relative grid h-9 w-9 place-items-center rounded-xl text-white shadow-sm"
             style={{ background: "linear-gradient(135deg, var(--primary), var(--secondary))" }}
             aria-hidden="true"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
               <rect x="5" y="3" width="14" height="14" rx="4" />
               <path d="M5 10h14M8 17l-2 4M16 17l2 4" />
+            </svg>
+            {/* "Smart" accent spark — echoes the live-data pulse used
+                throughout the product (see LiveDot). */}
+            <svg viewBox="0 0 24 24" className="absolute -right-1.5 -top-1.5 h-3 w-3" fill="var(--accent)">
+              <path d="M12 2l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" />
             </svg>
           </span>
           {SITE_NAME}

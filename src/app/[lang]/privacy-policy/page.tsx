@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const doc = legalDoc(locale, "privacy-policy");
   const meta = localizePage(locale, "privacy-policy", {
     title: doc.title || "Privacy Policy",
-    description: "What RailSetu collects, why, and how to have it deleted. Most tools run entirely in your browser.",
+    description: "What SmartRail collects, why, and how to have it deleted. Most tools run entirely in your browser.",
   });
   return buildMetadata({
     title: meta.title,

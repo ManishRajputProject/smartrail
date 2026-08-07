@@ -28,7 +28,7 @@ export const CONTENT_PAGE_TRANSLATIONS: Partial<Record<Locale, Record<string, Pa
     },
     search: {
       title: "खोजें",
-      description: "RailSetu के कैलकुलेटर, गाइड और स्टेशन निर्देशिका में खोजें।",
+      description: "SmartRail के कैलकुलेटर, गाइड और स्टेशन निर्देशिका में खोजें।",
     },
     stations: {
       title: "भारतीय रेलवे स्टेशन कोड निर्देशिका — 8,900+ स्टेशन खोजें",
@@ -63,7 +63,7 @@ export const CONTENT_PAGE_TRANSLATIONS: Partial<Record<Locale, Record<string, Pa
     },
     search: {
       title: "খুঁজুন",
-      description: "RailSetu-র ক্যালকুলেটর, গাইড ও স্টেশন ডিরেক্টরিতে খুঁজুন।",
+      description: "SmartRail-র ক্যালকুলেটর, গাইড ও স্টেশন ডিরেক্টরিতে খুঁজুন।",
     },
     stations: {
       title: "ভারতীয় রেলওয়ে স্টেশন কোড ডিরেক্টরি — ৮,৯০০+ স্টেশন খুঁজুন",
@@ -98,7 +98,7 @@ export const CONTENT_PAGE_TRANSLATIONS: Partial<Record<Locale, Record<string, Pa
     },
     search: {
       title: "शोधा",
-      description: "RailSetu चे कॅल्क्युलेटर, मार्गदर्शक आणि स्थानक निर्देशिकेत शोधा.",
+      description: "SmartRail चे कॅल्क्युलेटर, मार्गदर्शक आणि स्थानक निर्देशिकेत शोधा.",
     },
     stations: {
       title: "भारतीय रेल्वे स्थानक कोड निर्देशिका — ८,९००+ स्थानके शोधा",
@@ -133,7 +133,7 @@ export const CONTENT_PAGE_TRANSLATIONS: Partial<Record<Locale, Record<string, Pa
     },
     search: {
       title: "தேடு",
-      description: "RailSetu-வின் கால்குலேட்டர்கள், வழிகாட்டிகள் மற்றும் நிலைய அடைவில் தேடுங்கள்.",
+      description: "SmartRail-வின் கால்குலேட்டர்கள், வழிகாட்டிகள் மற்றும் நிலைய அடைவில் தேடுங்கள்.",
     },
     stations: {
       title: "இந்திய ரயில் நிலைய குறியீட்டு அடைவு — 8,900+ நிலையங்கள்",
@@ -168,7 +168,7 @@ export const CONTENT_PAGE_TRANSLATIONS: Partial<Record<Locale, Record<string, Pa
     },
     search: {
       title: "వెతకండి",
-      description: "RailSetu కాలిక్యులేటర్లు, గైడ్‌లు మరియు స్టేషన్ డైరెక్టరీలో వెతకండి.",
+      description: "SmartRail కాలిక్యులేటర్లు, గైడ్‌లు మరియు స్టేషన్ డైరెక్టరీలో వెతకండి.",
     },
     stations: {
       title: "భారతీయ రైల్వే స్టేషన్ కోడ్ డైరెక్టరీ — 8,900+ స్టేషన్లు",
@@ -203,7 +203,7 @@ export const CONTENT_PAGE_TRANSLATIONS: Partial<Record<Locale, Record<string, Pa
     },
     search: {
       title: "શોધો",
-      description: "RailSetu ના કૅલ્ક્યુલેટર, માર્ગદર્શિકાઓ અને સ્ટેશન ડિરેક્ટરીમાં શોધો.",
+      description: "SmartRail ના કૅલ્ક્યુલેટર, માર્ગદર્શિકાઓ અને સ્ટેશન ડિરેક્ટરીમાં શોધો.",
     },
     stations: {
       title: "ભારતીય રેલવે સ્ટેશન કોડ ડિરેક્ટરી — ૮,૯૦૦+ સ્ટેશનો શોધો",
@@ -238,7 +238,7 @@ export const CONTENT_PAGE_TRANSLATIONS: Partial<Record<Locale, Record<string, Pa
     },
     search: {
       title: "ಹುಡುಕಿ",
-      description: "RailSetu ನ ಕ್ಯಾಲ್ಕುಲೇಟರ್‌ಗಳು, ಮಾರ್ಗದರ್ಶಿಗಳು ಮತ್ತು ನಿಲ್ದಾಣ ಡೈರೆಕ್ಟರಿಯಲ್ಲಿ ಹುಡುಕಿ.",
+      description: "SmartRail ನ ಕ್ಯಾಲ್ಕುಲೇಟರ್‌ಗಳು, ಮಾರ್ಗದರ್ಶಿಗಳು ಮತ್ತು ನಿಲ್ದಾಣ ಡೈರೆಕ್ಟರಿಯಲ್ಲಿ ಹುಡುಕಿ.",
     },
     stations: {
       title: "ಭಾರತೀಯ ರೈಲ್ವೆ ನಿಲ್ದಾಣ ಕೋಡ್ ಡೈರೆಕ್ಟರಿ — 8,900+ ನಿಲ್ದಾಣಗಳು",

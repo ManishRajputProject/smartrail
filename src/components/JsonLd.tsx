@@ -1,3 +1,5 @@
+import { SITE_NAME, SITE_URL } from "@/lib/seo";
+
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
     <script
@@ -61,8 +63,8 @@ export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "RailSetu",
-    url: "https://railsetu.in",
+    name: SITE_NAME,
+    url: SITE_URL,
     description:
       "Independent, free IRCTC booking calculators and reminders for Indian Railways travellers. Not affiliated with IRCTC or Indian Railways.",
   };
@@ -72,17 +74,17 @@ export function webSiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "RailSetu",
-    url: "https://railsetu.in",
+    name: SITE_NAME,
+    url: SITE_URL,
     description:
       "Free IRCTC booking date, Tatkal timing, refund and waitlist calculators for Indian Railways travellers.",
     inLanguage: "en-IN",
-    publisher: { "@type": "Organization", name: "RailSetu", url: "https://railsetu.in" },
+    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://railsetu.in/search?q={search_term_string}",
+        urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },

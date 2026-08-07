@@ -55,7 +55,7 @@ export function addRecentItem<T extends { id: string }>(key: string, item: T, ma
 }
 
 export const RECENT_KEYS = {
-  trains: "railsetu:recentTrains",
-  stations: "railsetu:recentStations",
-  stationPairs: "railsetu:recentStationPairs",
+  trains: "smartrail:recentTrains",
+  stations: "smartrail:recentStations",
+  stationPairs: "smartrail:recentStationPairs",
 } as const;
