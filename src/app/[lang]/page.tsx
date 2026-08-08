@@ -20,7 +20,13 @@ import { getDictionary } from "@/i18n/dictionary";
 import { localizeTools } from "@/i18n/tool-translations";
 import { localizeGuides, categoryLabel } from "@/i18n/guide-translations";
 
-export const dynamic = "force-dynamic";
+// `force-dynamic` bypasses the fetch cache entirely — even fetches that
+// explicitly request caching (like the live-ticker's `revalidate: 120`) get
+// forced to re-fetch on every single request, including bots and Next.js's
+// own link-prefetching. That was burning RailRadar quota on every page view.
+// A plain revalidate window regenerates the page (and its live data) at most
+// once every 2 minutes, matching the ticker's own cache TTL.
+export const revalidate = 120;
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
