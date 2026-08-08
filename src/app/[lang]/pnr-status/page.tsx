@@ -29,9 +29,16 @@ const faqs = [
   { question: "Is GNWL better than PQWL?", answer: "Yes — GNWL draws from the largest cancellation pool and confirms more reliably, while PQWL is shared across many intermediate stations and clears more slowly." },
 ];
 
-export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{ status?: string }>;
+}) {
   const { lang: raw } = await params;
   const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
+  const { status } = await searchParams;
   const page = localizePage(lang, "pnr-status", {
     eyebrow: "PNR Status Decoder",
     title: "What Does Your PNR Status Mean?",
@@ -95,7 +102,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         </>
       }
     >
-      <PnrDecoderClient />
+      <PnrDecoderClient initialValue={status} />
     </CalculatorShell>
   );
 }

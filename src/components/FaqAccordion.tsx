@@ -11,7 +11,7 @@ export function FaqAccordion({ items, title = "Frequently Asked Questions" }: { 
   return (
     <section className="mt-10">
       <JsonLd data={faqJsonLd(items)} />
-      <h2 className="text-xl font-semibold mb-3">{title}</h2>
+      {title && <h2 className="text-xl font-semibold mb-3">{title}</h2>}
       <div className="divide-y divide-border rounded-xl border border-border overflow-hidden">
         {items.map((item) => (
           <details key={item.question} className="group px-4 py-3 open:bg-surface">

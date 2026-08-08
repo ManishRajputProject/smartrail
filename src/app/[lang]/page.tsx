@@ -6,12 +6,15 @@ import { GUIDES } from "@/lib/guides";
 import { nowIST, latestBookableJourneyDate, formatDateLong } from "@/lib/irctc-rules";
 import { computeLongWeekends } from "@/lib/holidays";
 import { allTrainsCount, allStationsCount } from "@/lib/rail-data";
+import { getLiveStationBoard } from "@/lib/railradar";
 import { FeedbackVoteWidget } from "@/components/FeedbackVoteWidget";
 import { TrainAnnouncementBar } from "@/components/TrainAnnouncementBar";
+import { LiveTrainTicker } from "@/components/LiveTrainTicker";
+import { QuickActionSearch } from "@/components/QuickActionSearch";
 import { LiveDot } from "@/components/LiveDot";
 import { ToolIcon } from "@/components/ToolIcon";
 import { StatCounter } from "@/components/StatCounter";
-import { JsonLd, faqJsonLd } from "@/components/JsonLd";
+import { FaqAccordion } from "@/components/FaqAccordion";
 import { DEFAULT_LOCALE, isLocale, localePath, LOCALES, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizeTools } from "@/i18n/tool-translations";
@@ -52,12 +55,32 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const latestBookable = latestBookableJourneyDate(today);
   const upcomingLongWeekend = computeLongWeekends(today)[0];
 
+  // New Delhi is one of the busiest hubs on the network — a reliable source
+  // of real, currently-moving trains for the homepage ticker. Renders
+  // nothing if the live feed is empty rather than showing stale data.
+  const liveBoard = await getLiveStationBoard("NDLS").catch(() => null);
+  const liveTickerTrains = (liveBoard?.trains ?? []).slice(0, 8);
+
   // Every figure below is a verifiable fact about the product — no invented traffic numbers.
   const stats = [
     { value: allTrainsCount(), label: "Trains in the database", href: "/trains" },
     { value: allStationsCount(), label: "Stations you can look up", href: "/stations" },
     { value: CALCULATOR_ROUTES.length + DECISION_TOOL_ROUTES.length + COMMUNITY_ROUTES.length, label: "Free tools, no login", href: "#tools" },
     { value: LOCALES.length, label: "Languages supported", href: "#tools" },
+  ];
+
+  // Real station codes only — each links straight into Trains Between
+  // Stations with both ends pre-filled, so the result is the live search,
+  // never a fabricated preview.
+  const popularRoutes = [
+    { from: "NDLS", fromLabel: "New Delhi", to: "BCT", toLabel: "Mumbai Central" },
+    { from: "BCT", fromLabel: "Mumbai Central", to: "PUNE", toLabel: "Pune Jn" },
+    { from: "MAS", fromLabel: "Chennai Central", to: "SBC", toLabel: "Bengaluru" },
+    { from: "HWH", fromLabel: "Howrah", to: "NDLS", toLabel: "New Delhi" },
+    { from: "SC", fromLabel: "Secunderabad", to: "MAS", toLabel: "Chennai Central" },
+    { from: "ADI", fromLabel: "Ahmedabad", to: "BCT", toLabel: "Mumbai Central" },
+    { from: "JP", fromLabel: "Jaipur", to: "NDLS", toLabel: "New Delhi" },
+    { from: "LKO", fromLabel: "Lucknow", to: "NDLS", toLabel: "New Delhi" },
   ];
 
   const roadmap = [
@@ -71,8 +94,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
   return (
     <>
-      <JsonLd data={faqJsonLd(homeFaqs)} />
-
       {/* ================= HERO ================= */}
       <section className="hero-glow border-b border-border">
         <div className="mx-auto max-w-5xl px-6 pt-12 pb-14 md:pt-16 md:pb-20 text-center">
@@ -91,7 +112,11 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             {hero.subtitle}
           </p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-3 rise-in-3">
+          <div className="mt-7 rise-in-3">
+            <QuickActionSearch lang={lang} />
+          </div>
+
+          <div className="mt-6 flex flex-wrap justify-center gap-3 rise-in-3">
             <Link href={lp("/booking-date-calculator")} className="btn-primary">{hero.checkBooking}</Link>
             <Link href={lp("/reminders")} className="btn-secondary">{hero.setReminder}</Link>
           </div>
@@ -128,7 +153,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* ================= LIVE RIGHT NOW ================= */}
-      <section className="border-b border-border bg-primary-soft/50">
+      <section className="reveal border-b border-border bg-primary-soft/50">
         <div className="mx-auto max-w-6xl px-6 py-14 md:py-20">
           <div className="max-w-2xl">
             <p className="eyebrow inline-flex items-center gap-2">
@@ -140,6 +165,16 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             </h2>
             <p className="mt-3 text-muted text-[17px] leading-relaxed">{sections.liveSub}</p>
           </div>
+
+          {liveTickerTrains.length > 0 && (
+            <div className="mt-8">
+              <p className="mb-3 inline-flex items-center gap-2 text-[13px] font-semibold text-muted">
+                <LiveDot />
+                Right now at New Delhi (NDLS)
+              </p>
+              <LiveTrainTicker trains={liveTickerTrains} lang={lang} />
+            </div>
+          )}
 
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {[
@@ -162,6 +197,37 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ================= POPULAR ROUTES ================= */}
+      <section className="reveal mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <div className="max-w-2xl">
+          <p className="eyebrow">Popular Routes</p>
+          <h2 className="mt-3 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
+            Find trains on the busiest routes
+          </h2>
+          <p className="mt-3 text-muted text-[17px] leading-relaxed">Jump straight to live trains between two major stations.</p>
+        </div>
+
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {popularRoutes.map((r) => (
+            <Link
+              key={`${r.from}-${r.to}`}
+              href={lp(
+                `/trains-between?from=${r.from}&to=${r.to}&fromLabel=${encodeURIComponent(r.fromLabel)}&toLabel=${encodeURIComponent(r.toLabel)}`
+              )}
+              className="card card-hover group flex items-center justify-between gap-2 p-4"
+            >
+              <span className="min-w-0">
+                <span className="block truncate text-[14px] font-semibold group-hover:text-primary transition-colors">
+                  {r.fromLabel} → {r.toLabel}
+                </span>
+                <span className="mt-0.5 block font-mono text-[11px] text-muted">{r.from} → {r.to}</span>
+              </span>
+              <span className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -190,7 +256,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* ================= PLAN & DECIDE ================= */}
-      <section className="border-y border-border bg-surface-2/40">
+      <section className="reveal border-y border-border bg-surface-2/40">
         <div className="mx-auto max-w-6xl px-6 py-14 md:py-20">
           <div className="max-w-2xl">
             <p className="eyebrow">{sections.planDecide}</p>
@@ -289,7 +355,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </section>
 
       {/* ================= GUIDES ================= */}
-      <section className="border-y border-border bg-surface-2/40">
+      <section className="reveal border-y border-border bg-surface-2/40">
         <div className="mx-auto max-w-6xl px-6 py-14 md:py-20">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="max-w-2xl">
@@ -361,6 +427,17 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
             <FeedbackVoteWidget />
           </div>
         </div>
+      </section>
+
+      {/* ================= FAQ ================= */}
+      <section className="reveal mx-auto max-w-3xl px-6 py-14 md:py-20">
+        <div className="text-center max-w-2xl mx-auto mb-8">
+          <p className="eyebrow">Questions</p>
+          <h2 className="mt-3 text-[30px] md:text-[40px] font-bold tracking-[-0.02em] leading-tight">
+            Frequently asked questions
+          </h2>
+        </div>
+        <FaqAccordion items={homeFaqs} title="" />
       </section>
 
       {/* ================= CTA ================= */}

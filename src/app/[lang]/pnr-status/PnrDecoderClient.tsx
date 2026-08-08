@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { decodePnrStatus, BOARD_LABEL, type DecodedPnr } from "@/lib/pnr-status";
 
-export function PnrDecoderClient() {
-  const [value, setValue] = useState("");
-  const [result, setResult] = useState<DecodedPnr | null>(null);
+export function PnrDecoderClient({ initialValue }: { initialValue?: string } = {}) {
+  const [value, setValue] = useState(initialValue ?? "");
+  const [result, setResult] = useState<DecodedPnr | null>(initialValue ? decodePnrStatus(initialValue) : null);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

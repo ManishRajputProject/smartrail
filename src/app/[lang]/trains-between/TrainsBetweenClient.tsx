@@ -110,14 +110,30 @@ interface RecentPair {
   toLabel: string;
 }
 
-export function TrainsBetweenClient({ locale, t }: { locale: string; t: Dictionary["live"] }) {
+interface StationValue {
+  code: string;
+  label: string;
+}
+
+export function TrainsBetweenClient({
+  locale,
+  t,
+  initialFrom,
+  initialTo,
+}: {
+  locale: string;
+  t: Dictionary["live"];
+  initialFrom?: StationValue;
+  initialTo?: StationValue;
+}) {
   const lp = (href: string) => `/${locale}${href}`;
-  const [from, setFrom] = useState({ code: "", label: "" });
-  const [to, setTo] = useState({ code: "", label: "" });
+  const [from, setFrom] = useState(initialFrom ?? { code: "", label: "" });
+  const [to, setTo] = useState(initialTo ?? { code: "", label: "" });
   const [results, setResults] = useState<TrainResult[] | null>(null);
   const [source, setSource] = useState<"live" | "static" | null>(null);
   const [loading, setLoading] = useState(false);
   const recentPairs = useRecentItems<RecentPair>(RECENT_KEYS.stationPairs);
+  const autoRanRef = useRef(false);
 
   async function runSearch(fromCode: string, fromLabel: string, toCode: string, toLabel: string) {
     setFrom({ code: fromCode, label: fromLabel });
@@ -139,6 +155,20 @@ export function TrainsBetweenClient({ locale, t }: { locale: string; t: Dictiona
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (autoRanRef.current) return;
+    if (!initialFrom?.code || !initialTo?.code) return;
+    autoRanRef.current = true;
+    // Mount-time fetch triggered by URL query params (homepage "Popular
+    // Routes" / quick-search deep links) — not a UI state sync, so the
+    // set-state-in-effect rule's usual concern doesn't apply here.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    runSearch(initialFrom.code, initialFrom.label, initialTo.code, initialTo.label);
+    // Intentionally mount-only: initialFrom/initialTo are the first-render
+    // seed from the URL and shouldn't re-trigger the search on change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

@@ -349,12 +349,24 @@ body {
 .smoke-2 { animation-delay: .8s; }
 .smoke-3 { animation-delay: 1.6s; }
 
+/* ---- live train ticker (flat marquee, homepage "Live right now") ---- */
+.live-ticker { position: relative; overflow: hidden; padding: 12px; }
+.live-ticker-track {
+  display: flex; width: max-content; gap: 10px;
+  animation: ticker-scroll 32s linear infinite;
+  will-change: transform;
+}
+.live-ticker:hover .live-ticker-track,
+.live-ticker:focus-within .live-ticker-track { animation-play-state: paused; }
+@keyframes ticker-scroll { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+
 @media (prefers-reduced-motion: reduce) {
-  .hero-glow::before, .train-track, .smoke { animation: none !important; }
+  .hero-glow::before, .train-track, .smoke, .live-ticker-track { animation: none !important; }
   .rise-in, .rise-in-1, .rise-in-2, .rise-in-3 { animation: none; }
   .card-hover:hover, .btn-primary:hover, .btn-secondary:hover, .btn-accent:hover, .btn-on-dark:hover { transform: none; }
   html { scroll-behavior: auto; }
   .train-track { width: 100%; justify-content: center; flex-wrap: wrap; }
+  .live-ticker-track { width: 100%; flex-wrap: wrap; }
 }
 
 /* ---------- Legacy ticker (kept for compatibility) ---------- */

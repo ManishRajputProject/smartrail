@@ -25,10 +25,19 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   });
 }
 
-export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{ from?: string; to?: string; fromLabel?: string; toLabel?: string }>;
+}) {
   const { lang: raw } = await params;
   const lang: Locale = isLocale(raw) ? raw : DEFAULT_LOCALE;
   const dict = getDictionary(lang);
+  const sp = await searchParams;
+  const initialFrom = sp.from ? { code: sp.from.toUpperCase(), label: sp.fromLabel ?? sp.from.toUpperCase() } : undefined;
+  const initialTo = sp.to ? { code: sp.to.toUpperCase(), label: sp.toLabel ?? sp.to.toUpperCase() } : undefined;
   const page = localizePage(lang, "trains-between", {
     eyebrow: "Trains Between Stations",
     title: dict.live.trainsBetweenTitle,
@@ -43,7 +52,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       <p className="mt-2 text-muted text-[15px] max-w-2xl">{page.description}</p>
 
       <div className="mt-5">
-        <TrainsBetweenClient locale={lang} t={dict.live} />
+        <TrainsBetweenClient locale={lang} t={dict.live} initialFrom={initialFrom} initialTo={initialTo} />
       </div>
 
       <HowItWorks variant={howItWorksStrings(lang).between} />
