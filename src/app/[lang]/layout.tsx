@@ -57,6 +57,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     },
     twitter: { card: "summary_large_image" },
     icons: { icon: "/favicon.ico" },
+    verification: { google: "4dM8fnAJo__88wLLlj-oweNgthMa9zYlLn6eEF-Zn5w" },
   };
 }
 
