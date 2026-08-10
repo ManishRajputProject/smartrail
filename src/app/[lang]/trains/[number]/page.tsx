@@ -10,7 +10,7 @@ import { scheduleStrings } from "@/i18n/schedule-strings";
 import { JsonLd } from "@/components/JsonLd";
 import { getTrainByNumber, popularTrains, type Train } from "@/lib/rail-data";
 import { trainFacts, formatDuration } from "@/lib/train-facts";
-import { ARP_DAYS } from "@/lib/irctc-rules";
+import { ARP_DAYS, computeChartTimes, nextOccurrence, formatDateTime, formatDateShort } from "@/lib/irctc-rules";
 import { DEFAULT_LOCALE, isLocale, localePath, LOCALES, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { trainStrings, fill } from "@/i18n/train-page-strings";
@@ -102,6 +102,8 @@ export async function generateMetadata({
       `${train.fromName} to ${train.toName} train`,
       "train timings",
       "train route",
+      `${train.number} chart preparation time`,
+      `${train.number} running status`,
     ],
     locale,
   });
@@ -235,6 +237,59 @@ export default async function Page({
         </p>
         <p className="mt-1.5 text-[15px] leading-relaxed">{summary}</p>
       </div>
+
+      {/* Chart preparation time — the single most-searched query pattern for
+       *  individual train pages ("<number> chart preparation time"), so it
+       *  gets a direct, server-rendered answer right up top rather than only
+       *  living inside the generic calculator tool. */}
+      {train.dep &&
+        (() => {
+          const nextDep = nextOccurrence(train.dep);
+          if (!nextDep) return null;
+          const chartTimes = computeChartTimes(nextDep);
+          return (
+            <section className="mt-5">
+              <h2 className="text-[17px] font-bold tracking-tight">{t.chartPrepHeading}</h2>
+              <p className="mt-1.5 text-[14px] text-muted leading-relaxed">
+                {fill(t.chartPrepIntro, {
+                  number: train.number,
+                  name: train.name,
+                  fromCode: train.fromCode,
+                  dep: train.dep,
+                  date: formatDateShort(nextDep),
+                })}
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-2.5">
+                <div className="rounded-xl border border-primary/25 bg-primary-soft/60 p-3 text-center">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">
+                    {dict.forms.firstChartLabel}
+                  </p>
+                  <p className="mt-1 text-[15px] font-bold text-primary leading-tight">
+                    {formatDateTime(chartTimes.firstChart)}
+                  </p>
+                  <p className="mt-1 text-[11px] text-muted leading-snug">
+                    {chartTimes.earlyMorning ? dict.forms.earlyMorningNote : dict.forms.normalChartNote}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-secondary/25 bg-secondary/5 p-3 text-center">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">
+                    {dict.forms.finalChartLabel}
+                  </p>
+                  <p className="mt-1 text-[15px] font-bold text-secondary leading-tight">
+                    {formatDateTime(chartTimes.finalChart)}
+                  </p>
+                  <p className="mt-1 text-[11px] text-muted leading-snug">{dict.forms.finalChartNote}</p>
+                </div>
+              </div>
+              <Link
+                href={lp("/guides/chart-preparation-time-explained")}
+                className="mt-2.5 inline-block text-[12px] font-medium text-primary underline underline-offset-2"
+              >
+                {t.chartPrepGuideLink} →
+              </Link>
+            </section>
+          );
+        })()}
 
       <LiveStatusPanel trainNumber={train.number} t={dict.live} />
 

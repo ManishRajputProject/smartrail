@@ -449,6 +449,30 @@ export function formatDateShort(date: Date): string {
   return date.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 }
 
+/** e.g. "Thu, 8 Aug, 4:30 PM" — date and clock time together. */
+export function formatDateTime(date: Date): string {
+  return date.toLocaleString("en-IN", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+/** Parse an "HH:MM" clock time and return the next occurrence of that time —
+ *  today if it hasn't passed yet, otherwise tomorrow. Used to give a train's
+ *  chart-preparation section a concrete upcoming date rather than just an
+ *  abstract "4 hours before departure" rule. */
+export function nextOccurrence(hhmm: string, from: Date = nowIST()): Date | null {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(hhmm);
+  if (!m) return null;
+  const candidate = new Date(from);
+  candidate.setHours(Number(m[1]), Number(m[2]), 0, 0);
+  if (candidate.getTime() <= from.getTime()) candidate.setDate(candidate.getDate() + 1);
+  return candidate;
+}
+
 /** The booking-opens date for a given journey date, per the ARP rule. */
 export function bookingOpenDate(journeyDate: Date): Date {
   return addDays(startOfDay(journeyDate), -ARP_DAYS);

@@ -5,6 +5,7 @@ import {
   estimateWlOutlook,
   estimateFare,
   computeChartTimes,
+  nextOccurrence,
   ARP_DAYS,
 } from "./irctc-rules";
 
@@ -94,5 +95,25 @@ describe("computeChartTimes", () => {
     const { finalChart } = computeChartTimes(departure);
     expect(finalChart.getHours()).toBe(5);
     expect(finalChart.getMinutes()).toBe(0);
+  });
+});
+
+describe("nextOccurrence", () => {
+  it("returns today when the clock time hasn't passed yet", () => {
+    const from = new Date(2026, 7, 1, 10, 0);
+    const next = nextOccurrence("16:00", from);
+    expect(next!.getDate()).toBe(1);
+    expect(next!.getHours()).toBe(16);
+  });
+
+  it("rolls to tomorrow when the clock time has already passed", () => {
+    const from = new Date(2026, 7, 1, 18, 0);
+    const next = nextOccurrence("16:00", from);
+    expect(next!.getDate()).toBe(2);
+    expect(next!.getHours()).toBe(16);
+  });
+
+  it("returns null for a malformed time string", () => {
+    expect(nextOccurrence("not-a-time")).toBeNull();
   });
 });
