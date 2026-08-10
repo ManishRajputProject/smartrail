@@ -75,6 +75,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
       </div>
       <h1 className="text-[26px] md:text-[32px] font-extrabold tracking-tight leading-tight mt-2">{guide.title}</h1>
 
+      {guide.bannerSvg && (
+        <div
+          className="mt-4 overflow-hidden rounded-2xl border border-border bg-surface-2 [&>svg]:block [&>svg]:w-full [&>svg]:h-auto"
+          dangerouslySetInnerHTML={{ __html: guide.bannerSvg }}
+        />
+      )}
+
       {/* Quick answer — direct, quotable summary (GEO) */}
       <div className="card mt-4 p-4 border-l-4" style={{ borderLeftColor: "var(--primary)" }}>
         <p className="text-[11px] font-bold uppercase tracking-wider text-primary mb-1">{dict.common.quickAnswer}</p>
@@ -97,6 +104,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string;
                   </li>
                 ))}
               </ul>
+            )}
+            {section.illustrationSvg && (
+              <div
+                className="mt-3 overflow-hidden rounded-xl border border-border bg-surface-2 p-2 [&>svg]:block [&>svg]:w-full [&>svg]:h-auto"
+                dangerouslySetInnerHTML={{ __html: section.illustrationSvg }}
+              />
             )}
           </section>
         ))}

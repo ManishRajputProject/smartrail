@@ -320,13 +320,13 @@ const GUIDE_TRANSLATIONS: Partial<Record<Locale, GuideMap>> = { hi, bn, mr, ta, 
 
 /** Category chip labels (Booking / Tatkal / Waitlist / …). */
 const CATEGORY_LABELS: Partial<Record<Locale, Record<Guide["category"], string>>> = {
-  hi: { Booking: "बुकिंग", Tatkal: "तत्काल", Waitlist: "वेटिंग लिस्ट", Cancellation: "रद्दीकरण", Chart: "चार्ट", Quota: "कोटा" },
-  bn: { Booking: "বুকিং", Tatkal: "তৎকাল", Waitlist: "ওয়েটিং লিস্ট", Cancellation: "বাতিলকরণ", Chart: "চার্ট", Quota: "কোটা" },
-  mr: { Booking: "बुकिंग", Tatkal: "तत्काळ", Waitlist: "प्रतीक्षा यादी", Cancellation: "रद्दीकरण", Chart: "चार्ट", Quota: "कोटा" },
-  ta: { Booking: "முன்பதிவு", Tatkal: "தத்கால்", Waitlist: "காத்திருப்பு", Cancellation: "ரத்து", Chart: "விளக்கப்படம்", Quota: "ஒதுக்கீடு" },
-  te: { Booking: "బుకింగ్", Tatkal: "తత్కాల్", Waitlist: "వెయిటింగ్ లిస్ట్", Cancellation: "రద్దు", Chart: "చార్ట్", Quota: "కోటా" },
-  gu: { Booking: "બુકિંગ", Tatkal: "તત્કાલ", Waitlist: "વેઇટિંગ લિસ્ટ", Cancellation: "રદ કરવું", Chart: "ચાર્ટ", Quota: "કોટા" },
-  kn: { Booking: "ಬುಕಿಂಗ್", Tatkal: "ತತ್ಕಾಲ್", Waitlist: "ವೇಟಿಂಗ್ ಲಿಸ್ಟ್", Cancellation: "ರದ್ದತಿ", Chart: "ಚಾರ್ಟ್", Quota: "ಕೋಟಾ" },
+  hi: { Booking: "बुकिंग", Tatkal: "तत्काल", Waitlist: "वेटिंग लिस्ट", Cancellation: "रद्दीकरण", Chart: "चार्ट", Quota: "कोटा", Travel: "यात्रा" },
+  bn: { Booking: "বুকিং", Tatkal: "তৎকাল", Waitlist: "ওয়েটিং লিস্ট", Cancellation: "বাতিলকরণ", Chart: "চার্ট", Quota: "কোটা", Travel: "ভ্রমণ" },
+  mr: { Booking: "बुकिंग", Tatkal: "तत्काळ", Waitlist: "प्रतीक्षा यादी", Cancellation: "रद्दीकरण", Chart: "चार्ट", Quota: "कोटा", Travel: "प्रवास" },
+  ta: { Booking: "முன்பதிவு", Tatkal: "தத்கால்", Waitlist: "காத்திருப்பு", Cancellation: "ரத்து", Chart: "விளக்கப்படம்", Quota: "ஒதுக்கீடு", Travel: "பயணம்" },
+  te: { Booking: "బుకింగ్", Tatkal: "తత్కాల్", Waitlist: "వెయిటింగ్ లిస్ట్", Cancellation: "రద్దు", Chart: "చార్ట్", Quota: "కోటా", Travel: "ప్రయాణం" },
+  gu: { Booking: "બુકિંગ", Tatkal: "તત્કાલ", Waitlist: "વેઇટિંગ લિસ્ટ", Cancellation: "રદ કરવું", Chart: "ચાર્ટ", Quota: "કોટા", Travel: "મુસાફરી" },
+  kn: { Booking: "ಬುಕಿಂಗ್", Tatkal: "ತತ್ಕಾಲ್", Waitlist: "ವೇಟಿಂಗ್ ಲಿಸ್ಟ್", Cancellation: "ರದ್ದತಿ", Chart: "ಚಾರ್ಟ್", Quota: "ಕೋಟಾ", Travel: "ಪ್ರಯಾಣ" },
 };
 
 /** Guide with localized title/description/quickAnswer; body stays as authored. */
