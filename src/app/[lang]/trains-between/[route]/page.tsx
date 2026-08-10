@@ -12,7 +12,11 @@ import { getDictionary } from "@/i18n/dictionary";
 import { routePageStrings } from "@/i18n/route-page-strings";
 import { fill } from "@/i18n/train-page-strings";
 
-export const dynamicParams = false; // only the known popular routes exist as static pages
+// Not `false`: if a route fails to generate at build time (e.g. a transient
+// RailRadar timeout during the build), this lets it render on-demand at
+// request time instead of 404ing until the next deploy. findPopularRoute()
+// still 404s any slug that isn't a real popular route.
+export const dynamicParams = true;
 export const revalidate = 3600; // matches getLiveTrainsBetween's own 1h cache
 
 export function generateStaticParams() {
