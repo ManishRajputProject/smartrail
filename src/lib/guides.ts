@@ -569,6 +569,17 @@ export const GUIDES: Guide[] = [
           "Two structural reasons explain most of the variation: rake type and operational adjustments. Trains running on older ICF (Integral Coach Factory) rakes and newer LHB (Linke-Hofmann-Busch) rakes can have different coach counts and slightly different standard orderings even on similar routes, because the two rake types aren't interchangeable in composition. Separately, railway divisions sometimes adjust a specific service's composition temporarily — adding or removing coaches for a festival rush, or substituting a rake with a different one during maintenance — without that being reflected in general-purpose route guides. Neither of these is something a traveller can predict from first principles; they're exactly why checking the live, specific data for your train number beats relying on memory or a generic diagram, including this one.",
         ],
       },
+      {
+        heading: "Quick checklist before you head to the platform",
+        paragraphs: [],
+        list: [
+          "Look up your train number on SmartRail and check the live coach position, if available.",
+          "Note both your coach code (e.g. B2) and, once assigned, your berth number.",
+          "Arrive early enough to walk the platform if you're unsure — general coaches fill first, so don't linger near them if that's not your class.",
+          "Cross-check against the station's own coach position board on arrival; it reflects that day's actual rake.",
+          "Remember the formation can differ on the return leg of the same train number — don't assume symmetry.",
+        ],
+      },
     ],
     sources: [OFFICIAL_SOURCES.irctc, OFFICIAL_SOURCES.indianRail],
     relatedTool: { href: "/trains", label: "Train Finder & Live Coach Position" },
