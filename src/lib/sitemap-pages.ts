@@ -3,6 +3,7 @@ import { ALL_TOOL_ROUTES, CONTENT_ROUTES, LEGAL_ROUTES } from "@/lib/site-routes
 import { GUIDES } from "@/lib/guides";
 import { trainIndexLetters, stationIndexLetters } from "@/lib/rail-data";
 import { TRAIN_CATEGORIES } from "@/lib/train-categories";
+import { POPULAR_ROUTES } from "@/lib/popular-routes";
 
 export interface PageEntry {
   path: string;
@@ -62,6 +63,13 @@ export function pageEntries(now = new Date()): PageEntry[] {
       path: `/trains/category/${c.slug}`,
       changeFrequency: "weekly" as const,
       priority: 0.6,
+      lastModified: now,
+    })),
+    // Static, indexable landing pages for popular station-pair corridors.
+    ...POPULAR_ROUTES.map((r) => ({
+      path: `/trains-between/${r.slug}`,
+      changeFrequency: "daily" as const,
+      priority: 0.7,
       lastModified: now,
     })),
   ];

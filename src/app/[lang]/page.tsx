@@ -6,6 +6,7 @@ import { GUIDES } from "@/lib/guides";
 import { nowIST, latestBookableJourneyDate, formatDateLong } from "@/lib/irctc-rules";
 import { computeLongWeekends } from "@/lib/holidays";
 import { allTrainsCount, allStationsCount } from "@/lib/rail-data";
+import { POPULAR_ROUTES } from "@/lib/popular-routes";
 import { getLiveStationBoard } from "@/lib/railradar";
 import { FeedbackVoteWidget } from "@/components/FeedbackVoteWidget";
 import { TrainAnnouncementBar } from "@/components/TrainAnnouncementBar";
@@ -73,20 +74,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     { value: allStationsCount(), label: "Stations you can look up", href: "/stations" },
     { value: CALCULATOR_ROUTES.length + DECISION_TOOL_ROUTES.length + COMMUNITY_ROUTES.length, label: "Free tools, no login", href: "#tools" },
     { value: LOCALES.length, label: "Languages supported", href: "#tools" },
-  ];
-
-  // Real station codes only — each links straight into Trains Between
-  // Stations with both ends pre-filled, so the result is the live search,
-  // never a fabricated preview.
-  const popularRoutes = [
-    { from: "NDLS", fromLabel: "New Delhi", to: "BCT", toLabel: "Mumbai Central" },
-    { from: "BCT", fromLabel: "Mumbai Central", to: "PUNE", toLabel: "Pune Jn" },
-    { from: "MAS", fromLabel: "Chennai Central", to: "SBC", toLabel: "Bengaluru" },
-    { from: "HWH", fromLabel: "Howrah", to: "NDLS", toLabel: "New Delhi" },
-    { from: "SC", fromLabel: "Secunderabad", to: "MAS", toLabel: "Chennai Central" },
-    { from: "ADI", fromLabel: "Ahmedabad", to: "BCT", toLabel: "Mumbai Central" },
-    { from: "JP", fromLabel: "Jaipur", to: "NDLS", toLabel: "New Delhi" },
-    { from: "LKO", fromLabel: "Lucknow", to: "NDLS", toLabel: "New Delhi" },
   ];
 
   const roadmap = [
@@ -217,12 +204,10 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         </div>
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {popularRoutes.map((r) => (
+          {POPULAR_ROUTES.map((r) => (
             <Link
-              key={`${r.from}-${r.to}`}
-              href={lp(
-                `/trains-between?from=${r.from}&to=${r.to}&fromLabel=${encodeURIComponent(r.fromLabel)}&toLabel=${encodeURIComponent(r.toLabel)}`
-              )}
+              key={r.slug}
+              href={lp(`/trains-between/${r.slug}`)}
               className="card card-hover group flex items-center justify-between gap-2 p-4"
             >
               <span className="min-w-0">
