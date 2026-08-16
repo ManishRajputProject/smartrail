@@ -5,6 +5,24 @@ import { WaitlistClient } from "./WaitlistClient";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/i18n/locales";
 import { getDictionary } from "@/i18n/dictionary";
 import { localizePage } from "@/i18n/page-translations";
+import { estimateWlOutlook, type OutlookBand, type WlType } from "@/lib/irctc-rules";
+
+// Server-rendered so queries like "WL 7 confirmation chances" or "TQWL 40
+// confirmation chances" have crawlable content to match, not just an
+// interactive form. Uses fixed, disclosed assumptions (Sleeper class, ~15
+// days out) — the interactive tool below lets a reader plug in their own.
+const WL_TYPES: WlType[] = ["GNWL", "RLWL", "PQWL", "RSWL", "TQWL"];
+const SAMPLE_POSITIONS = [5, 10, 15, 20, 25, 30, 40, 50];
+const SAMPLE_CLASS = "SL";
+const SAMPLE_DAYS = 15;
+
+const STATIC_BAND_STYLES: Record<OutlookBand, string> = {
+  "Very Likely": "text-success",
+  Likely: "text-success",
+  Uncertain: "text-accent-foreground",
+  Unlikely: "text-danger",
+  "Very Unlikely": "text-danger",
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -73,6 +91,51 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
             Always verify your live PNR status on IRCTC or NTES before travel; this tool is directional
             guidance based on general patterns, not a live prediction.
           </p>
+
+          <h2 className="text-xl font-semibold mt-8 mb-2">Typical outlook by waitlist number</h2>
+          <p className="text-muted leading-relaxed mb-3">
+            A quick reference for questions like &ldquo;WL 7 confirmation chances&rdquo; or &ldquo;TQWL 40
+            confirmation chances&rdquo; — assuming Sleeper class and roughly 15 days to departure. Your own
+            class and timing change the outlook, so use the calculator above for a read tailored to your
+            actual ticket.
+          </p>
+          <div className="overflow-x-auto rounded-lg border border-border">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-[var(--surface-2,transparent)]">
+                  <th className="text-left px-3 py-2 font-semibold">WL Type</th>
+                  {SAMPLE_POSITIONS.map((pos) => (
+                    <th key={pos} className="text-center px-3 py-2 font-semibold whitespace-nowrap">
+                      WL {pos}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {WL_TYPES.map((wlType) => (
+                  <tr key={wlType} className="border-t border-border">
+                    <td className="px-3 py-2 font-medium">{wlType}</td>
+                    {SAMPLE_POSITIONS.map((pos) => {
+                      const { band } = estimateWlOutlook({
+                        wlNumber: pos,
+                        wlType,
+                        travelClass: SAMPLE_CLASS,
+                        daysToDeparture: SAMPLE_DAYS,
+                      });
+                      return (
+                        <td
+                          key={pos}
+                          className={`text-center px-3 py-2 whitespace-nowrap ${STATIC_BAND_STYLES[band]}`}
+                        >
+                          {band}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </>
       }
     >
