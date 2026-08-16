@@ -27,6 +27,38 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         question: "Is IRCTC booking available 24 hours a day?",
         answer: "Yes, the booking system itself is generally available around the clock, though there can be short scheduled maintenance windows, typically overnight.",
       },
+      {
+        question: "What does \"journey date is not within ARP range\" mean?",
+        answer: `This exact IRCTC error means the journey date you picked is either more than ${ARP_DAYS} days away (outside the advance booking window) or already in the past. Recheck your date against the ARP calculator — the fix is almost always picking a valid date, not a technical problem.`,
+      },
+    ],
+  },
+  {
+    id: "booking-outcomes",
+    title: "Booking Outcomes",
+    items: [
+      {
+        question: "What does \"Regret\" mean in IRCTC?",
+        answer: "\"Regret\" means IRCTC couldn't complete your booking because there were zero seats and no waitlist slot left in that exact train, class, quota and date combination. It happens before payment, so you're never charged — try a different class, quota, train or date.",
+      },
+      {
+        question: "What's the difference between \"Regret\" and \"Not Available\" in IRCTC?",
+        answer: "They mean the same thing in practice — no seats and no waitlist capacity left for that search. IRCTC has used both phrasings at different times; neither implies a technical error.",
+      },
+    ],
+  },
+  {
+    id: "quotas",
+    title: "Quotas",
+    items: [
+      {
+        question: "What is General quota in a train?",
+        answer: "General (GN) quota is the default, largest seat pool on every train, open to all passengers. It opens 60 days before the journey and is what you get unless you specifically select a different quota.",
+      },
+      {
+        question: "What is HQ (Headquarters) quota in a train?",
+        answer: "HQ, sometimes written HO, is a small quota controlled directly by railway headquarters or divisional officers rather than released through normal booking — it's used for administrative and emergency allocations and isn't something passengers can select or book themselves on IRCTC.",
+      },
     ],
   },
   {
@@ -44,6 +76,10 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
       {
         question: "Can Tatkal tickets be cancelled for a refund?",
         answer: "Confirmed Tatkal tickets are generally non-refundable on cancellation. Waitlisted Tatkal tickets that never confirm are refunded automatically.",
+      },
+      {
+        question: "Does Vande Bharat Express have Tatkal booking?",
+        answer: "Yes for its Chair Car and Executive Chair Car classes, at the standard 10:00 AM IST AC Tatkal opening, one day before departure — there's no separate Vande Bharat Tatkal quota. Vande Bharat has no Sleeper class at all, so \"Sleeper Tatkal\" doesn't apply to it.",
       },
     ],
   },
@@ -121,6 +157,11 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         question: "How do I find my coach position on the platform?",
         answer:
           "After the chart is prepared, your coach number is fixed. Most stations display coach positions on electronic boards; coach-position apps and the station enquiry desk can also tell you where your coach will stop.",
+      },
+      {
+        question: "What does \"PC\" mean in a train coach list?",
+        answer:
+          "PC stands for Pantry Car — the coach that prepares and serves cooked meals on trains with onboard catering. It's a service coach, not something passengers can book a seat in.",
       },
     ],
   },
