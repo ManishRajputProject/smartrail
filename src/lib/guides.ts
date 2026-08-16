@@ -804,9 +804,9 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: "irctc-booking-timings-maintenance-window-guide",
-    title: "IRCTC Booking Timings & Daily Maintenance Window, Explained",
+    title: "IRCTC Maintenance Time: Daily Downtime Window & Booking Timings",
     description:
-      "When IRCTC is actually available for booking, why it sometimes goes offline overnight, and what to do — including tools that still work — when it does.",
+      "IRCTC's booking system typically goes offline for maintenance late at night — here's the usual IRCTC maintenance time window, why it moves, and what still works while it's down.",
     quickAnswer:
       "IRCTC's reserved-ticket booking is generally available across the day, with Tatkal opening at fixed times (10:00 AM for AC classes, 11:00 AM for non-AC) — but IRCTC has historically run a nightly maintenance window, commonly reported as falling in the very late night to early morning IST hours, during which booking can be unavailable. The exact timing isn't published as a fixed guarantee and has changed over time, so treat any specific hour as indicative rather than certain, and check IRCTC's own status if booking seems down.",
     category: "Booking",

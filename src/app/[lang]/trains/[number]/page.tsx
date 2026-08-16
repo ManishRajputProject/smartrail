@@ -291,7 +291,10 @@ export default async function Page({
           );
         })()}
 
-      <LiveStatusPanel trainNumber={train.number} t={dict.live} />
+      <section className="mt-5">
+        <h2 className="text-[17px] font-bold tracking-tight">{dict.live.runningStatusHeading}</h2>
+        <LiveStatusPanel trainNumber={train.number} t={dict.live} />
+      </section>
 
       {live?.train.coachPosition && (
         <section className="mt-5">
