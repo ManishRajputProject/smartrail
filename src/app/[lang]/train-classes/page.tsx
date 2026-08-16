@@ -24,8 +24,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 }
 
 const faqs = [
+  { question: "What does SL mean in a train?", answer: "SL stands for Sleeper class — the standard non-AC overnight class with open windows, the most economical and widely available sleeper option on Indian Railways." },
+  { question: "What does 2A mean in a train ticket?", answer: "2A means Second AC — an air-conditioned class with open bays of 6 berths, privacy curtains, and fewer passengers per coach than 3A." },
+  { question: "What does 3A mean in a train?", answer: "3A means Third AC — air-conditioned bays of 8 berths (three tiers) with no curtains on most coaches, at a lower fare than 2A. It's the most popular overnight AC class." },
   { question: "What is the difference between 2A and 3A?", answer: "Both are air-conditioned. 2A has open bays of 6 berths with privacy curtains and fewer passengers per coach; 3A has bays of 8 berths (three tiers) and no curtains on most coaches, at a lower fare." },
   { question: "Is Sleeper class air-conditioned?", answer: "No. Sleeper (SL) is non-AC with open windows. For air-conditioning on an overnight train, choose 3A, 2A or 1A." },
+  { question: "What is 2S and CC in a train?", answer: "2S is Second Sitting — a non-AC, budget day-journey seating class. CC is AC Chair Car — an air-conditioned seating class used on fast day trains like Shatabdi. Neither has berths; both are seats only." },
   { question: "Which class is best for a day journey?", answer: "AC Chair Car (CC) or Executive Chair Car (EC) on fast trains like Shatabdi and Vande Bharat. Second Sitting (2S) is the budget day option." },
   { question: "What is the most popular class?", answer: "3A (Third AC) is the value sweet spot for overnight AC travel, and Sleeper (SL) is the most economical and widely available sleeper option." },
 ];
@@ -51,7 +55,8 @@ export default function Page() {
                   <p className="text-[11px] text-muted">{c.ac ? "Air-conditioned" : "Non-AC"} · {c.fareHint} fare</p>
                 </div>
               </div>
-              <p className="text-[13px] text-muted mt-2.5">{c.layout}</p>
+              <p className="text-[13px] mt-2.5"><span className="font-semibold">{c.code}</span> means <span className="font-semibold">{c.name}</span>.</p>
+              <p className="text-[13px] text-muted mt-1">{c.layout}</p>
               <p className="text-[13px] mt-2"><span className="font-semibold">Best for:</span> {c.bestFor}</p>
               <div className="mt-2.5 flex flex-wrap gap-1">
                 {c.amenities.slice(0, 4).map((a) => (
