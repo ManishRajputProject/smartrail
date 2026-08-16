@@ -87,7 +87,7 @@ export function fill(template: string, vars: Record<string, string | number>): s
 }
 
 const en: TrainStrings = {
-  metaTitleSuffix: "Live Status, Chart Prep & Timings",
+  metaTitleSuffix: "Chart Prep, Timings & Live Status",
   metaRoute: "{from} to {to}.",
   metaTimes: "Departs {dep}, arrives {arr} ({duration}).",
   metaClasses: "Classes: {classes}.",
@@ -158,7 +158,7 @@ const en: TrainStrings = {
 };
 
 const hi: TrainStrings = {
-  metaTitleSuffix: "लाइव स्टेटस, चार्ट तैयारी और समय",
+  metaTitleSuffix: "चार्ट तैयारी, समय और लाइव स्टेटस",
   metaRoute: "{from} से {to} तक।",
   metaTimes: "{dep} बजे प्रस्थान, {arr} बजे आगमन ({duration})।",
   metaClasses: "श्रेणियां: {classes}।",
@@ -226,7 +226,7 @@ const hi: TrainStrings = {
 };
 
 const bn: TrainStrings = {
-  metaTitleSuffix: "লাইভ স্ট্যাটাস, চার্ট প্রস্তুতি ও সময়সূচি",
+  metaTitleSuffix: "চার্ট প্রস্তুতি, সময়সূচি ও লাইভ স্ট্যাটাস",
   metaRoute: "{from} থেকে {to}।",
   metaTimes: "{dep}-এ ছাড়ে, {arr}-এ পৌঁছায় ({duration})।",
   metaClasses: "শ্রেণি: {classes}।",
@@ -294,7 +294,7 @@ const bn: TrainStrings = {
 };
 
 const mr: TrainStrings = {
-  metaTitleSuffix: "लाइव्ह स्टेटस, चार्ट तयारी आणि वेळापत्रक",
+  metaTitleSuffix: "चार्ट तयारी, वेळापत्रक आणि लाइव्ह स्टेटस",
   metaRoute: "{from} ते {to}.",
   metaTimes: "{dep} वाजता सुटते, {arr} वाजता पोहोचते ({duration}).",
   metaClasses: "श्रेणी: {classes}.",
@@ -362,7 +362,7 @@ const mr: TrainStrings = {
 };
 
 const ta: TrainStrings = {
-  metaTitleSuffix: "நேரடி நிலை, சார்ட் தயாரிப்பு மற்றும் நேரம்",
+  metaTitleSuffix: "சார்ட் தயாரிப்பு, நேரம் மற்றும் நேரடி நிலை",
   metaRoute: "{from} இலிருந்து {to}.",
   metaTimes: "{dep}-க்குப் புறப்படும், {arr}-க்கு வந்தடையும் ({duration}).",
   metaClasses: "வகுப்புகள்: {classes}.",
@@ -430,7 +430,7 @@ const ta: TrainStrings = {
 };
 
 const te: TrainStrings = {
-  metaTitleSuffix: "ప్రత్యక్ష స్థితి, చార్ట్ తయారీ మరియు సమయాలు",
+  metaTitleSuffix: "చార్ట్ తయారీ, సమయాలు మరియు ప్రత్యక్ష స్థితి",
   metaRoute: "{from} నుండి {to}.",
   metaTimes: "{dep}కు బయలుదేరుతుంది, {arr}కు చేరుతుంది ({duration}).",
   metaClasses: "తరగతులు: {classes}.",
@@ -498,7 +498,7 @@ const te: TrainStrings = {
 };
 
 const gu: TrainStrings = {
-  metaTitleSuffix: "લાઇવ સ્ટેટસ, ચાર્ટ તૈયારી અને સમય",
+  metaTitleSuffix: "ચાર્ટ તૈયારી, સમય અને લાઇવ સ્ટેટસ",
   metaRoute: "{from} થી {to}.",
   metaTimes: "{dep} વાગ્યે ઉપડે છે, {arr} વાગ્યે પહોંચે છે ({duration}).",
   metaClasses: "વર્ગો: {classes}.",
@@ -566,7 +566,7 @@ const gu: TrainStrings = {
 };
 
 const kn: TrainStrings = {
-  metaTitleSuffix: "ಲೈವ್ ಸ್ಥಿತಿ, ಚಾರ್ಟ್ ತಯಾರಿ ಮತ್ತು ಸಮಯ",
+  metaTitleSuffix: "ಚಾರ್ಟ್ ತಯಾರಿ, ಸಮಯ ಮತ್ತು ಲೈವ್ ಸ್ಥಿತಿ",
   metaRoute: "{from} ಇಂದ {to}.",
   metaTimes: "{dep}ಕ್ಕೆ ಹೊರಡುತ್ತದೆ, {arr}ಕ್ಕೆ ತಲುಪುತ್ತದೆ ({duration}).",
   metaClasses: "ದರ್ಜೆಗಳು: {classes}.",
