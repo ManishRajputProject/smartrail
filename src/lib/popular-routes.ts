@@ -34,6 +34,17 @@ export const POPULAR_ROUTES: PopularRoute[] = [
     toLabel: "Chandigarh",
     variants: ["Ferozepur", "Ferozpur", "FZR"],
   },
+  // Batch 2, added from Search Console query demand (2026-08-16 export):
+  // real "X to Y train" searches with no dedicated landing page yet.
+  { slug: "ahmedabad-jammu-tawi", from: "ADI", fromLabel: "Ahmedabad", to: "JAT", toLabel: "Jammu Tawi" },
+  { slug: "indore-jodhpur", from: "INDB", fromLabel: "Indore Jn", to: "JU", toLabel: "Jodhpur Jn" },
+  { slug: "solapur-kolhapur", from: "SUR", fromLabel: "Solapur Jn", to: "KOP", toLabel: "Kolhapur" },
+  { slug: "gwalior-bhind", from: "GWL", fromLabel: "Gwalior Jn", to: "BIX", toLabel: "Bhind" },
+  { slug: "ranchi-mumbai", from: "RNC", fromLabel: "Ranchi", to: "BCT", toLabel: "Mumbai Central" },
+  { slug: "puri-guwahati", from: "PURI", fromLabel: "Puri", to: "GHY", toLabel: "Guwahati" },
+  { slug: "rewari-bhiwani", from: "RE", fromLabel: "Rewari", to: "BNW", toLabel: "Bhiwani" },
+  { slug: "dehradun-chennai", from: "DDN", fromLabel: "Dehradun", to: "MAS", toLabel: "Chennai Central" },
+  { slug: "nagpur-kolhapur", from: "NGP", fromLabel: "Nagpur", to: "KOP", toLabel: "Kolhapur" },
 ];
 
 export function findPopularRoute(slug: string): PopularRoute | undefined {
