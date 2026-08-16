@@ -18,6 +18,11 @@ export interface TrainStrings {
   metaTimes: string;
   /** {classes} */
   metaClasses: string;
+  /** {number} {time} — the single most-searched query pattern for these
+   *  pages ("<number> chart preparation time"), so it gets its own,
+   *  specific, computed-time sentence near the front of the description
+   *  rather than only the generic mention inside metaTail. */
+  metaChartPrep: string;
   metaTail: string;
   trainFinder: string;
   quickAnswer: string;
@@ -86,7 +91,8 @@ const en: TrainStrings = {
   metaRoute: "{from} to {to}.",
   metaTimes: "Departs {dep}, arrives {arr} ({duration}).",
   metaClasses: "Classes: {classes}.",
-  metaTail: "Chart preparation time, live running status, booking window, Tatkal timing and direct alternatives.",
+  metaChartPrep: "{number} chart preparation time: expected around {time}.",
+  metaTail: "Live running status, booking window, Tatkal timing and direct alternatives.",
   trainFinder: "Train Finder",
   quickAnswer: "Quick answer",
   chartPrepHeading: "Chart Preparation Time",
@@ -156,7 +162,8 @@ const hi: TrainStrings = {
   metaRoute: "{from} से {to} तक।",
   metaTimes: "{dep} बजे प्रस्थान, {arr} बजे आगमन ({duration})।",
   metaClasses: "श्रेणियां: {classes}।",
-  metaTail: "चार्ट तैयार होने का समय, लाइव स्टेटस, बुकिंग विंडो, तत्काल समय और अन्य सीधी ट्रेनें।",
+  metaChartPrep: "{number} चार्ट तैयार होने का समय: लगभग {time} तक।",
+  metaTail: "लाइव स्टेटस, बुकिंग विंडो, तत्काल समय और अन्य सीधी ट्रेनें।",
   trainFinder: "ट्रेन फाइंडर",
   quickAnswer: "संक्षिप्त उत्तर",
   chartPrepHeading: "चार्ट तैयार होने का समय",
@@ -223,7 +230,8 @@ const bn: TrainStrings = {
   metaRoute: "{from} থেকে {to}।",
   metaTimes: "{dep}-এ ছাড়ে, {arr}-এ পৌঁছায় ({duration})।",
   metaClasses: "শ্রেণি: {classes}।",
-  metaTail: "চার্ট তৈরির সময়, লাইভ স্ট্যাটাস, বুকিং উইন্ডো, তৎকাল সময় ও অন্যান্য সরাসরি ট্রেন।",
+  metaChartPrep: "{number} চার্ট তৈরির সময়: আনুমানিক {time}।",
+  metaTail: "লাইভ স্ট্যাটাস, বুকিং উইন্ডো, তৎকাল সময় ও অন্যান্য সরাসরি ট্রেন।",
   trainFinder: "ট্রেন ফাইন্ডার",
   quickAnswer: "সংক্ষিপ্ত উত্তর",
   chartPrepHeading: "চার্ট তৈরির সময়",
@@ -290,7 +298,8 @@ const mr: TrainStrings = {
   metaRoute: "{from} ते {to}.",
   metaTimes: "{dep} वाजता सुटते, {arr} वाजता पोहोचते ({duration}).",
   metaClasses: "श्रेणी: {classes}.",
-  metaTail: "चार्ट तयार होण्याची वेळ, लाइव्ह स्टेटस, बुकिंग विंडो, तत्काळ वेळ आणि इतर थेट गाड्या.",
+  metaChartPrep: "{number} चार्ट तयार होण्याची वेळ: अंदाजे {time}.",
+  metaTail: "लाइव्ह स्टेटस, बुकिंग विंडो, तत्काळ वेळ आणि इतर थेट गाड्या.",
   trainFinder: "ट्रेन फाइंडर",
   quickAnswer: "थोडक्यात उत्तर",
   chartPrepHeading: "चार्ट तयार होण्याची वेळ",
@@ -357,7 +366,8 @@ const ta: TrainStrings = {
   metaRoute: "{from} இலிருந்து {to}.",
   metaTimes: "{dep}-க்குப் புறப்படும், {arr}-க்கு வந்தடையும் ({duration}).",
   metaClasses: "வகுப்புகள்: {classes}.",
-  metaTail: "சார்ட் தயாராகும் நேரம், நேரடி நிலை, முன்பதிவு நேரம், தத்கால் நேரம் மற்றும் பிற நேரடி ரயில்கள்.",
+  metaChartPrep: "{number} சார்ட் தயாராகும் நேரம்: சுமார் {time}.",
+  metaTail: "நேரடி நிலை, முன்பதிவு நேரம், தத்கால் நேரம் மற்றும் பிற நேரடி ரயில்கள்.",
   trainFinder: "ரயில் தேடுபொறி",
   quickAnswer: "சுருக்கமான பதில்",
   chartPrepHeading: "சார்ட் தயாராகும் நேரம்",
@@ -424,7 +434,8 @@ const te: TrainStrings = {
   metaRoute: "{from} నుండి {to}.",
   metaTimes: "{dep}కు బయలుదేరుతుంది, {arr}కు చేరుతుంది ({duration}).",
   metaClasses: "తరగతులు: {classes}.",
-  metaTail: "చార్ట్ తయారీ సమయం, ప్రత్యక్ష స్థితి, బుకింగ్ విండో, తత్కాల్ సమయం మరియు ఇతర ప్రత్యక్ష రైళ్లు.",
+  metaChartPrep: "{number} చార్ట్ తయారీ సమయం: సుమారు {time}.",
+  metaTail: "ప్రత్యక్ష స్థితి, బుకింగ్ విండో, తత్కాల్ సమయం మరియు ఇతర ప్రత్యక్ష రైళ్లు.",
   trainFinder: "రైలు ఫైండర్",
   quickAnswer: "సంక్షిప్త సమాధానం",
   chartPrepHeading: "చార్ట్ తయారీ సమయం",
@@ -491,7 +502,8 @@ const gu: TrainStrings = {
   metaRoute: "{from} થી {to}.",
   metaTimes: "{dep} વાગ્યે ઉપડે છે, {arr} વાગ્યે પહોંચે છે ({duration}).",
   metaClasses: "વર્ગો: {classes}.",
-  metaTail: "ચાર્ટ તૈયાર થવાનો સમય, લાઇવ સ્ટેટસ, બુકિંગ વિન્ડો, તત્કાલ સમય અને અન્ય સીધી ટ્રેનો.",
+  metaChartPrep: "{number} ચાર્ટ તૈયાર થવાનો સમય: આશરે {time}.",
+  metaTail: "લાઇવ સ્ટેટસ, બુકિંગ વિન્ડો, તત્કાલ સમય અને અન્ય સીધી ટ્રેનો.",
   trainFinder: "ટ્રેન ફાઇન્ડર",
   quickAnswer: "ટૂંકો જવાબ",
   chartPrepHeading: "ચાર્ટ તૈયાર થવાનો સમય",
@@ -558,7 +570,8 @@ const kn: TrainStrings = {
   metaRoute: "{from} ಇಂದ {to}.",
   metaTimes: "{dep}ಕ್ಕೆ ಹೊರಡುತ್ತದೆ, {arr}ಕ್ಕೆ ತಲುಪುತ್ತದೆ ({duration}).",
   metaClasses: "ದರ್ಜೆಗಳು: {classes}.",
-  metaTail: "ಚಾರ್ಟ್ ತಯಾರಿ ಸಮಯ, ಲೈವ್ ಸ್ಥಿತಿ, ಬುಕಿಂಗ್ ವಿಂಡೋ, ತತ್ಕಾಲ್ ಸಮಯ ಮತ್ತು ಇತರ ನೇರ ರೈಲುಗಳು.",
+  metaChartPrep: "{number} ಚಾರ್ಟ್ ತಯಾರಿ ಸಮಯ: ಸುಮಾರು {time}.",
+  metaTail: "ಲೈವ್ ಸ್ಥಿತಿ, ಬುಕಿಂಗ್ ವಿಂಡೋ, ತತ್ಕಾಲ್ ಸಮಯ ಮತ್ತು ಇತರ ನೇರ ರೈಲುಗಳು.",
   trainFinder: "ರೈಲು ಹುಡುಕಾಟ",
   quickAnswer: "ಸಂಕ್ಷಿಪ್ತ ಉತ್ತರ",
   chartPrepHeading: "ಚಾರ್ಟ್ ತಯಾರಿ ಸಮಯ",

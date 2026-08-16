@@ -80,9 +80,20 @@ export async function generateMetadata({
   const s = trainStrings(locale);
   const f = trainFacts(train);
   const dur = formatDuration(f.durationMins);
+
+  // Computed inline (mirrors the page body's Chart Prep section) so the
+  // single most-searched query pattern for these pages — "<number> chart
+  // preparation time" — gets a specific, accurate answer near the front of
+  // the meta description, not just a generic mention.
+  const nextDep = train.dep ? nextOccurrence(train.dep) : null;
+  const chartPrepLine = nextDep
+    ? fill(s.metaChartPrep, { number: train.number, time: formatDateTime(computeChartTimes(nextDep).firstChart) })
+    : "";
+
   const desc = [
     `${train.number} ${train.name}:`,
     fill(s.metaRoute, { from: train.fromName, to: train.toName }),
+    chartPrepLine,
     train.dep && train.arr && dur
       ? fill(s.metaTimes, { dep: train.dep, arr: train.arr, duration: dur })
       : "",
@@ -103,6 +114,7 @@ export async function generateMetadata({
       "train timings",
       "train route",
       `${train.number} chart preparation time`,
+      `chart preparation time for ${train.number}`,
       `${train.number} running status`,
     ],
     locale,
